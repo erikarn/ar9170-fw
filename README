@@ -1,0 +1,46 @@
+Atheros ar9170 firmware
+-------------------------
+
+This is the firmware for the Atheros ar9170 802.11n devices.
+To build the firmware you will need an SH-2 toolchain.
+
+Toolchain being used
+--------------------
+
+You can download an SH-2 gcc toolchain from KPIT:
+
+http://www.kpitgnutools.com/index.php
+
+Alternative older toolchains
+----------------------------
+
+http://www.sh-linux.org/
+http://rpm.sh-linux.org/rpm-fc6/RPMS/i386/
+
+A mirror of these RPMs and converted Debian packages are also available at:
+ftp://ftp.infradead.org/pub/sh-gcc/
+
+Notes
+-----
+
+The target binary is not ELF, its built using --oformat binary. The target
+host is SH2 little endian.
+
+The resulting firmware, ar9170.fw, can be used with the ar9170 Linux
+driver through the standard request_firmware() API. You will need
+ar9170 with 1-stage firmware support (this was recently added to
+wireless-testing).
+
+This built firmware does not yet work, work is needed to get the start
+routine at the right address.
+
+STA/AP support could be merged, most code is shared. We have split up the
+files into two directories one for STA and one for AP. Most work has been
+done for STA to get it to compile correctly.
+
+Build and install
+-----------------
+
+make
+make fw
+sudo make install
