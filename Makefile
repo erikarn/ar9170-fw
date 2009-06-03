@@ -1,10 +1,11 @@
 # Type is AP or STA
 TYPE ?= STA
 
-CC = /usr/share/gnush_v0901_elf-1/bin/sh-elf-gcc
-LD = /usr/share/gnush_v0901_elf-1/bin/sh-elf-ld
-AS = /usr/share/gnush_v0901_elf-1/bin/sh-elf-as
-OBJCOPY = /usr/share/gnush_v0901_elf-1/bin/sh-elf-objcopy
+PFX ?= /usr/share/gnush_v0901_elf-1/bin/sh-elf-
+CC = $(PFX)gcc
+LD = $(PFX)ld
+AS = $(PFX)as
+OBJCOPY = $(PFX)objcopy
 
 # CPU is a Little endian sh2a-nofpu-or-sh3-nommu
 #
@@ -26,19 +27,19 @@ LDFLAGS += -s
 LDFLAGS += -e _zfbooter
 LDFLAGS += --gc-sections
 
-FW += boot.o
-FW += USB_Boot.o
-FW += cmd.o
-FW += cphy.o
-FW += desc.o
-FW += gv.o
-FW += hostif.o
-FW += mon.o
-FW += uart.o
-FW += usb.o
-FW += usb_fifo.o
-FW += usb_intrq.o
-FW += wlan.o
+FW += $(TYPE)/boot.o
+FW += $(TYPE)/USB_Boot.o
+FW += $(TYPE)/cmd.o
+FW += $(TYPE)/cphy.o
+FW += $(TYPE)/desc.o
+FW += $(TYPE)/gv.o
+FW += $(TYPE)/hostif.o
+FW += $(TYPE)/mon.o
+FW += $(TYPE)/uart.o
+FW += usb/usb.o
+FW += usb/usb_fifo.o
+FW += usb/usb_intrq.o
+FW += $(TYPE)/wlan.o
 
 # These comes from the Linux kernel
 FW += ashlsi3.o
@@ -49,15 +50,6 @@ FW += ashlsi3.o
 
 %.o: %.c
 	$(CC) $(CFLAGS) -o $@ $<
-
-.files:
-	cp $(TYPE)/*.[ch] .
-	cp usb/*.c .
-	@touch $@
-
-all: .files
-	@echo
-	@echo Now run make fw
 
 fw: otus-$(TYPE).fw
 	$(OBJCOPY) --strip-unneeded -O binary otus-$(TYPE).fw otus-STA.bin

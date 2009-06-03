@@ -1,6 +1,8 @@
 #ifndef _GV_EXTR_H
 #define _GV_EXTR_H
 
+#include "desc.h"
+
 extern volatile u32_t zgIdleCount;
 extern volatile u8_t zgPacketDumpFlag;
 extern volatile u32_t zgAggMode;
