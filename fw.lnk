@@ -19,7 +19,16 @@ SECTIONS
 	 * is kept at that address.
 	 */
 
-	. =  0x04; 
+	. =  0x04;
+
+	/*
+	 * This is still not putting zfbooter at 0x04 ...
+	 * also note that STA needs to be changed for AP
+	 */
+	.zfboot_section : { STA/boot*(.text) } > pram
+
+	/* The rest of the .text can go anywhere */
+	.text	: { *(.text) } > pram
 	
 	/* .text	: { *(.text) _zfbooter = ABSOLUTE(0x04); } > pram */
 	.text	: { *(.text) } > pram 
