@@ -109,12 +109,12 @@ u16_t zfInitRf(u32_t frequency,
     zfHwConfigureMask();
     zfHwHTEnable();
 	zfActiveBB();
-    #if 0
+#if 0
         zfHwCalibration();
     ret = zfHwNoiseCalibration();
-    #else
+#else
 	ret = zfAGCCalibration(finiteLoopCount);
-    #endif
+#endif
 
 	zfSetChannelEnd();
 
@@ -162,12 +162,12 @@ u16_t zfSetChannel(u32_t frequency,
                    delta_slope_coeff_man_shgi);
     //zfHwConfigureMask();
     //zfHwHTEnable();
-    #if 0
+#if 0
     //zfHwCalibration();
         ret = zfHwNoiseCalibration();
-    #else
+#else
 	ret = zfAGCCalibration(finiteLoopCount);
-    #endif
+#endif
 
 	zfSetChannelEnd();
 	return ret;
@@ -183,7 +183,7 @@ void zfSetChannelStart(void)
     //val |= 0x20;
 
     //*(volatile u32_t*)(0x1c3500) = val;
-  #if 1
+#if 1
 	/* Manipulate CCA threshold to stop transmission */
 	*(volatile u32_t*)(0x1c5968) = 0x300;
 	/* Enable Virtual CCA */
@@ -194,7 +194,7 @@ void zfSetChannelStart(void)
 	//{
 	//	zfUartSendStrAndHex((u8_t*)"TXDM:  ", *(volatile u32_t*)(0x1c3684));
   	//}
-  #else
+#else
     /* TS/TC select */
     *(volatile u32_t*)(0x1c3b3c) |= 0x1f0000;
 
@@ -203,7 +203,7 @@ void zfSetChannelStart(void)
     {
 	    zfUartSendStrAndHex((u8_t*)"TXDM:  ", *(volatile u32_t*)(0x1c3684));
     }
-  #endif
+#endif
 
 }
 
@@ -216,15 +216,15 @@ void zfSetChannelEnd(void)
     /* Trigger Rx DMA */
     //zm_wl_dma_trigger_reg = 0x100;
 
-  #if 1
+#if 1
 	/* Manipulate CCA threshold to resume transmission */
 	*(volatile u32_t*)(0x1c5968) = 0x000;
 	/* Disable Virtual CCA */
 	*(volatile u32_t*)(0x1c3b40) = 0x0000;
-  #else
+#else
   /* TS/TC select */
   *(volatile u32_t*)(0x1c3b3c) &= ~(u32_t)(0x1f0000);
-  #endif
+#endif
 }
 
 #if 0 /* ART/MDK no need on normal driver */

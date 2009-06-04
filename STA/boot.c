@@ -87,14 +87,14 @@ void __attribute__((section(".boot"))) zfbooter(void)
   ZM_GPIO_PORT_TYPE_REG = 3;
   ZM_GPIO_PORT_DATA_REG = 0;
 
-  #if ZM_CLOCK_25M == 1
+#if ZM_CLOCK_25M == 1
     ZM_HUART_DIVISOR_LSB_REG = 0xc;
-  #else
-    #if ZM_FPGA == 0
+#else
+#if ZM_FPGA == 0
     ZM_HUART_DIVISOR_LSB_REG = 0x14;  /* 40 MHz */
     ZM_HUART_REMAINDER_REG = 0xB38E;
-	#endif
-  #endif
+#endif
+#endif
 
 	/* watchdog magic pattern check */
 	if ( (ZM_WATCH_DOG_MAGIC_REG & 0xFFFF0000) == 0x12340000 )
@@ -171,18 +171,18 @@ void zfInit(void)
     //zfUartSendStr((u8_t*)"\n\rZD1221 zfInit\n\r");
 
     /* Uart init */
-    #if ZM_UART
+#if ZM_UART
     //zfUartInit();
-    #endif
+#endif
 
 
     /* CPU Utilization */
     zfInitTimer0();
 
     /* USB init */
-    #if ZM_USB
+#if ZM_USB
     zfUsbInit();
-    #endif
+#endif
 
     //PCI only
     //ZM_PTA_MEM_CTRL_REG = 0xE000 | (0x10f000>>11); /* size=1K, enable=1 */
@@ -205,15 +205,15 @@ void zfInit(void)
     /* Trigger WLAN RX DMA */
     //zm_wl_dma_trigger_reg |= ZM_RXQ_TRIG_BIT;
 
-    #if ZM_USB == 0
+#if ZM_USB == 0
     /* Firmware Ready */
     ZM_PTA_AHB_INT_FLAG_REG = 0x8000;
-    #else
+#else
     /* Firmware Ready */
     //ZM_CBUS_FIFO_SIZE_REG = 0xf;
     //ZM_EP0_DATA_REG = 0x12345678;
     //ZM_CX_CONFIG_STATUS_REG = 0x01;
-    #endif
+#endif
 
     /* initialize */
     zgRxMaxSize = 8192;
@@ -226,10 +226,10 @@ void zfInit(void)
 	/* MDK mode use */
 	zgDontRetransmit = 0;
 
-    #if ZM_INT_USE_EP2 == 1
+#if ZM_INT_USE_EP2 == 1
 	/* EP2 desc for Interrupt */
 	zgIntrINAvailable = 1;
-    #endif
+#endif
 
     zgBaStsCurrRate = -1;
 
@@ -237,11 +237,11 @@ void zfInit(void)
     {
         zgBARate[ii] = 0xffff;
     }
-	#if ZM_BAR_AUTO_BA == 1
+#if ZM_BAR_AUTO_BA == 1
 	zgBAAvailable = 1;
 	zgBARGotState = 0;
 	zgBARTimeOut  = 0;
-	#endif
+#endif
 
 	/* Marvell debug */
 	for (ii=0; ii<0x80; ii+=4)
@@ -383,13 +383,13 @@ void zfMainLoop(void)
         /* CPU Utilization Monitor */
         //zfMonitorTask();
 
-    #if OTUS_NO_SHRINK == 1
+#if OTUS_NO_SHRINK == 1
         /* if UART Rx Interrupt, call Debug task */
         if ((ZM_HUART_LINE_STATUS_REG & ZM_RX_DATA_READY_BIT) != 0)
         {
             zfDebugTask();
         }
-    #endif
+#endif
 
         /* if tick timer interrupt, call 100ms task */
         //TBD
@@ -401,11 +401,11 @@ void zfMainLoop(void)
         zfWlanIsr();
 
         /* USB ISRs */
-        #if ZM_USB
+#if ZM_USB
         zfUsbIsr();
-        #endif
+#endif
 
-	#if ZM_BAR_AUTO_BA == 1
+#if ZM_BAR_AUTO_BA == 1
 		if (zgBARGotState == 1)
 		{
 			if (zgBARTimeOut > 0x5000)
@@ -419,7 +419,7 @@ void zfMainLoop(void)
 				zgBARTimeOut++;
 			}
 		}
-	#endif
+#endif
 
     if ((ZM_TIMER_INTERRUPT_REG == 1) || (zgBaErrorCount > 200) || zgGenBAIntr == 1)
     {
@@ -431,7 +431,7 @@ void zfMainLoop(void)
 		*(volatile u32_t*)(0x117734) = (u32_t)zgDnQ.head;
 		*(volatile u32_t*)(0x117738) = (u32_t)zgDnQ.terminator;
 
-		#if ZM_TX_DELAY_DESC == 1
+#if ZM_TX_DELAY_DESC == 1
 		{
 			u8_t i;
 			for (i=0; i<ZM_TX_DELAY_DESC_NUM; i++)
@@ -446,11 +446,11 @@ void zfMainLoop(void)
 			}
 			*(volatile u32_t*)(0x117600) |= (zgTxDelayDescIdx<<24);
 		}
-		#endif
+#endif
 
 		//#endif
 
-        #if ZM_TX_HANG_CHK == 1
+#if ZM_TX_HANG_CHK == 1
 
         if (ZM_TIMER_INTERRUPT_REG == 1)
         {
@@ -626,7 +626,7 @@ void zfMainLoop(void)
 				zgTxCompleted = 0;
             }
         }
-        #endif
+#endif
 
 
         /* Clear Timer-0 interrupt flag */

@@ -280,37 +280,37 @@ void zfHandleCfgBcnInt(void)
 {
 	u32_t bcnCount;
 
-    #if ZM_USB == 0
+#if ZM_USB == 0
     /* Generate config beacon interrupt */
     ZM_PTA_AHB_INT_FLAG_REG = 0x8;
-    #else
+#else
 	bcnCount =  *((volatile u32_t*)(ZM_WL_REGISTER_BASE+0xd9c));
     zfGenUsbInterrupt(4, 0xC2, 0x80, (u8_t *) &bcnCount);
-    #endif
+#endif
 
     return;
 }
 
 void zfHandlePreTbttInt(void)
 {
-    #if ZM_USB == 0
+#if ZM_USB == 0
     /* Generate config beacon interrupt */
     ZM_PTA_AHB_INT_FLAG_REG = 0x2;
-    #else
+#else
     zfGenUsbInterrupt(0, 0xC0, 0x80, 0);
-    #endif
+#endif
 
     return;
 }
 
 void zfHandleAtimInt(void)
 {
-    #if ZM_USB == 0
+#if ZM_USB == 0
     /* Generate config beacon interrupt */
     ZM_PTA_AHB_INT_FLAG_REG = 0x2;
-    #else
+#else
     zfGenUsbInterrupt(0, 0xC3, 0x80, 0);
-    #endif
+#endif
 
     return;
 }
@@ -364,7 +364,7 @@ void zfHandleRxInterrupt(void)
     {
         desc = zfDmaGetPacket(&zgRxQ);
 
-		#if ZM_BAR_AUTO_BA == 1
+#if ZM_BAR_AUTO_BA == 1
 		{
 			u8_t* buf = (u8_t*)desc->dataAddr;
 			if (buf[12] == 0x84)
@@ -379,10 +379,10 @@ void zfHandleRxInterrupt(void)
 
 					if (zgBAAvailable)
 					{
-						#if ZM_LED_FOR_MARVELL_BAR == 1
+#if ZM_LED_FOR_MARVELL_BAR == 1
 						/* LED  */
 						*(volatile u32_t*)(0x1d0104) = 1;
-						#endif
+#endif
 
 						zgBADesc->lastAddr = zgBADesc;
 						zgBADesc->ctrl = (ZM_LS_BIT | ZM_FS_BIT);
@@ -460,10 +460,10 @@ void zfHandleRxInterrupt(void)
 							*(volatile u32_t*)(0x117730) += 1;
 						}
 
-						#if ZM_LED_FOR_MARVELL_BAR == 1
+#if ZM_LED_FOR_MARVELL_BAR == 1
 						/* LED  */
 						*(volatile u32_t*)(0x1d0104) = 0;
-						#endif
+#endif
 
     					//zfUartSendStr((u8_t*)"ba");
 					}
@@ -542,7 +542,7 @@ void zfHandleRxInterrupt(void)
 			}/* end if handle BAR */
 		}
 
-		#endif
+#endif
         /* TODO : if len < 5+14+8 or len > zgRxMaxSize, discard rx frame */
         if (desc->totalLen < zgRxMaxSize)
         {
@@ -614,7 +614,7 @@ void zfHandleTxCompInt(u8_t flag)
 
 
 
-				#if ZM_BAR_AUTO_BA == 1
+#if ZM_BAR_AUTO_BA == 1
 				if (q->head->dataAddr == ZM_BA_BUFFER)
 				{
 					desc = zfDmaGetPacket(q);
@@ -628,7 +628,7 @@ void zfHandleTxCompInt(u8_t flag)
 					//zfUartSendStrAndHex((u8_t*)"BADesc = ", (u32_t)zgBADesc);
 					continue;
 				}
-				#endif
+#endif
 
 
                 //if q=txq and desc->ctrl = txfail
@@ -646,7 +646,7 @@ void zfHandleTxCompInt(u8_t flag)
                     zm_hw_get_mt_mcs(buf, mt, mcs);
                     sg = (buf[3]>>15) & 0x1;
 
-	#if ZM_BAR_AUTO_BA == 1
+#if ZM_BAR_AUTO_BA == 1
         /*
 		 * yjsung
 		 * Fix: If send normal packet after firmware enter fix case,
@@ -659,7 +659,7 @@ void zfHandleTxCompInt(u8_t flag)
 				/* Recover Ack func */
 				*(volatile u32_t*)(0x1c36f8) |= 0x1;
 		}
-	#endif
+#endif
 
                     if (zgEnableFwRetry == 1)
                     {
@@ -794,7 +794,7 @@ void zfHandleTxCompInt(u8_t flag)
                         ZM_PTA_DN_DMA_TRIGGER_REG = 1;
                         //zfPutTraceBuffer((u32_t)desc | 0x08000000);
 
-                        #if ZM_BB_RESET == 1
+#if ZM_BB_RESET == 1
                         //if ((buf[1] & 0x20) != 0)
                         {
                             zgGenBBResetCnt++;
@@ -806,7 +806,7 @@ void zfHandleTxCompInt(u8_t flag)
                                 zfGenUsbInterrupt(0, 0xC9, 0x80, NULL);
                             }
                         }
-                        #endif
+#endif
 
 //                        zfUartSendStr((u8_t*)"F");
                     }
@@ -873,11 +873,11 @@ void zfHandleTxCompInt(u8_t flag)
                     /* Turn on retry bit */
                     buf[4] |= 0x0800;
 
-  #if 1
+#if 1
                     /* Increase zgBAFailCnt counter */
                     zgTally.BAFailCnt++;
                     zgBaErrorCount++;
-        #if 0
+#if 0
                     //if(zgAggMode == 1)
                     {
                         /* Change AGG group bits to b'11 */
@@ -888,7 +888,7 @@ void zfHandleTxCompInt(u8_t flag)
                         /* Clear AGG bit */
                         buf[1] &= 0xffdf;
                     }
-        #endif
+#endif
 
                     if(zgDontRetransmit)
                     {
@@ -901,10 +901,10 @@ void zfHandleTxCompInt(u8_t flag)
                     }
                     else
                     {
-                #if  ZM_AGGREGATION_RECLAIM != 0
+#if  ZM_AGGREGATION_RECLAIM != 0
                 if ((desc->status & 0xf00) == 0x200)
                 {
-                    #if ZM_AGGREGATION_RECLAIM == 1
+#if ZM_AGGREGATION_RECLAIM == 1
                     //Reclaim this packet
                     zfDmaReclaimPacket(&zgDnQ, desc);
                     //zfPutTraceBuffer((u32_t)desc | 0x08000000);
@@ -912,7 +912,7 @@ void zfHandleTxCompInt(u8_t flag)
                     /* Trigger PTA DN DMA */
                     ZM_PTA_DN_DMA_TRIGGER_REG = 1;
 
-                    #elif ZM_AGGREGATION_RECLAIM == 2
+#elif ZM_AGGREGATION_RECLAIM == 2
                     /* Change control setting to single packet */
 
                     //Clear TxFail|BaFail control bit
@@ -935,7 +935,7 @@ void zfHandleTxCompInt(u8_t flag)
 
                     /* Trigger WLAN TX DMA */
                     zm_wl_dma_trigger_reg = (1<<ii);
-                    #endif
+#endif
                 }
                 else
                 {
@@ -947,7 +947,7 @@ void zfHandleTxCompInt(u8_t flag)
                     u8_t retryCnt = (desc->status >> 8);
                     retryCnt++;
                     desc->status = (retryCnt << 8);
-                #endif
+#endif
 #if 1
                     if (retryCnt == 1)
                     {
@@ -1007,9 +1007,9 @@ void zfHandleTxCompInt(u8_t flag)
                 /* Trigger WLAN TX DMA */
                 zm_wl_dma_trigger_reg = (1<<ii);
 
-                #if ZM_AGGREGATION_RECLAIM != 0
+#if ZM_AGGREGATION_RECLAIM != 0
                 }
-                #endif
+#endif
 			}/* end of if(zgDontRetransmit) */
 #else
                     zfDmaReclaimPacket(&zgDnQ, desc);
@@ -1028,9 +1028,9 @@ void zfHandleTxCompInt(u8_t flag)
 				    //    *(volatile u32_t*)(0x1c3b28) = 0 ;
 				    //}
 
-                    #if ZM_BB_RESET == 1
+#if ZM_BB_RESET == 1
                     zgRTSRetryCnt = 0;
-                    #endif
+#endif
 
                     desc = zfDmaGetPacket(q);
 					desc = zfExchangeDesc(desc);

@@ -301,32 +301,32 @@ void zfPtaModeInit(void)
         ZM_SOC_USB_MODE_CTRL_REG |= BIT2;
     }
 
-    #if USB_RX_STREAM_MODE == 1
+#if USB_RX_STREAM_MODE == 1
     /* Set mode into stream mode */
     ZM_SOC_USB_MODE_CTRL_REG &= ~BIT3;
-    #else
+#else
     /* Set mode into packet mode */
     ZM_SOC_USB_MODE_CTRL_REG |= BIT3;
-    #endif
+#endif
 
-    #if USB_TX_STREAM_MODE == 1
+#if USB_TX_STREAM_MODE == 1
     ZM_SOC_USB_MODE_CTRL_REG |= BIT6;
-    #endif
+#endif
 
     /* Set maximum transfer size to 8K */
     ZM_SOC_USB_MODE_CTRL_REG &= 0xcf;
     ZM_SOC_USB_MODE_CTRL_REG |= 0x10;
 
-    #ifdef AHB_LOOPBACK
+#ifdef AHB_LOOPBACK
     /* Disable up stream and down stream */
     ZM_SOC_USB_MODE_CTRL_REG &= ~(BIT0 | BIT1);
     //zfUartSendStr((u8_t *) "Disable up stream and down stream\r\n");
-    #else
+#else
     /* Enable up stream and down stream */
     ZM_SOC_USB_MODE_CTRL_REG |= (BIT0 | BIT1);
     //ZM_SOC_USB_MODE_CTRL_REG |= BIT0;
     //zfUartSendStr((u8_t *) "Enable up stream and down stream\r\n");
-    #endif
+#endif
 
     /* Set the up stream mode maximum aggregate number */
     ZM_SOC_USB_MAX_AGGREGATE_REG = 0x02;
@@ -767,7 +767,7 @@ BOOLEAN bSet_feature(void)
             eUsbCxFinishAction = ACT_DONE;
             break;
 
-    #if ZM_SELF_TEST_MODE
+#if ZM_SELF_TEST_MODE
         case 2 :        // Test Mode
         //    ii = mDEV_REQ_INDEX() >> 8;
         //    switch (ii)    // TestSelector
@@ -835,7 +835,7 @@ BOOLEAN bSet_feature(void)
                     return FALSE;
             }
             break;
-    #endif
+#endif
         default :
             return FALSE;
     }
@@ -1135,20 +1135,20 @@ BOOLEAN bGet_interface(void)
     // You must check & select the specific one
     switch (u8UsbConfigValue)
     {
-        #if (HS_CONFIGURATION_NUMBER >= 1)
+#if (HS_CONFIGURATION_NUMBER >= 1)
         // Configuration 1
         case 1:
             if (mDEV_REQ_INDEX() > HS_C1_INTERFACE_NUMBER)
                 return FALSE;
             break;
-        #endif
-        #if (HS_CONFIGURATION_NUMBER >= 2)
+#endif
+#if (HS_CONFIGURATION_NUMBER >= 2)
         // Configuration 2
         case 2:
             if (mDEV_REQ_INDEX2() > HS_C2_INTERFACE_NUMBER)
                 return FALSE;
             break;
-        #endif
+#endif
         default:
             return FALSE;
     }

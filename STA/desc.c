@@ -90,11 +90,11 @@ void zfDmaInitDescriptor(void)
 #endif
 
 #if ZM_BAR_AUTO_BA == 1
-	#if ZM_INT_USE_EP2 == 1
+#if ZM_INT_USE_EP2 == 1
 		zgBADesc = desc[9];
-	#else
+#else
 		zgBADesc = desc[8];
-	#endif
+#endif
 #endif
 
     /* Init descriptors and memory blocks */
@@ -111,7 +111,7 @@ void zfDmaInitDescriptor(void)
         desc[0]->dataAddr = ZM_BLOCK_BUFFER_BASE + (i*ZM_BLOCK_SIZE);
         desc[0]->nextAddr = 0;
 
-		#if 0
+#if 0
         if (i < ZM_RX_BLOCK_NUMBER)
         {
             zfDmaReclaimPacket(&zgRxQ, desc[0]);
@@ -120,7 +120,7 @@ void zfDmaInitDescriptor(void)
         {
             zfDmaReclaimPacket(&zgDnQ, desc[0]);
         }
-		#else
+#else
         if (i < ZM_TX_BLOCK_NUMBER)
         {
             zfDmaReclaimPacket(&zgDnQ, desc[0]);
@@ -129,7 +129,7 @@ void zfDmaInitDescriptor(void)
         {
             zfDmaReclaimPacket(&zgRxQ, desc[0]);
         }
-		#endif
+#endif
 
     }
 

@@ -208,9 +208,9 @@ void IsrHMac(void)
 {
     ReadIntReg(0);
 
-    #if fINDEPEND_REG_RW
+#if fINDEPEND_REG_RW
     mUSB_REG_OUT_INT(DISABLE);
-    #endif
+#endif
     mUSB_STATUS_IN_INT(ENABLE);
 
 }

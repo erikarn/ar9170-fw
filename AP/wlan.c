@@ -279,11 +279,11 @@ void zfHandleCfgBcnInt(void)
 {
 	u32_t bcnCount;
 
-    #if ZM_USB == 0
+#if ZM_USB == 0
     /* Generate config beacon interrupt */
     ZM_PTA_AHB_INT_FLAG_REG = 0x8;
-    #else
-    #if ZM_CABQ_SUPPORT == 1
+#else
+#if ZM_CABQ_SUPPORT == 1
     if (zgStartVCCA == 1)
     {
         /* Start Virtual CCA for pending all frames in Queue 0 */
@@ -294,35 +294,35 @@ void zfHandleCfgBcnInt(void)
         /* Trigger Tx Queue 1 */
         zm_wl_dma_trigger_reg = 0x02;
     }
-    #endif
+#endif
 
 	bcnCount =  *((volatile u32_t*)(ZM_WL_REGISTER_BASE+0xd9c));
     zfGenUsbInterrupt(4, 0xC2, 0x80, (u8_t*)(&bcnCount));
-    #endif
+#endif
 
     return;
 }
 
 void zfHandlePreTbttInt(void)
 {
-    #if ZM_USB == 0
+#if ZM_USB == 0
     /* Generate config beacon interrupt */
     ZM_PTA_AHB_INT_FLAG_REG = 0x2;
-    #else
+#else
     zfGenUsbInterrupt(0, 0xC0, 0x80, 0);
-    #endif
+#endif
 
     return;
 }
 
 void zfHandleAtimInt(void)
 {
-    #if ZM_USB == 0
+#if ZM_USB == 0
     /* Generate config beacon interrupt */
     ZM_PTA_AHB_INT_FLAG_REG = 0x2;
-    #else
+#else
     zfGenUsbInterrupt(0, 0xC3, 0x80, 0);
-    #endif
+#endif
 
     return;
 }
@@ -348,7 +348,7 @@ void zfHandleRxInterrupt(void)
             continue;
         }
 
-		#if ZM_BAR_AUTO_BA == 1
+#if ZM_BAR_AUTO_BA == 1
 		{
 			u8_t* buf = (u8_t*)desc->dataAddr;
 			if (buf[12] == 0x84)
@@ -363,10 +363,10 @@ void zfHandleRxInterrupt(void)
 
 					if (zgBAAvailable)
 					{
-						#if ZM_LED_FOR_MARVELL_BAR == 1
+#if ZM_LED_FOR_MARVELL_BAR == 1
 						/* LED  */
 						*(volatile u32_t*)(0x1d0104) = 1;
-						#endif
+#endif
 
 						zgBADesc->lastAddr = zgBADesc;
 						zgBADesc->ctrl = (ZM_LS_BIT | ZM_FS_BIT);
@@ -438,10 +438,10 @@ void zfHandleRxInterrupt(void)
 							*(volatile u32_t*)(0x117730) += 1;
 						}
 
-						#if ZM_LED_FOR_MARVELL_BAR == 1
+#if ZM_LED_FOR_MARVELL_BAR == 1
 						/* LED  */
 						*(volatile u32_t*)(0x1d0104) = 0;
-						#endif
+#endif
 
     					//zfUartSendStr((u8_t*)"ba");
 					}
@@ -500,7 +500,7 @@ void zfHandleRxInterrupt(void)
 			}/* end if handle BAR */
 		}
 
-		#endif
+#endif
         /* TODO : if len < 5+14+8 or len > zgRxMaxSize, discard rx frame */
         if (desc->totalLen < zgRxMaxSize)
         {
@@ -676,7 +676,7 @@ void zfBAFailHandler(struct zsDmaQueue* q, u16_t q_num, struct zsDmaDesc* desc)
     /* Turn on retry bit */
     buf[4] |= 0x0800;
 
-  #if 1 /* Do BA Fail handle */
+#if 1 /* Do BA Fail handle */
     /* Increase zgBAFailCnt counter */
     zgTally.BAFailCnt++;
 //    zgBaErrorCount++;
@@ -693,10 +693,10 @@ void zfBAFailHandler(struct zsDmaQueue* q, u16_t q_num, struct zsDmaDesc* desc)
     else
     {
 
-      #if  ZM_AGGREGATION_RECLAIM != 0
+#if  ZM_AGGREGATION_RECLAIM != 0
         if ((desc->status & 0xf00) == (ZM_AGGREGATION_BAFAIL_RETRY_NUM<<8) )
         {
-          #if ZM_AGGREGATION_RECLAIM == 1
+#if ZM_AGGREGATION_RECLAIM == 1
             //Reclaim this packet
             zfDmaReclaimPacket(&zgDnQ, desc);
             //zfPutTraceBuffer((u32_t)desc | 0x08000000);
@@ -704,7 +704,7 @@ void zfBAFailHandler(struct zsDmaQueue* q, u16_t q_num, struct zsDmaDesc* desc)
             /* Trigger PTA DN DMA */
             ZM_PTA_DN_DMA_TRIGGER_REG = 1;
 
-          #elif ZM_AGGREGATION_RECLAIM == 2
+#elif ZM_AGGREGATION_RECLAIM == 2
             /* Change control setting to single packet */
 
             //Clear TxFail|BaFail control bit
@@ -729,14 +729,14 @@ void zfBAFailHandler(struct zsDmaQueue* q, u16_t q_num, struct zsDmaDesc* desc)
 
             /* Trigger WLAN TX DMA */
             zm_wl_dma_trigger_reg = (1<<q_num);
-          #endif
+#endif
         }
         else
         {
             u8_t retryCnt = (u8_t)(desc->status >> 8);
             retryCnt++;
             desc->status = (u16_t)(retryCnt << 8);
-      #endif /* ZM_AGGREGATION_RECLAIM != 0 */
+#endif /* ZM_AGGREGATION_RECLAIM != 0 */
 
             /* Count BAFail by rate */
 //            if (retryCnt == 1)
@@ -757,17 +757,17 @@ void zfBAFailHandler(struct zsDmaQueue* q, u16_t q_num, struct zsDmaDesc* desc)
                 zgRTQTUCount++;
             }
 
-      #if ZM_AGGREGATION_RECLAIM != 0
+#if ZM_AGGREGATION_RECLAIM != 0
         }
-      #endif
+#endif
     }/* end of if(zgDontRetransmit) */
-  #else /* reclaim it, do nothing for BA Fail */
+#else /* reclaim it, do nothing for BA Fail */
     zfDmaReclaimPacket(&zgDnQ, desc);
     //zfPutTraceBuffer((u32_t)desc | 0x08000000);
 
     /* Trigger PTA DN DMA */
     ZM_PTA_DN_DMA_TRIGGER_REG = 1;
-  #endif /* End of Do BA Fail handle */
+#endif /* End of Do BA Fail handle */
 
 //    zfUartSendStrAndHex((u8_t*)"BA seq=", buf[15]);
 }
@@ -806,7 +806,7 @@ void zfHandleTxCompInt(void)
             {
 //zfUartSendStrAndHex((u8_t *) "Q=", ii);
 
-				#if ZM_BAR_AUTO_BA == 1
+#if ZM_BAR_AUTO_BA == 1
 				if (q->head->dataAddr == ZM_BA_BUFFER)
 				{
 					desc = zfDmaGetPacket(q);
@@ -820,7 +820,7 @@ void zfHandleTxCompInt(void)
 					//zfUartSendStrAndHex((u8_t*)"BADesc = ", (u32_t)zgBADesc);
 					continue;
 				}
-				#endif
+#endif
 
 
                 //if q=txq and desc->ctrl = txfail
@@ -973,7 +973,7 @@ void zfHandleTxCompInt(void)
                         ZM_PTA_DN_DMA_TRIGGER_REG = 1;
                         //zfPutTraceBuffer((u32_t)desc | 0x08000000);
 
-                        #if ZM_BB_RESET == 1
+#if ZM_BB_RESET == 1
                         //if ((buf[1] & 0x20) != 0)
                         {
                             zgGenBBResetCnt++;
@@ -985,7 +985,7 @@ void zfHandleTxCompInt(void)
                                 zfGenUsbInterrupt(0, 0xC9, 0x80, NULL);
                             }
                         }
-                        #endif
+#endif
 
                         //zfUartSendStr((u8_t*)"F");
                     }
@@ -1074,9 +1074,9 @@ void zfHandleTxCompInt(void)
 				    //    *(volatile u32_t*)(0x1c3b28) = 0 ;
 				    //}
 
-                    #if ZM_BB_RESET == 1
+#if ZM_BB_RESET == 1
                     zgRTSRetryCnt = 0;
-                    #endif
+#endif
 
                     desc = zfDmaGetPacket(q);
 					desc = zfExchangeDesc(desc);
@@ -1174,7 +1174,7 @@ void zfHandleTxCompInt(void)
                     //zfUartSendStrAndHex((u8_t*)" desc=", (u32_t)desc);
                 } /* if (getDescFlag == 1) */
 
-                #if ZM_CABQ_SUPPORT == 1
+#if ZM_CABQ_SUPPORT == 1
                 if (qNum == 1)
                 {
                     //zfUartSendStrAndHex((u8_t*) "status=", q->head->status);
@@ -1194,7 +1194,7 @@ void zfHandleTxCompInt(void)
                     //    zfPutChar('N');
                     //}
                 }
-                #endif
+#endif
 
 
             } /* while ((zgTxQ[ii].head != zgTxQ[ii].terminator)... */
