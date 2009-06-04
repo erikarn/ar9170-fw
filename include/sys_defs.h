@@ -7,8 +7,8 @@
 /* FPGA mode support */
 #define ZM_FPGA					0
 
-/* stream mode setting 
- *  hpfwu_2k.c             None         
+/* stream mode setting
+ *  hpfwu_2k.c             None
  *  hpfwu.c                    Rx
  *  hpfwu_txstream.c      Tx / Rx
  *
@@ -32,7 +32,7 @@
 #define ZM_TX_HANG_CHK            1
 
 /* CAM user space : 64/16 */
-#define ZM_CAM_USER_NUM         64 
+#define ZM_CAM_USER_NUM         64
 
 
 /* 1 to include test code, 0 to exclude test code  */
@@ -55,15 +55,15 @@
 #define ZM_CLOCK_25M            0   /* 0=>40MHz clock */
                                     /* 1=>25MHz clock */
 
-/* fix: interrupt in use EP2(data in) replace EP3 
+/* fix: interrupt in use EP2(data in) replace EP3
  *         0 : normal use EP3
  *         1 : fix use EP2
- */									
+ */
 #define ZM_INT_USE_EP2               0
-#define ZM_INT_USE_EP2_HEADER_SIZE  12							
+#define ZM_INT_USE_EP2_HEADER_SIZE  12
 
 /* BAR fix with Marvell */
-#define ZM_TX_DELAY_DESC			 1						
+#define ZM_TX_DELAY_DESC			 1
 
 #define ZM_MHZ_CLOCK                    40
 #define ZM_NANOSECOND_PER_CLOCK         (1000/ZM_MHZ_CLOCK)

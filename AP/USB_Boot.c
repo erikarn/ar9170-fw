@@ -10,7 +10,7 @@
 #include "api_extr.h"
 #include "ap.h"
 
-#if ZM_INT_USE_EP2 == 1 
+#if ZM_INT_USE_EP2 == 1
 #include "desc.h"
 void vUsb_Status_In(void);
 #endif
@@ -126,15 +126,15 @@ void vUsb_Status_In(void)
     /* fix: interrupt in use EP2(data in) replace EP3
      *         0 : normal use EP3
      *         1 : fix use EP2
-     */	
-    
+     */
+
 	/* boundary check */
 	//if (RegBufLen > (128-INT_IN_DESC_REV))
 	if ( RegBufLen > ZM_INTRQ_BUF_SIZE )
 	{
 	    zfUartSendStr((u8_t*)"ErLen");
 	}
-	
+
 	for(count = 0; count < (RegBufLen >> 2); count++)
 	{
 		*(volatile u32_t*)(INT_IN_DESC_dataAddr + (count*4)) = *regaddr;
@@ -143,15 +143,15 @@ void vUsb_Status_In(void)
 	zgIntDesc->ctrl = (ZM_LS_BIT | ZM_FS_BIT);
 	zgIntDesc->dataSize = RegBufLen + ZM_INT_USE_EP2_HEADER_SIZE;
 	zgIntDesc->totalLen = RegBufLen + ZM_INT_USE_EP2_HEADER_SIZE;
-		
+
 	/* Put to UpQ */
     zfDmaPutPacket(&zgUpQ, zgIntDesc);
-    
+
     /* Trigger PTA UP DMA */
     ZM_PTA_UP_DMA_TRIGGER_REG = 1;
-    
+
 //    zfUartSendStr((u8_t*)"I");
-	
+
 #else
     /* INT use EP3 */
     for(count = 0; count < (RegBufLen / 4); count++)
@@ -311,9 +311,9 @@ void zfResetUSBFIFO(void)
 
     val = *(volatile u32_t*)(0x1c3500);
     val |= 0x20;
- 
+
     *(volatile u32_t*)(0x1c3500) = val;
- 
+
     /* Reset USB FIFO */
     *((volatile u32_t *) (0x1d4004)) = 0x05;
     *((volatile u32_t *) (0x1d4004)) = 0;
@@ -420,7 +420,7 @@ extern void vUsb_sof(void);
 
     if (usb_interrupt_level1 & BIT4)
     {
-        vUsb_Reg_Out();     
+        vUsb_Reg_Out();
     }
 
     if (usb_interrupt_level1 & BIT6)
@@ -446,7 +446,7 @@ extern void vUsb_sof(void);
 
         if (usb_interrupt_level2 & BIT0)
         {
-            vUsb_ep0setup();	
+            vUsb_ep0setup();
         }
 //TODO : What are these interrupts?
         else if (usb_interrupt_level2 & BIT3)
@@ -456,18 +456,18 @@ extern void vUsb_sof(void);
         if (usb_interrupt_level2 & BIT4)
             vUsb_ep0fail();
 
-        if (eUsbCxFinishAction == ACT_STALL)    
-    	{                                                       
-//            mUsbEP0StallSet();                  
+        if (eUsbCxFinishAction == ACT_STALL)
+    	{
+//            mUsbEP0StallSet();
             ZM_CX_CONFIG_STATUS_REG = 0x04;
-    	}                                       
+    	}
     	else if (eUsbCxFinishAction == ACT_DONE)
-    	{    	    
-//             mUsbEP0DoneSet();                   
+    	{
+//             mUsbEP0DoneSet();
             ZM_CX_CONFIG_STATUS_REG = 0x01;
     	}
 
-        eUsbCxFinishAction = ACT_IDLE;   
+        eUsbCxFinishAction = ACT_IDLE;
     }
 
     if (usb_interrupt_level1 & BIT7)            //Group Byte 7
@@ -508,7 +508,7 @@ extern void vUsb_sof(void);
         }
         if (usb_interrupt_level2 & BIT3)
             vUsb_resm();
-			
+
     }
     //mSysUsbIntEnable();                     // ReEnable Usb interrupt.
 }

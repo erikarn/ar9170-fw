@@ -50,7 +50,7 @@ extern void zfUsbRestoreSettings(u32_t usb_ctrl, u32_t max_agg, u32_t agg_timeou
 #define MAX_USER		64
 #define MAX_KEY_LENGTH		16      // no use
 #define ENCRY_TYPE_START_ADDR	24
-#define DEFAULT_ENCRY_TYPE	26	
+#define DEFAULT_ENCRY_TYPE	26
 #define KEY_START_ADDR		27
 #define STA_KEY_START_ADDR	155
 #define COUNTER_START_ADDR      163
@@ -59,11 +59,11 @@ extern void zfUsbRestoreSettings(u32_t usb_ctrl, u32_t max_agg, u32_t agg_timeou
 #define MAX_USER		16
 #define MAX_KEY_LENGTH		16      // no use
 #define ENCRY_TYPE_START_ADDR	6
-#define DEFAULT_ENCRY_TYPE	7	
+#define DEFAULT_ENCRY_TYPE	7
 #define KEY_START_ADDR		8
 #define STA_KEY_START_ADDR	40
 #define COUNTER_START_ADDR      48
-#define STA_COUNTER_START_ADDR	49  
+#define STA_COUNTER_START_ADDR	49
 #endif
 
 struct zsSetKeyCmdStruct
@@ -74,7 +74,7 @@ struct zsSetKeyCmdStruct
     u8_t  macAddr[6];
     u32_t key[4];
 };
-        
+
 /************************************************************************/
 /*                                                                      */
 /*    FUNCTION DESCRIPTION                  zfCmdHandler                */
@@ -108,7 +108,7 @@ void zfCmdHandler(void)
     u32_t data[4];
     u8_t *rspBuf;
     struct zsSetKeyCmdStruct* setKeyCmd;
-    
+
     #if ZM_USB == 0
     cmd = ZM_PTA_CMD_REG;
 
@@ -117,7 +117,7 @@ void zfCmdHandler(void)
         zfUartSendStrAndHex((u8_t*)"FTL:cmd=", cmd);
     }
     #endif
-    
+
     len = *(volatile u8_t*)ZM_CMD_BUFFER;
     type = *(volatile u8_t*)(ZM_CMD_BUFFER+1);
 
@@ -199,13 +199,13 @@ void zfCmdHandler(void)
 #endif
 	else if (type == ZM_CMD_RF_INIT)
 	{
-        u16_t ret;		
+        u16_t ret;
         u32_t delta_slope_coeff_exp = *(volatile u32_t*)(ZM_CMD_BUFFER+16);
         u32_t delta_slope_coeff_man = *(volatile u32_t*)(ZM_CMD_BUFFER+20);
         u32_t delta_slope_coeff_exp_shgi = *(volatile u32_t*)(ZM_CMD_BUFFER+24);
         u32_t delta_slope_coeff_man_shgi = *(volatile u32_t*)(ZM_CMD_BUFFER+28);
 
-		u32_t finiteLoopCount = *(volatile u32_t*)(ZM_CMD_BUFFER+32);	
+		u32_t finiteLoopCount = *(volatile u32_t*)(ZM_CMD_BUFFER+32);
 
         frequency 			= *(volatile u32_t*)(ZM_CMD_BUFFER+4);
 		zgDYNAMIC_HT2040_EN = (u8_t)(*(volatile u32_t*)(ZM_CMD_BUFFER+8));
@@ -216,13 +216,13 @@ void zfCmdHandler(void)
         //zfUartSendStrAndHex((u8_t*)"delta_slope_coeff_exp_shgi=", delta_slope_coeff_exp_shgi);
         //zfUartSendStrAndHex((u8_t*)"delta_slope_coeff_man_shgi=", delta_slope_coeff_man_shgi);
 
-        ret = zfInitRf(frequency, 
+        ret = zfInitRf(frequency,
 		         delta_slope_coeff_exp,
                  delta_slope_coeff_man,
                  delta_slope_coeff_exp_shgi,
                  delta_slope_coeff_man_shgi,
 				 finiteLoopCount);
-				 		
+
         *(volatile u8_t*)(rspBuf) = 28;
         *(volatile u32_t*)(rspBuf+4) = ret;
 		*(volatile u32_t*)(rspBuf+8) =  *(volatile u32_t*)(0x1bc000+0x9800+(25<<2));
@@ -235,24 +235,24 @@ void zfCmdHandler(void)
     else if (type == ZM_CMD_FREQUENCY)
     {
         u16_t ret;
-		
+
         u32_t delta_slope_coeff_exp = *(volatile u32_t*)(ZM_CMD_BUFFER+16);
         u32_t delta_slope_coeff_man = *(volatile u32_t*)(ZM_CMD_BUFFER+20);
         u32_t delta_slope_coeff_exp_shgi = *(volatile u32_t*)(ZM_CMD_BUFFER+24);
         u32_t delta_slope_coeff_man_shgi = *(volatile u32_t*)(ZM_CMD_BUFFER+28);
-		
+
 		u32_t finiteLoopCount = *(volatile u32_t*)(ZM_CMD_BUFFER+32);
 
         frequency 			= *(volatile u32_t*)(ZM_CMD_BUFFER+4);
 		zgDYNAMIC_HT2040_EN = (u8_t)(*(volatile u32_t*)(ZM_CMD_BUFFER+8));
-		zgHT_ENABLE			= (u8_t)((*(volatile u32_t*)(ZM_CMD_BUFFER+12)) & 0x1);        
-		zgExtOffset			= (u8_t)((*(volatile u32_t*)(ZM_CMD_BUFFER+12)) >> 2);    
+		zgHT_ENABLE			= (u8_t)((*(volatile u32_t*)(ZM_CMD_BUFFER+12)) & 0x1);
+		zgExtOffset			= (u8_t)((*(volatile u32_t*)(ZM_CMD_BUFFER+12)) >> 2);
         //zfUartSendStrAndHex((u8_t*)"delta_slope_coeff_exp=", delta_slope_coeff_exp);
         //zfUartSendStrAndHex((u8_t*)"delta_slope_coeff_man=", delta_slope_coeff_man);
         //zfUartSendStrAndHex((u8_t*)"delta_slope_coeff_exp_shgi=", delta_slope_coeff_exp_shgi);
         //zfUartSendStrAndHex((u8_t*)"delta_slope_coeff_man_shgi=", delta_slope_coeff_man_shgi);
 
-        ret = zfSetChannel(frequency, 
+        ret = zfSetChannel(frequency,
 		             delta_slope_coeff_exp,
                      delta_slope_coeff_man,
                      delta_slope_coeff_exp_shgi,
@@ -267,7 +267,7 @@ void zfCmdHandler(void)
 		*(volatile u32_t*)(rspBuf+20) = *(volatile u32_t*)(0x1bc000+0x9800+(111<<2));
 		*(volatile u32_t*)(rspBuf+24) = *(volatile u32_t*)(0x1bc000+0xa800+(111<<2));
 		*(volatile u32_t*)(rspBuf+28) = *(volatile u32_t*)(0x1bc000+0xb800+(111<<2));
-     
+
     }
 	else if (type == ZM_CMD_FREQ_STRAT)
 	{
@@ -278,7 +278,7 @@ void zfCmdHandler(void)
     else if (type == ZM_CMD_EKEY)
     {
         setKeyCmd = (struct zsSetKeyCmdStruct*)(ZM_CMD_BUFFER+4);
-        
+
         //zfUartSendStrAndHex((u8_t*)"ZM_CMD_EKEY: user=", setKeyCmd->user);
         //zfUartSendStrAndHex((u8_t*)"keyID=", setKeyCmd->keyId);
         //zfUartSendStrAndHex((u8_t*)"EncType=", setKeyCmd->type);
@@ -308,7 +308,7 @@ void zfCmdHandler(void)
 
             /* Disable Key */
             zfDisableCamUser(setKeyCmd->user);
-    
+
             /* Set encrypt type */
             if (setKeyCmd->user <= (MAX_USER+3))
             {
@@ -325,21 +325,21 @@ void zfCmdHandler(void)
                     wordId = (setKeyCmd->user >> 3) & 0x3;
                     nibbleId = setKeyCmd->user & 0x7;
                 }
-   
-                
+
+
                 HW_CAM_Read128(row, data);
                 data[wordId] &= (~(0xf<<((u32_t)nibbleId*4)));
                 data[wordId] |= (setKeyCmd->type<<((u32_t)nibbleId*4));
                 HW_CAM_Write128(row, data);
             }
-    
+
             /* Set MAC address */
             if (setKeyCmd->user < MAX_USER)
             {
                 wordId = (setKeyCmd->user >> 2) & 0x3;
                 byteId = setKeyCmd->user & 0x3;
                 row = (setKeyCmd->user >> 4) * 6;
-                
+
                 for (i=0; i<6; i++)
                 {
                     HW_CAM_Read128(row+i, data);
@@ -348,10 +348,10 @@ void zfCmdHandler(void)
                     HW_CAM_Write128(row+i, data);
                 }
             }
-            
+
             /* Set key */
             row = KEY_START_ADDR + (setKeyCmd->user*2) + setKeyCmd->keyId;
-#if 0            
+#if 0
             /* tentitaive patch for CAM */
             /* Bug : The default keys are overlapped with user 62 and 63  */
             /* on FPGA revision before 2006.1.4                           */
@@ -359,14 +359,14 @@ void zfCmdHandler(void)
             {
                 row -= 4;
             }
-#endif            
-            
+#endif
+
             for (i=0; i<4; i++)
             {
                 data[i] = setKeyCmd->key[i];
             }
             HW_CAM_Write128(row, data);
-            
+
             /* Enable Key */
             zfEnableCamUser(setKeyCmd->user);
         }
@@ -391,12 +391,12 @@ void zfCmdHandler(void)
         *(volatile u8_t*)(rspBuf) = 0;
         val = *(volatile u32_t*)(ZM_CMD_BUFFER+4);
         val = val & 0xffff;
-        
+
         //zfUartSendStrAndHex((u8_t*)"ZM_CMD_DKEY: user=", val);
 
         /* Disable Key */
         zfDisableCamUser(val);
-    }  
+    }
 #endif
     else if (type == ZM_CMD_TALLY)
     {
@@ -404,10 +404,10 @@ void zfCmdHandler(void)
 		zgTally.RxTotalCount += zm_wl_rx_count_reg;
 	    zgTally.RxCRC32      += zm_wl_rx_crc32_reg;
 	    zgTally.RxCRC16      += zm_wl_rx_crc16_reg;
-		
+
 		zgRxOverRunWorkAround    += zm_wl_rx_overrun_reg;
 	    zgTally.RxOverRun    	 += zgRxOverRunWorkAround;
-	    
+
 	    zgTally.RxTimeOut    += zm_wl_rx_timeout_reg;
 	    zgTally.RxUniError   += zm_wl_rx_err_uni_reg;
 	    zgTally.RxMulError   += zm_wl_rx_err_mul_reg;
@@ -422,14 +422,14 @@ void zfCmdHandler(void)
         zgTally.RxPhyCCKError         += *(volatile u32_t*)0x1c3cb8;
         zgTally.RxPhyHTError          += *(volatile u32_t*)0x1c3cbc;
         zgTally.RxPhyTotalCount       += *(volatile u32_t*)0x1c3cc0;
-   
+
 	    zgTally.TxTotalCount += zm_wl_tx_count_reg;
 	    zgTally.TxUnderRun   += zm_wl_tx_underrun_reg;
 	    zgTally.TxRetryCount += zm_wl_tx_retry_count_reg;
 
         zgTally.TxAmpduCnt += zm_wl_ampdu_count_reg >> 16;
         zgTally.TxMpduCnt += zm_wl_mpdu_count_reg >> 16;
-				
+
         *(volatile u8_t*)(rspBuf) = 56;
         *(volatile u32_t*)(rspBuf+4)  = zgTally.TxUnderRun;
         *(volatile u32_t*)(rspBuf+8)  = zgTally.RxTotalCount;
@@ -437,7 +437,7 @@ void zfCmdHandler(void)
         *(volatile u32_t*)(rspBuf+16) = zgTally.RxCRC16;
         *(volatile u32_t*)(rspBuf+20) = zgTally.RxUniError;
         *(volatile u32_t*)(rspBuf+24) = zgTally.RxOverRun;
-        *(volatile u32_t*)(rspBuf+28) = zgTally.RxMulError;        
+        *(volatile u32_t*)(rspBuf+28) = zgTally.RxMulError;
         *(volatile u32_t*)(rspBuf+32) = zgTally.TxRetryCount;
         *(volatile u32_t*)(rspBuf+36) = zgTally.TxTotalCount;
         *(volatile u32_t*)(rspBuf+40) = zgTally.RxTimeOut;
@@ -471,13 +471,13 @@ void zfCmdHandler(void)
         //zfUartSendStrAndHex((u8_t*)"ZM_CMD_TALLY: zm_wl_rx_overrun_reg    =", *(volatile u32_t*)(ZM_RSP_BUFFER+24));
         //zfUartSendStrAndHex((u8_t*)"ZM_CMD_TALLY: zm_wl_rx_err_mul_reg    =", *(volatile u32_t*)(ZM_RSP_BUFFER+28));
         //zfUartSendStrAndHex((u8_t*)"ZM_CMD_TALLY: zm_wl_tx_retry_count_reg=", *(volatile u32_t*)(ZM_RSP_BUFFER+32));
-        //zfUartSendStrAndHex((u8_t*)"ZM_CMD_TALLY: zm_wl_tx_count_reg      =", *(volatile u32_t*)(ZM_RSP_BUFFER+36));        
-        //zfUartSendStrAndHex((u8_t*)"ZM_CMD_TALLY: zm_wl_rx_timeout_reg    =", *(volatile u32_t*)(ZM_RSP_BUFFER+40));        
+        //zfUartSendStrAndHex((u8_t*)"ZM_CMD_TALLY: zm_wl_tx_count_reg      =", *(volatile u32_t*)(ZM_RSP_BUFFER+36));
+        //zfUartSendStrAndHex((u8_t*)"ZM_CMD_TALLY: zm_wl_rx_timeout_reg    =", *(volatile u32_t*)(ZM_RSP_BUFFER+40));
         //zfUartSendStrAndHex((u8_t*)"ZM_CMD_TALLY: AggTxCnt   =", *(volatile u32_t*)(ZM_RSP_BUFFER+44));
         //zfUartSendStrAndHex((u8_t*)"ZM_CMD_TALLY: BAFailCnt  =", *(volatile u32_t*)(ZM_RSP_BUFFER+48));
         //zfUartSendStrAndHex((u8_t*)"ZM_CMD_TALLY: TxAmpduCnt =", *(volatile u32_t*)(ZM_RSP_BUFFER+52));
         //zfUartSendStrAndHex((u8_t*)"ZM_CMD_TALLY: TxMpduCnt  =", *(volatile u32_t*)(ZM_RSP_BUFFER+56));
-    }  
+    }
     else if (type == ZM_CMD_TALLY_APD)
     {
         *(volatile u8_t*)(rspBuf) = 36;
@@ -503,7 +503,7 @@ void zfCmdHandler(void)
         zgTally.RxPhyCCKError = 0;
         zgTally.RxPhyHTError = 0;
         zgTally.RxPhyTotalCount = 0;
-        
+
         //zfUartSendStrAndHex((u8_t*)"ZM_CMD_TALLY: RxMPDU         =", *(volatile u32_t*)(ZM_RSP_BUFFER+4));
         //zfUartSendStrAndHex((u8_t*)"ZM_CMD_TALLY: RxDropMPDU     =", *(volatile u32_t*)(ZM_RSP_BUFFER+8));
         //zfUartSendStrAndHex((u8_t*)"ZM_CMD_TALLY: RxDelMPDU      =", *(volatile u32_t*)(ZM_RSP_BUFFER+12));
@@ -514,14 +514,14 @@ void zfCmdHandler(void)
         //zfUartSendStrAndHex((u8_t*)"ZM_CMD_TALLY: RxPhyCCKError  =", *(volatile u32_t*)(ZM_RSP_BUFFER+28));
         //zfUartSendStrAndHex((u8_t*)"ZM_CMD_TALLY: RxPhyHTError   =", *(volatile u32_t*)(ZM_RSP_BUFFER+32));
         //zfUartSendStrAndHex((u8_t*)"ZM_CMD_TALLY: RxPhyTotalCount=", *(volatile u32_t*)(ZM_RSP_BUFFER+36));
-    }  
+    }
     else if (type == ZM_CMD_CONFIG)
     {
         *(volatile u8_t*)(rspBuf) = 0;
-        zgRxMaxSize = *(volatile u32_t*)(ZM_CMD_BUFFER+4);        
-		zgDontRetransmit = (u8_t)(*(volatile u32_t*)(ZM_CMD_BUFFER+8));       
+        zgRxMaxSize = *(volatile u32_t*)(ZM_CMD_BUFFER+4);
+		zgDontRetransmit = (u8_t)(*(volatile u32_t*)(ZM_CMD_BUFFER+8));
 
-        //zfUartSendStrAndHex((u8_t*)"ZM_CMD_CONFIG: set value=", zgRxMaxSize);                 
+        //zfUartSendStrAndHex((u8_t*)"ZM_CMD_CONFIG: set value=", zgRxMaxSize);
     }
     else if (type == ZM_CMD_SWRST)
     {
@@ -544,16 +544,16 @@ void zfCmdHandler(void)
     else if (type == ZM_CMD_FW_RETRY)
     {
         zgEnableFwRetry = (u8_t)(*(volatile u32_t*)(ZM_CMD_BUFFER+4));
-		*(volatile u8_t*)(rspBuf) = 0;        
+		*(volatile u8_t*)(rspBuf) = 0;
     }
     else if (type == ZM_CMD_REBOOT)
     {
 	/* write watchdog magic pattern for suspend  */
         ZM_WATCH_DOG_MAGIC_REG &= 0xFFFF;
         ZM_WATCH_DOG_MAGIC_REG |= 0x98760000;
-	
+
         /* Disable watchdog */
-        ZM_WATCH_DOG_REG = 0xFFFF;	
+        ZM_WATCH_DOG_REG = 0xFFFF;
 
         /* Reset USB FIFO */
         zfResetUSBFIFO();
@@ -595,30 +595,30 @@ void zfCmdHandler(void)
     else if (type == ZM_CMD_FW_DL_INIT)
     {
 		u32_t val;
-		
+
         //zfUartSendStr((u8_t*)"ZM_CMD_FW_DL_INIT");
 
         /* Software Reset, before we use new downloaded SPI firmware*/
 		val = *(volatile u32_t*)(0x1c3500);
 		val |= 0x20;
-		
-		*(volatile u32_t*)(0x1c3500) = val;		
-		
+
+		*(volatile u32_t*)(0x1c3500) = val;
+
 		/* Clsoe Watch dog control(_ZF_WATCH_DOG) */
 		// disable Watch dog
-		ZM_WATCH_DOG_REG = 0xFFFF;		
-		
+		ZM_WATCH_DOG_REG = 0xFFFF;
+
 		u8Watchdog_Enable = 0;
 
         *(volatile u8_t*)(rspBuf) = len;
-    }	
+    }
     else
     {
         zfUartSendStrAndHex((u8_t*)"Unknown command=",
                 *(volatile u32_t*)ZM_CMD_BUFFER);
     }
-	
-    #if ZM_USB == 0	
+
+    #if ZM_USB == 0
     ZM_PTA_AHB_INT_FLAG_REG = 0x1;
     #endif
 }
@@ -659,13 +659,13 @@ void zfEnableCamUser(u16_t userId)
 void zfWaitForCamReadReady(void)
 {
     while (((*(volatile u32_t*)0x1c373c) & 0x40000000) == 0){}
-    //zfUartSendStr((u8_t*)"R");	
+    //zfUartSendStr((u8_t*)"R");
 }
 
 void zfWaitForCamWriteReady(void)
 {
     while (((*(volatile u32_t*)0x1c373c) & 0x80000000) == 0){}
-    //zfUartSendStr((u8_t*)"W");	
+    //zfUartSendStr((u8_t*)"W");
 }
 
 void zfDelayLoop(u32_t n)
@@ -686,13 +686,13 @@ void HW_CAM_Avail(void)
     {
         //for(ii=0; ii<10000; ii++){}
         tmpValue = zm_cam_mode_reg;
-    }	
+    }
 
 }
 
 
 void HW_CAM_Write128(u32_t address, u32_t *data)
-{		
+{
     HW_CAM_Avail();
 
     zm_cam_data0_reg = data[0];
@@ -701,7 +701,7 @@ void HW_CAM_Write128(u32_t address, u32_t *data)
     zm_cam_data3_reg = data[3];
 
     zm_cam_addr_reg = address | CAM_WRITE;
-    
+
     zfWaitForCamWriteReady();
 }
 
@@ -709,21 +709,21 @@ void HW_CAM_Write128(u32_t address, u32_t *data)
 
 void HW_CAM_Read128(u32_t address, u32_t *data)
 {
-	
+
     HW_CAM_Avail();
-    zm_cam_addr_reg = address; 
+    zm_cam_addr_reg = address;
 
     zfWaitForCamReadReady();
-    HW_CAM_Avail();    
+    HW_CAM_Avail();
     data[0] = zm_cam_data0_reg;
     data[1] = zm_cam_data1_reg;
     data[2] = zm_cam_data2_reg;
     data[3] = zm_cam_data3_reg;
-}	
+}
 
 #if 0
 void HW_CAM_Write128(u32_t address, u32_t *data)
-{		
+{
     HW_CAM_Avail();
 
     zm_cam_data0_reg = data[0];
@@ -736,11 +736,11 @@ void HW_CAM_Write128(u32_t address, u32_t *data)
 
 void HW_CAM_Read128(u32_t address, u32_t *data)
 {
-	
-    HW_CAM_Avail();
-    zm_cam_addr_reg = address; 
 
-    HW_CAM_Avail();    
+    HW_CAM_Avail();
+    zm_cam_addr_reg = address;
+
+    HW_CAM_Avail();
     data[0] = zm_cam_data0_reg;
     data[1] = zm_cam_data1_reg;
     data[2] = zm_cam_data2_reg;
@@ -752,12 +752,12 @@ void HW_CAM_Read128(u32_t address, u32_t *data)
 void zfCamDump(void)
 {
     u32_t data[4];
-    s16_t i, j; 
+    s16_t i, j;
 
     zfUartSendStrAndHex((u8_t*)"RCTL=", zm_cam_roll_call_tablel_reg);
     zfUartSendStrAndHex((u8_t*)"RCTH=", zm_cam_roll_call_tableh_reg);
-    zfUartSendStr((u8_t*)"CAM Content\n\r");    
-    
+    zfUartSendStr((u8_t*)"CAM Content\n\r");
+
     for (j=0; j<=STA_COUNTER_START_ADDR; j++)
     {
         HW_CAM_Read128(j, data);
@@ -819,10 +819,10 @@ void zfSwReset(void)
 
     /* Restart DMA */
     zfDmaInitDescriptor();
- 
+
     /* Trigger DS DMA */
     ZM_PTA_DN_DMA_TRIGGER_REG = 1;
- 
+
     /* Trigger Rx DMA */
     zm_wl_dma_trigger_reg = 0x100;
 }

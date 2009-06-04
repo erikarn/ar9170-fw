@@ -30,16 +30,16 @@ void zfSetDnQAGP_w()
     u16_t* buf;
     struct zsDmaDesc *descPtr, *preDescPtr;
 
-    descPtr = zgDnQ.head;    
+    descPtr = zgDnQ.head;
 
     while ( (descPtr != zgDnQ.terminator) && (descPtr != zgDnQCurrentDescPtr))
     {
         preDescPtr = descPtr;
         descPtr = descPtr->lastAddr->nextAddr;
-    }											
-		
+    }
+
     *(volatile u32_t*)(0x117708) += 1;
-		
+
     buf = (u16_t*)preDescPtr->dataAddr;
     /* AGP : MAC ctrl Bit_14 */
     buf[1] |= 0x4000;
@@ -66,9 +66,9 @@ void zfSetDnQAGP_w()
 //! \author Wade Sung
 //! \date 2007.12
 void zfHostDlTask(void)
-{					
+{
     /* zgDnQ own bits changed */
-    while ( (zgDnQCurrentDescPtr != zgDnQ.terminator) && 
+    while ( (zgDnQCurrentDescPtr != zgDnQ.terminator) &&
            ((zgDnQCurrentDescPtr->status & ZM_OWN_BITS_MASK) != ZM_OWN_BITS_HW) )
     {
         /* Length inconsistent check part1 : avoid lose the packet with AGP */
@@ -76,9 +76,9 @@ void zfHostDlTask(void)
         {
             /* TODO : pre-detect : protect the packet with AGP */
         }
-        
-		
-        
+
+
+
         if (zfCheckAGG(zgDnQCurrentDescPtr))
 		{/* aggregation packet */
 
@@ -87,20 +87,20 @@ void zfHostDlTask(void)
             {
                 zgDnQTUCount++;
             }
-		
-			
+
+
             /* Update advance DnQ current Desc pointer */
             zgDnQCurrentDescPtr = zgDnQCurrentDescPtr->lastAddr->nextAddr;
 		}
-		else		
+		else
         {/* handle single/multi/board cast */
             if (zgDnQCurrentDescPtr == zgDnQ.head)
             {
                 /* put TxQ immediately */
-                
+
                 /* Update advance DnQ current Desc pointer */
-                zgDnQCurrentDescPtr = zgDnQCurrentDescPtr->lastAddr->nextAddr;	
-				zfSendTUFromDnQToTxQ(1);						    
+                zgDnQCurrentDescPtr = zgDnQCurrentDescPtr->lastAddr->nextAddr;
+				zfSendTUFromDnQToTxQ(1);
             }
             else
 			{
@@ -112,12 +112,12 @@ void zfHostDlTask(void)
 					zgDnQTUCount++;
 					zfSetDnQAGP_w();
 				}
-			    break;	
+			    break;
 			}
-        }		
+        }
 
-    }/* end of while */		
-    	
+    }/* end of while */
+
 }
 
 //! \brief Process Down Link DMA descriptor chain.
@@ -126,18 +126,18 @@ void zfHostDlTask(void)
 void zfSendTUFromDnQToTxQ(u8_t bSinglePacket)
 {
     struct zsDmaDesc* desc;
-    
+
     /* zgDnQ own bits changed */
-    while ((zgDnQ.head != zgDnQ.terminator) && 
-           ((zgDnQ.head->status & ZM_OWN_BITS_MASK) != ZM_OWN_BITS_HW) && 
+    while ((zgDnQ.head != zgDnQ.terminator) &&
+           ((zgDnQ.head->status & ZM_OWN_BITS_MASK) != ZM_OWN_BITS_HW) &&
            (zgDnQ.head != zgDnQCurrentDescPtr))
     {
       #if ZM_FM_LOOPBACK == 1
         desc = zfDmaGetPacket(&zgDnQ);
-    
+
         zfDmaPutPacket(&zgUpQ, desc);
         ZM_PTA_UP_DMA_TRIGGER_REG = 1;
-    	
+
     	//zfUartSendStr((u8_t*)"lb ");
         //zfDmaReclaimPacket(&zgDnQ, desc);
         //ZM_PTA_DN_DMA_TRIGGER_REG = 1;
@@ -145,8 +145,8 @@ void zfSendTUFromDnQToTxQ(u8_t bSinglePacket)
         desc = zfDmaGetPacket(&zgDnQ);
       #if OTUS_NO_SHRINK == 1
         zfPutTraceBuffer((u32_t)desc | 0x01000000);
-      #endif       
-    
+      #endif
+
         if (zgBlockTx == 1)
         {
              zfDmaReclaimPacket(&zgDnQ, desc);
@@ -155,19 +155,19 @@ void zfSendTUFromDnQToTxQ(u8_t bSinglePacket)
         {
             u16_t* buf;
             u16_t txqNum;
-            u8_t ch;						
+            u8_t ch;
 
             buf = (u16_t*)desc->dataAddr;
-				
-            if (zfCheckAGG(desc))			
+
+            if (zfCheckAGG(desc))
             {
                 zgTally.AggTxCnt++;
             }
-    		
+
     		/* Length inconsistent: totalLen of desc and len of ctrlsetting */
     		#if 1
     		if ( zfLengthConfirm(desc) )
-    		{					
+    		{
         		zfDmaReclaimPacket(&zgDnQ, desc);
         		ZM_PTA_DN_DMA_TRIGGER_REG = 1;
     			continue;
@@ -175,8 +175,8 @@ void zfSendTUFromDnQToTxQ(u8_t bSinglePacket)
     		#else
     		zfLengthConfirm(desc);
     		#endif
-    		
-    
+
+
     		{
                 /* TxQ number */
       		  #if ZM_CABQ_SUPPORT == 1
@@ -185,8 +185,8 @@ void zfSendTUFromDnQToTxQ(u8_t bSinglePacket)
       		  #endif
         		{
            			txqNum = 0;
-        		}					
-   
+        		}
+
                 zfDmaPutPacket(&zgTxQ[txqNum], desc);
                 #if ZM_CABQ_SUPPORT == 1
                     if (txqNum == 0)
@@ -202,39 +202,39 @@ void zfSendTUFromDnQToTxQ(u8_t bSinglePacket)
                         //zfUartSendStr((u8_t *) "CabQ\r\n");
                         //zm_wl_dma_trigger_reg = (1 << txqNum);
                     }
-                #endif				
-				
+                #endif
+
             #if OTUS_NO_SHRINK == 1
                 zfPutTraceBuffer((u32_t)desc | 0x02000000);
             #endif
                 ch = '0' + txqNum;
                 //zfPutChar(ch);
-				
+
     		}
-			
+
 			if (zfCheckAGP(desc) || bSinglePacket)
 			{
 				#if 0
-                if (zfCheckAGP(desc))				
+                if (zfCheckAGP(desc))
                     zfUartSendStr((u8_t*)"p");
                 else
-                    zfUartSendStr((u8_t*)"s");	
+                    zfUartSendStr((u8_t*)"s");
 			    #endif
-				/* 
+				/*
 				 * When catch last packet of one AMPDU ==> complete one TU
 				 * or one single packet ==> complete this routine.
-				 */		
+				 */
 				break;
 			}
 			#if 0
 			else
 			{
-                zfUartSendStr((u8_t*)"d");				
+                zfUartSendStr((u8_t*)"d");
 			}
 			#endif
         }
       #endif /* #if ZM_FM_LOOPBACK == 1 */
-    }/* while */    
+    }/* while */
 }
 
 
@@ -261,16 +261,16 @@ void zfHostIfIsr(void)
 {
     struct zsDmaDesc* desc;
     u16_t intr;
-    
+
     intr = (u16_t)ZM_PTA_INT_FLAG_REG;
-    
+
     if ((intr & (ZM_PTA_DOWN_INT_BIT|ZM_PTA_UP_INT_BIT))!=0)
     {
 #if 1 /* softap */
 
 		zfHostDlTask();
-				
-#else /* softap */		
+
+#else /* softap */
         /* zgDnQ own bits changed */
         while ((zgDnQ.head != zgDnQ.terminator) && ((zgDnQ.head->status
                 & ZM_OWN_BITS_MASK) != ZM_OWN_BITS_HW))
@@ -280,7 +280,7 @@ void zfHostIfIsr(void)
 
             zfDmaPutPacket(&zgUpQ, desc);
             ZM_PTA_UP_DMA_TRIGGER_REG = 1;
-			
+
 			//zfUartSendStr((u8_t*)"lb ");
             //zfDmaReclaimPacket(&zgDnQ, desc);
             //ZM_PTA_DN_DMA_TRIGGER_REG = 1;
@@ -297,22 +297,22 @@ void zfHostIfIsr(void)
             }
             else
             {
-                u16_t* buf;                
+                u16_t* buf;
                 u16_t txqNum;
                 u8_t ch;
 
                 buf = (u16_t*)desc->dataAddr;
-                
+
                 /* if AGG bit = 1 */
                 if ((buf[1] & 0x20) != 0)
                 {
                     zgTally.AggTxCnt++;
                 }
-				
+
 				/* Length inconsistent: totalLen of desc and len of ctrlsetting */
 				#if 1
 				if ( zfLengthConfirm(desc) )
-				{					
+				{
             		zfDmaReclaimPacket(&zgDnQ, desc);
             		ZM_PTA_DN_DMA_TRIGGER_REG = 1;
 					continue;
@@ -320,7 +320,7 @@ void zfHostIfIsr(void)
 				#else
 				zfLengthConfirm(desc);
 				#endif
-				
+
 
 				{
                     /* TxQ number */
@@ -364,12 +364,12 @@ void zfHostIfIsr(void)
             zm_wl_dma_trigger_reg = ZM_TXQ0_TRIG_BIT;
             //zfUartSendStr((u8_t*)"d");
   #endif
-            
+
 			//zfDumpPacket(desc);
           #endif /* #if ZM_FM_LOOPBACK == 1 */
         }
 #endif /* softap */
-        
+
         /* zgUpQ own bits changed */
         while ((zgUpQ.head != zgUpQ.terminator) && ((zgUpQ.head->status
                 & ZM_OWN_BITS_MASK) != ZM_OWN_BITS_HW))
@@ -380,10 +380,10 @@ void zfHostIfIsr(void)
             zfDmaReclaimPacket(&zgDnQ, desc);
             ZM_PTA_DN_DMA_TRIGGER_REG = 1;
           #else
-            
-			
+
+
             desc = zfDmaGetPacket(&zgUpQ);
-			
+
           #if ZM_INT_USE_EP2 == 1
 		    if (desc->dataAddr == ZM_RSP_BUFFER)
 			{
@@ -394,21 +394,21 @@ void zfHostIfIsr(void)
 			}
 			else
 			{
-		  #endif /* ZM_INT_USE_EP2 == 1 */	
-		  		
+		  #endif /* ZM_INT_USE_EP2 == 1 */
+
             zfDmaReclaimPacket(&zgRxQ, desc);
             /* Trigger WLAN RX DMA */
             zm_wl_dma_trigger_reg = ZM_RXQ_TRIG_BIT;
             //zfPutChar('u');
-			
+
           #if ZM_INT_USE_EP2 == 1
 			}/* INT use EP2 */
-		  #endif /* ZM_INT_USE_EP2 == 1 */	
+		  #endif /* ZM_INT_USE_EP2 == 1 */
 
           #endif /* ZM_FM_LOOPBACK == 1 */
         }/* end of while */
     }
-    
+
     if ((intr & ZM_PTA_CMD_INT) == ZM_PTA_CMD_INT)
     {
         zfCmdHandler();

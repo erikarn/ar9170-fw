@@ -19,18 +19,18 @@ void zfInitTimer0(void)
 {
     /* Init average delta */
     //zgAvgDelta = 1;
-    
+
     //zgMonitorPointer = 0;
 
     /* Init timer */
     /* Set timer-0 to periodic mode */
     ZM_TIMER_CONTROL_REG = 0x1;
-    
+
     /* Set time-0 = 50ms */
     ZM_TIMER0_REG = (50000-1);
 	/* OTUS FB50 */
     //ZM_TIMER0_REG = (200000-1);
-    
+
     /* Clear Timer-0 interrupt flag */
     ZM_TIMER_INTERRUPT_REG = 0x1;
 }
@@ -47,13 +47,13 @@ void zfMonitorTask(void)
     {
         /* Clear Timer-0 interrupt flag */
         ZM_TIMER_INTERRUPT_REG = 0x1;
-        
+
     //    idleCount = zgIdleCount;
     //    delta = idleCount - zgPreIdleCount;
     //    zgPreIdleCount = idleCount;
-        
+
     //    zgMonitorBuffer[zgMonitorPointer] = (delta < zgAvgDelta)
-    //                ? (((zgAvgDelta - delta)*100) / zgAvgDelta) : 0;    
+    //                ? (((zgAvgDelta - delta)*100) / zgAvgDelta) : 0;
 
     //    if (zgAvgDelta < delta)
     //    {
@@ -82,7 +82,7 @@ void zfMonitorTask(void)
         zgTally.RxPhyCCKError         += *(volatile u32_t*)0x1c3cb8;
         zgTally.RxPhyHTError          += *(volatile u32_t*)0x1c3cbc;
         zgTally.RxPhyTotalCount       += *(volatile u32_t*)0x1c3cc0;
-   
+
 	    zgTally.TxTotalCount += zm_wl_tx_count_reg;
 	    zgTally.TxUnderRun   += zm_wl_tx_underrun_reg;
 	    zgTally.TxRetryCount += zm_wl_tx_retry_count_reg;
@@ -115,10 +115,10 @@ void zfPrintCpuUtilization(void)
         zfUartSendStr((u8_t*)str);
         zfUartSendStr((u8_t*)"% ");
     }
-    
+
     //zfSendHex(avgDelta);
 #endif
-    
+
     //zfSleepMilliSecond(10);
     zfUartSendStr((u8_t*)"\n\r");
 
@@ -136,7 +136,7 @@ void zfPrintCpuUtilization(void)
         }
         zfUartSendStr((u8_t*)str);
         zfUartSendStr((u8_t*)"% ");
-        
+
         position = originalPosition;
         for (i=0; i<(ZM_MONITOR_BUFFER_SIZE-2); i++)
         {
@@ -162,7 +162,7 @@ void zfPrintCpuUtilization(void)
         zfUartSendStr((u8_t*)"\n\r");
         //zfSleepMilliSecond(10);
     }
-    
+
     return;
 }
 

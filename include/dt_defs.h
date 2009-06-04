@@ -51,7 +51,7 @@ struct DB_TALLY_STRUCT
 
     u32_t  TxTotalCount;
     u32_t  TxUnderRun;
-    u32_t  TxRetryCount;    
+    u32_t  TxRetryCount;
 
 	u32_t  BAFailCnt;
 	u32_t  AggTxCnt;

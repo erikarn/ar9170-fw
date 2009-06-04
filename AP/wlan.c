@@ -30,7 +30,7 @@ void zfPauseUsbDma(void);
 
 #define zm_hw_get_mt_mcs(buf, mt, mcs) {mt = buf[2] & 0x3; \
         mcs = (buf[3]>>2) & 0x3f;}
-        
+
 #define zm_hw_set_mt_mcs(buf, newMt, newMcs, sg) {buf[2] &= 0xfffc; \
         buf[3] &= 0x7e03; \
         buf[2] |= newMt; \
@@ -43,7 +43,7 @@ void zfPauseUsbDma(void);
 
 #define zm_hw_get_mt_mcs(buf, mt, mcs) {mt = buf[2] & 0x3; \
         mcs = buf[3] & 0x3f;}
-        
+
 #define zm_hw_set_mt_mcs(buf, newMt, newMcs) {buf[2] &= 0xfffc; \
         buf[3] &= 0xffc0; \
         buf[2] |= newMt; \
@@ -133,7 +133,7 @@ extern void zfDumpPacket(struct zsDmaDesc* desc);
 
 const u16_t zc2Ghz40RetryRateTable[ZM_NUM_OF_MT][ZM_NUM_OF_MCS] =
     {
-        { 
+        {
    /* CCK          1M,            2M,          5.5M,           11M, */
           ZM_MCS_NONE, ZM_MCS_CCK_1M, ZM_MCS_CCK_2M, ZM_MCS_CCK_5M,
           ZM_MCS_NONE, ZM_MCS_NONE,   ZM_MCS_NONE,   ZM_MCS_NONE,
@@ -156,7 +156,7 @@ const u16_t zc2Ghz40RetryRateTable[ZM_NUM_OF_MT][ZM_NUM_OF_MCS] =
     /* HT            MCS8,            MCS9,           MCS10,           MCS11, */
            ZM_MCS_HT_MCS0,  ZM_MCS_HT_MCS2,  ZM_MCS_HT_MCS3,  ZM_MCS_HT_MCS4,
     /* HT           MCS12,           MCS13,           MCS14,           MCS15 */
-           ZM_MCS_HT_MCS11, ZM_MCS_HT_MCS12, ZM_MCS_HT_MCS13, ZM_MCS_HT_MCS14                                
+           ZM_MCS_HT_MCS11, ZM_MCS_HT_MCS12, ZM_MCS_HT_MCS13, ZM_MCS_HT_MCS14
         },
         {
     /* DL-OFDM */
@@ -169,7 +169,7 @@ const u16_t zc2Ghz40RetryRateTable[ZM_NUM_OF_MT][ZM_NUM_OF_MCS] =
 
 const u16_t zc2Ghz20RetryRateTable[ZM_NUM_OF_MT][ZM_NUM_OF_MCS] =
     {
-        { 
+        {
    /* CCK          1M,            2M,          5.5M,           11M, */
           ZM_MCS_NONE, ZM_MCS_CCK_1M, ZM_MCS_CCK_2M, ZM_MCS_CCK_5M,
           ZM_MCS_NONE, ZM_MCS_NONE,   ZM_MCS_NONE,   ZM_MCS_NONE,
@@ -192,7 +192,7 @@ const u16_t zc2Ghz20RetryRateTable[ZM_NUM_OF_MT][ZM_NUM_OF_MCS] =
     /* HT            MCS8,            MCS9,           MCS10,           MCS11, */
            ZM_MCS_HT_MCS0,  ZM_MCS_HT_MCS2,  ZM_MCS_HT_MCS3,  ZM_MCS_HT_MCS4,
     /* HT           MCS12,           MCS13,           MCS14,           MCS15 */
-           ZM_MCS_HT_MCS11, ZM_MCS_HT_MCS12, ZM_MCS_HT_MCS13, ZM_MCS_HT_MCS14                                
+           ZM_MCS_HT_MCS11, ZM_MCS_HT_MCS12, ZM_MCS_HT_MCS13, ZM_MCS_HT_MCS14
         },
         {
     /* DL-OFDM */
@@ -205,7 +205,7 @@ const u16_t zc2Ghz20RetryRateTable[ZM_NUM_OF_MT][ZM_NUM_OF_MCS] =
 
 const u16_t zc5Ghz40RetryRateTable[ZM_NUM_OF_MT][ZM_NUM_OF_MCS] =
     {
-        { 
+        {
    /* CCK          1M,            2M,          5.5M,           11M, */
           ZM_MCS_NONE, ZM_MCS_NONE,   ZM_MCS_NONE,   ZM_MCS_NONE,
           ZM_MCS_NONE, ZM_MCS_NONE,   ZM_MCS_NONE,   ZM_MCS_NONE,
@@ -228,7 +228,7 @@ const u16_t zc5Ghz40RetryRateTable[ZM_NUM_OF_MT][ZM_NUM_OF_MCS] =
     /* HT            MCS8,            MCS9,           MCS10,           MCS11, */
            ZM_MCS_HT_MCS0,  ZM_MCS_HT_MCS2,  ZM_MCS_HT_MCS3, ZM_MCS_HT_MCS4,
     /* HT           MCS12,           MCS13,           MCS14,           MCS15 */
-          ZM_MCS_HT_MCS11, ZM_MCS_HT_MCS12, ZM_MCS_HT_MCS13, ZM_MCS_HT_MCS14                                
+          ZM_MCS_HT_MCS11, ZM_MCS_HT_MCS12, ZM_MCS_HT_MCS13, ZM_MCS_HT_MCS14
         },
         {
     /* DL-OFDM */
@@ -238,10 +238,10 @@ const u16_t zc5Ghz40RetryRateTable[ZM_NUM_OF_MT][ZM_NUM_OF_MCS] =
          ZM_MCS_NONE, ZM_MCS_NONE,   ZM_MCS_NONE,   ZM_MCS_NONE
         }
     };
-    
+
 const u16_t zc5Ghz20RetryRateTable[ZM_NUM_OF_MT][ZM_NUM_OF_MCS] =
     {
-        { 
+        {
    /* CCK          1M,            2M,          5.5M,           11M, */
           ZM_MCS_NONE, ZM_MCS_NONE,   ZM_MCS_NONE,   ZM_MCS_NONE,
           ZM_MCS_NONE, ZM_MCS_NONE,   ZM_MCS_NONE,   ZM_MCS_NONE,
@@ -264,7 +264,7 @@ const u16_t zc5Ghz20RetryRateTable[ZM_NUM_OF_MT][ZM_NUM_OF_MCS] =
     /* HT            MCS8,            MCS9,           MCS10,           MCS11, */
            ZM_MCS_HT_MCS0,  ZM_MCS_HT_MCS2,  ZM_MCS_HT_MCS3, ZM_MCS_HT_MCS4,
     /* HT           MCS12,           MCS13,           MCS14,           MCS15 */
-          ZM_MCS_HT_MCS11, ZM_MCS_HT_MCS12, ZM_MCS_HT_MCS13, ZM_MCS_HT_MCS14                                
+          ZM_MCS_HT_MCS11, ZM_MCS_HT_MCS12, ZM_MCS_HT_MCS13, ZM_MCS_HT_MCS14
         },
         {
     /* DL-OFDM */
@@ -274,11 +274,11 @@ const u16_t zc5Ghz20RetryRateTable[ZM_NUM_OF_MT][ZM_NUM_OF_MCS] =
          ZM_MCS_NONE, ZM_MCS_NONE,   ZM_MCS_NONE,   ZM_MCS_NONE
         }
     };
-	
+
 void zfHandleCfgBcnInt(void)
 {
 	u32_t bcnCount;
-	
+
     #if ZM_USB == 0
     /* Generate config beacon interrupt */
     ZM_PTA_AHB_INT_FLAG_REG = 0x8;
@@ -299,7 +299,7 @@ void zfHandleCfgBcnInt(void)
 	bcnCount =  *((volatile u32_t*)(ZM_WL_REGISTER_BASE+0xd9c));
     zfGenUsbInterrupt(4, 0xC2, 0x80, (u8_t*)(&bcnCount));
     #endif
-        
+
     return;
 }
 
@@ -311,7 +311,7 @@ void zfHandlePreTbttInt(void)
     #else
     zfGenUsbInterrupt(0, 0xC0, 0x80, 0);
     #endif
-        
+
     return;
 }
 
@@ -323,7 +323,7 @@ void zfHandleAtimInt(void)
     #else
     zfGenUsbInterrupt(0, 0xC3, 0x80, 0);
     #endif
-        
+
     return;
 }
 
@@ -339,7 +339,7 @@ void zfHandleRxInterrupt(void)
     /* zgUpQ. Repeat until all Rx packet were reclaimed             */
     while ((zgRxQ.head != zgRxQ.terminator) && ((zgRxQ.head->status
             & ZM_OWN_BITS_MASK) != ZM_OWN_BITS_HW))
-    {            
+    {
         desc = zfDmaGetPacket(&zgRxQ);
 
         if (zgBlockRx == 1)
@@ -348,32 +348,32 @@ void zfHandleRxInterrupt(void)
             continue;
         }
 
-		#if ZM_BAR_AUTO_BA == 1		
+		#if ZM_BAR_AUTO_BA == 1
 		{
-			u8_t* buf = (u8_t*)desc->dataAddr; 
+			u8_t* buf = (u8_t*)desc->dataAddr;
 			if (buf[12] == 0x84)
 			{
 				/* Got a BAR */
-				
+
 				u8_t ia;
-				
+
 				if (zgBARGotState == 1)
 				{
-					/* state 2: send BA for the BAR, and recover ack func */					
-				
+					/* state 2: send BA for the BAR, and recover ack func */
+
 					if (zgBAAvailable)
 					{
 						#if ZM_LED_FOR_MARVELL_BAR == 1
 						/* LED  */
 						*(volatile u32_t*)(0x1d0104) = 1;
-						#endif											
+						#endif
 
 						zgBADesc->lastAddr = zgBADesc;
 						zgBADesc->ctrl = (ZM_LS_BIT | ZM_FS_BIT);
-					
+
 						zgBAAvailable = 0;
-						
-						
+
+
 						/* Do Wlan sw reset, and put BA into TxQ0 head */
 						{
                             u32_t val;
@@ -398,34 +398,34 @@ void zfHandleRxInterrupt(void)
 							ackPowerReg = *(volatile u32_t*)(0x1c3694);
 							rtsctsTPCReg = *(volatile u32_t*)(0x1c3bb4);
 							rxBBReg = *(volatile u32_t*)(0x1c5960); /* 0x1c8960 write only */
-								
+
                             /* TX/RX must be stopped by now */
                             val = *(volatile u32_t*)(0x1c3500);
                             val |= 0x20;
 
-                            *(volatile u32_t*)(0x1c3500) = val;	
+                            *(volatile u32_t*)(0x1c3500) = val;
 
                             for (ii = 0; ii < 64;ii++)
                             {
                             }
-							
+
                             /* Restore aggregation parameters */
                             *(volatile u32_t*)(0x1c3b9c) = agg_wait_counter;
-                            *(volatile  u32_t*)(0x1c3ba0) = agg_density;							
+                            *(volatile  u32_t*)(0x1c3ba0) = agg_density;
 							*(volatile u32_t*)(0x1c3d98) = bcnStartAddr;
                            	zm_cam_roll_call_tablel_reg = rctlReg;
                             zm_cam_roll_call_tableh_reg = rcthReg;
 							zm_cam_mode_reg = camModeReg;
 							*(volatile u32_t*)(0x1c3694) = ackPowerReg;
 							*(volatile u32_t*)(0x1c3bb4) = rtsctsTPCReg;
-							*(volatile u32_t*)(0x1c8960) = rxBBReg;						
-																						
+							*(volatile u32_t*)(0x1c8960) = rxBBReg;
+
 							zgBADesc->nextAddr = zgTxQ[0].head;
-							zgBADesc->status |= ZM_OWN_BITS_HW;	
-							
+							zgBADesc->status |= ZM_OWN_BITS_HW;
+
 							zgTxQ[0].head = zgBADesc;
-							
-							/* rewrite TxQ0 start addr */						
+
+							/* rewrite TxQ0 start addr */
 							zm_wl_txq0_dma_addr_reg = (u32_t)zgBADesc;
 							zm_wl_dma_trigger_reg = ZM_TXQ0_TRIG_BIT;
 
@@ -433,82 +433,82 @@ void zfHandleRxInterrupt(void)
                             zfRecycleRxQ();
 
                             /* Trigger Rx DMA */
-                            zm_wl_dma_trigger_reg = 0x100;			
-							
-							*(volatile u32_t*)(0x117730) += 1;											
+                            zm_wl_dma_trigger_reg = 0x100;
+
+							*(volatile u32_t*)(0x117730) += 1;
 						}
-						
+
 						#if ZM_LED_FOR_MARVELL_BAR == 1
 						/* LED  */
 						*(volatile u32_t*)(0x1d0104) = 0;
 						#endif
-													    
-    					//zfUartSendStr((u8_t*)"ba");			
+
+    					//zfUartSendStr((u8_t*)"ba");
 					}
-					
+
 					/* Recover Ack func */
 					*(volatile u32_t*)(0x1c36f8) |= 0x1;
-					zgBARGotState = 2;	
+					zgBARGotState = 2;
 				}
 				else if (zgBARGotState == 0)
 				{
-					/* state 1: got a BAR, stop (From DS/ To DS) ACK            */  
+					/* state 1: got a BAR, stop (From DS/ To DS) ACK            */
 					/* prepare BA for BAR */
 
 					/* BAR  | PLCP | FC | SA | DA | ID | SN | FCS | Rx status | */
 					/* BAR     12  + 4  + 6  + 6  + 2  + 2  + 4   + 24          */
-					
-     				/* BA   | CTL  | FC | SA | DA | ID | SN | Bit map | FCS |   */					      
+
+     				/* BA   | CTL  | FC | SA | DA | ID | SN | Bit map | FCS |   */
 					/* BA      8   + 4  + 6  + 6  + 2  + 2  + 8        + 4      */
-					//u8_t A1[6]; 
+					//u8_t A1[6];
 					//u8_t A2[6];
 					//u16_t sn;
-					 
-					zgBARGotState = 1;			
-					zgBARTimeOut = 0;							
-					
+
+					zgBARGotState = 1;
+					zgBARTimeOut = 0;
+
 					/* Stop Ack ToDS=0 and FromDS=0 */
 					*(volatile u32_t*)(0x1c36f8) &= ~((u32_t)0x1);
 
-					
+
 					/* start SN */
 					*(volatile u8_t*)(ZM_BA_BUFFER + 26) = buf[30];
 					*(volatile u8_t*)(ZM_BA_BUFFER + 27) = buf[31];
-										
+
 					for (ia=0; ia<6; ia++)
 					{
 						*(volatile u8_t*)(ZM_BA_BUFFER + ia + 12) = buf[ia + 22];
 						*(volatile u8_t*)(ZM_BA_BUFFER + ia + 18) = buf[ia + 16];
 					}
-					
+
 					*(volatile u8_t*)(ZM_BA_BUFFER + 8) = 0x94;		/* BA */
-					*(volatile u8_t*)(ZM_BA_BUFFER + 9) = 0x0;							
-					*(volatile u8_t*)(ZM_BA_BUFFER + 24) = 0x05;	/* Ack policy */										
-				}            
+					*(volatile u8_t*)(ZM_BA_BUFFER + 9) = 0x0;
+					*(volatile u8_t*)(ZM_BA_BUFFER + 24) = 0x05;	/* Ack policy */
+				}
  //           	zfUartSendStr((u8_t*)" bar ");
- 
+
  				if (zgBARGotState != 1)
 				{
                 	/* Discard BAR */
              		zfDmaReclaimPacket(&zgRxQ, desc);
-            
+
             		/* Trigger WLAN RX DMA */
-            		zm_wl_dma_trigger_reg = ZM_RXQ_TRIG_BIT;	
+            		zm_wl_dma_trigger_reg = ZM_RXQ_TRIG_BIT;
 					continue;
-				}			
-				
+				}
+
 			}/* end if handle BAR */
 		}
-			
+
 		#endif
         /* TODO : if len < 5+14+8 or len > zgRxMaxSize, discard rx frame */
         if (desc->totalLen < zgRxMaxSize)
         {
             zfDmaPutPacket(&zgUpQ, desc);
-    
+
             /* Trigger PTA UP DMA */
             ZM_PTA_UP_DMA_TRIGGER_REG = 1;
-    
+
             //zfUartSendStr((u8_t*)"r");
 
 			//if (zgPacketDumpFlag&0x8)
@@ -517,10 +517,10 @@ void zfHandleRxInterrupt(void)
         else
         {
             zfDmaReclaimPacket(&zgRxQ, desc);
-            
+
             /* Trigger WLAN RX DMA */
             zm_wl_dma_trigger_reg = ZM_RXQ_TRIG_BIT;
-            
+
             zfUartSendStr((u8_t*)" R ");
         }
     }
@@ -529,7 +529,7 @@ void zfHandleRxInterrupt(void)
 void zfGenerateTxCompEvent(u16_t* buf, u16_t status)
 {
     u16_t info[8];
-    
+
     info[0] = buf[6]; // macAddr
     info[1] = buf[7];
     info[2] = buf[8];
@@ -537,15 +537,15 @@ void zfGenerateTxCompEvent(u16_t* buf, u16_t status)
     info[4] = buf[3];
     info[5] = buf[1]; // macCtrl
     info[6] = status;
-    info[7] = 0;      /* dummy for 4 byte alignment */	
-    
+    info[7] = 0;      /* dummy for 4 byte alignment */
+
     zfGenUsbInterrupt(16, 0xC1, 0x81, (u8_t *)info);
 }
 
 void zfGenerateBaEvent(void)
 {
     u16_t info[8];
-    
+
     info[0] = zgRCBaMacAddr[0]; // macAddr
     info[1] = zgRCBaMacAddr[1];
     info[2] = zgRCBaMacAddr[2];
@@ -553,8 +553,8 @@ void zfGenerateBaEvent(void)
     info[4] = zgRCBaPhyCtrl[1];
     info[5] = zgRCBaMacCtrl ;   // macCtrl
     info[6] = zgRCBaMPDUCnt;
-    info[7] = zgRCBaErrorCnt;		
-    
+    info[7] = zgRCBaErrorCnt;
+
     zfGenUsbInterrupt(16, 0xC5, 0x80, (u8_t *)info);
 }
 
@@ -570,9 +570,9 @@ void zfBAFailCntIntr(u16_t* buf)
 {
 
     u16_t ii;
-    u16_t mt, mcs, sg;	
+    u16_t mt, mcs, sg;
     u16_t rate;
-    	
+
     zgBaErrorCount++;
 
     zm_hw_get_mt_mcs(buf, mt, mcs);
@@ -610,47 +610,47 @@ void zfBAFailCntIntr(u16_t* buf)
     {
         zgBaStsCurrRate = rate;
         zgGenBAIntr = 1;
-    }	
+    }
 }
 #endif
 
-/* 
+/*
  * Update AMPDU tx info for ba event to Host rate control.
  * If aggregation and grand, then update tx info for ba indicate event
- * if detect aggregation push bit, send BA info to host, and release grand. 
+ * if detect aggregation push bit, send BA info to host, and release grand.
  */
 void zfUpdateTxAggInfo(struct zsDmaDesc* desc)
 {
 	if (zfCheckAGG(desc))
 	{
         zgRCBaMPDUCnt++;
-		
-        if (zgRCBaGrand) 
+
+        if (zgRCBaGrand)
 	    {
 		    u16_t *buf = (u16_t*)desc->dataAddr;
-		
+
             zgRCBaMacAddr[0] = buf[6];
             zgRCBaMacAddr[1] = buf[7];
             zgRCBaMacAddr[2] = buf[8];
 		    zgRCBaPhyCtrl[0] = buf[2];
 		    zgRCBaPhyCtrl[1] = buf[3];
 		    zgRCBaMacCtrl    = buf[1];
-		
+
 		    /* We have got the tx information of the first packet in one AMPDU */
 		    zgRCBaGrand = 0;
 	    }
-		
+
 		if (zfCheckAGP(desc))
 		{
 			zfGenerateBaEvent();
-            
+
 			/* reset count */
 			zgRCBaMPDUCnt = 0;
-            zgRCBaErrorCnt = 0;				
+            zgRCBaErrorCnt = 0;
 			/* release grand for update tx information */
 			zgRCBaGrand = 1;
 		}
-	}		
+	}
 }
 
 /* Set AGP of the last packet in RTQ */
@@ -667,110 +667,110 @@ void zfSetRTQAGP(void)
 
 #define ZM_AGGREGATION_BAFAIL_RETRY_NUM  2
 void zfBAFailHandler(struct zsDmaQueue* q, u16_t q_num, struct zsDmaDesc* desc)
-{   
+{
     u16_t* buf;
-               
-    //zfPutTraceBuffer((u32_t)desc | 0x20000000);       
-    buf = (u16_t*)desc->dataAddr;                       
-                                                        
-    /* Turn on retry bit */                             
-    buf[4] |= 0x0800;                                   
-                                                                        
-  #if 1 /* Do BA Fail handle */                                         
-    /* Increase zgBAFailCnt counter */                  
-    zgTally.BAFailCnt++;                                
+
+    //zfPutTraceBuffer((u32_t)desc | 0x20000000);
+    buf = (u16_t*)desc->dataAddr;
+
+    /* Turn on retry bit */
+    buf[4] |= 0x0800;
+
+  #if 1 /* Do BA Fail handle */
+    /* Increase zgBAFailCnt counter */
+    zgTally.BAFailCnt++;
 //    zgBaErrorCount++;
-                                                        
-    if(zgDontRetransmit)                                
-    {                                                   
-        //Reclaim this packet                           
-        zfDmaReclaimPacket(&zgDnQ, desc);               
-        //zfPutTraceBuffer((u32_t)desc | 0x08000000);   
-                                                        
-        /* Trigger PTA DN DMA */                        
-        ZM_PTA_DN_DMA_TRIGGER_REG = 1;					
-    }                                                   
-    else                                                
-    {                  
-                                                         
-      #if  ZM_AGGREGATION_RECLAIM != 0				        
-        if ((desc->status & 0xf00) == (ZM_AGGREGATION_BAFAIL_RETRY_NUM<<8) )                    
-        {                                                       
-          #if ZM_AGGREGATION_RECLAIM == 1                     
-            //Reclaim this packet                               
-            zfDmaReclaimPacket(&zgDnQ, desc);                   
-            //zfPutTraceBuffer((u32_t)desc | 0x08000000);       
-                                                                
-            /* Trigger PTA DN DMA */                            
-            ZM_PTA_DN_DMA_TRIGGER_REG = 1;                      
-                                                                
-          #elif ZM_AGGREGATION_RECLAIM == 2                   
-            /* Change control setting to single packet */       
-                                                                
-            //Clear TxFail|BaFail control bit                   
-            desc->ctrl &= 0xfffc;                               
-                                                                
-            //Set OWN bits                                      
-            desc->status |= 0x1;                                
-                                                                
-            /* Clear AGG bit & protection bits & AGG push bit */               
-            buf[1] &= 0xbfdc;                                   
-            //*(volatile u32_t*)(0x1c3b28) = 0x33333;           
-                                                                
-            /* Turn off retry bit */                            
-            buf[4] &= 0xf7ff;                                   
-                                                                
-            /* Put to TxQ */                                    
-            zfDmaPutPacket(q, desc); 
-			
-//			zfUartSendStrAndHex((u8_t*)"give agg = ", (u32_t)desc);	                           
-                                                                
-            //zfPutTraceBuffer((u32_t)desc | 0x02000000);       
-                                                                
-            /* Trigger WLAN TX DMA */                           
-            zm_wl_dma_trigger_reg = (1<<q_num);                    
-          #endif                                              
-        }                                                       
-        else                                                    
-        {                                                                                                                          
-            u8_t retryCnt = (u8_t)(desc->status >> 8);                
-            retryCnt++;                                         
-            desc->status = (u16_t)(retryCnt << 8);                     
-      #endif /* ZM_AGGREGATION_RECLAIM != 0 */                
-                                                                        
-            /* Count BAFail by rate */                          
-//            if (retryCnt == 1)                                  
-//			{                                                   
-//                zfBAFailCntIntr(buf);                 
-//			}					                                                                                                                               
-                                                                        
-            //Clear TxFail|BaFail control bit                       
-            desc->ctrl &= 0xfffc; 
-            
-            /* pending into RTQ */  
-            zfQuePutPacket(&zgRTQ, desc);   
-			
+
+    if(zgDontRetransmit)
+    {
+        //Reclaim this packet
+        zfDmaReclaimPacket(&zgDnQ, desc);
+        //zfPutTraceBuffer((u32_t)desc | 0x08000000);
+
+        /* Trigger PTA DN DMA */
+        ZM_PTA_DN_DMA_TRIGGER_REG = 1;
+    }
+    else
+    {
+
+      #if  ZM_AGGREGATION_RECLAIM != 0
+        if ((desc->status & 0xf00) == (ZM_AGGREGATION_BAFAIL_RETRY_NUM<<8) )
+        {
+          #if ZM_AGGREGATION_RECLAIM == 1
+            //Reclaim this packet
+            zfDmaReclaimPacket(&zgDnQ, desc);
+            //zfPutTraceBuffer((u32_t)desc | 0x08000000);
+
+            /* Trigger PTA DN DMA */
+            ZM_PTA_DN_DMA_TRIGGER_REG = 1;
+
+          #elif ZM_AGGREGATION_RECLAIM == 2
+            /* Change control setting to single packet */
+
+            //Clear TxFail|BaFail control bit
+            desc->ctrl &= 0xfffc;
+
+            //Set OWN bits
+            desc->status |= 0x1;
+
+            /* Clear AGG bit & protection bits & AGG push bit */
+            buf[1] &= 0xbfdc;
+            //*(volatile u32_t*)(0x1c3b28) = 0x33333;
+
+            /* Turn off retry bit */
+            buf[4] &= 0xf7ff;
+
+            /* Put to TxQ */
+            zfDmaPutPacket(q, desc);
+
+//			zfUartSendStrAndHex((u8_t*)"give agg = ", (u32_t)desc);
+
+            //zfPutTraceBuffer((u32_t)desc | 0x02000000);
+
+            /* Trigger WLAN TX DMA */
+            zm_wl_dma_trigger_reg = (1<<q_num);
+          #endif
+        }
+        else
+        {
+            u8_t retryCnt = (u8_t)(desc->status >> 8);
+            retryCnt++;
+            desc->status = (u16_t)(retryCnt << 8);
+      #endif /* ZM_AGGREGATION_RECLAIM != 0 */
+
+            /* Count BAFail by rate */
+//            if (retryCnt == 1)
+//			{
+//                zfBAFailCntIntr(buf);
+//			}
+
+            //Clear TxFail|BaFail control bit
+            desc->ctrl &= 0xfffc;
+
+            /* pending into RTQ */
+            zfQuePutPacket(&zgRTQ, desc);
+
             /* softap */
             /* last one in an AMPDU */
             if (zfCheckAGP(desc))
             {
                 zgRTQTUCount++;
-            }                                                                                                                         
-                                                                        
-      #if ZM_AGGREGATION_RECLAIM != 0                         
-        }                                                       
-      #endif                                                  
-    }/* end of if(zgDontRetransmit) */                          
-  #else /* reclaim it, do nothing for BA Fail */                          
-    zfDmaReclaimPacket(&zgDnQ, desc);                   
-    //zfPutTraceBuffer((u32_t)desc | 0x08000000);       
-                                                        
-    /* Trigger PTA DN DMA */                            
-    ZM_PTA_DN_DMA_TRIGGER_REG = 1;                      
-  #endif /* End of Do BA Fail handle */  
-                                 
-//    zfUartSendStrAndHex((u8_t*)"BA seq=", buf[15]);     
-}                
+            }
+
+      #if ZM_AGGREGATION_RECLAIM != 0
+        }
+      #endif
+    }/* end of if(zgDontRetransmit) */
+  #else /* reclaim it, do nothing for BA Fail */
+    zfDmaReclaimPacket(&zgDnQ, desc);
+    //zfPutTraceBuffer((u32_t)desc | 0x08000000);
+
+    /* Trigger PTA DN DMA */
+    ZM_PTA_DN_DMA_TRIGGER_REG = 1;
+  #endif /* End of Do BA Fail handle */
+
+//    zfUartSendStrAndHex((u8_t*)"BA seq=", buf[15]);
+}
 
 
 void zfHandleTxCompInt(void)
@@ -803,7 +803,7 @@ void zfHandleTxCompInt(void)
             while ((q->head != q->terminator)
                     && ((q->head->status & ZM_OWN_BITS_MASK)
                     != ZM_OWN_BITS_HW))
-            {          					
+            {
 //zfUartSendStrAndHex((u8_t *) "Q=", ii);
 
 				#if ZM_BAR_AUTO_BA == 1
@@ -817,18 +817,18 @@ void zfHandleTxCompInt(void)
 					zgBADesc = desc;
 					zgBAAvailable = 1;
 					zgBARGotState = 0;
-					//zfUartSendStrAndHex((u8_t*)"BADesc = ", (u32_t)zgBADesc);					
+					//zfUartSendStrAndHex((u8_t*)"BADesc = ", (u32_t)zgBADesc);
 					continue;
 				}
 				#endif
-								        
+
 
                 //if q=txq and desc->ctrl = txfail
 				/* Tx retry fail (hw retry max set to 0)                               */
 				/*   1. if first tx retry fail ==> do retransmit by the same rate.     */
 				/*   2. else if get new tx rate and not ZM_MCS_NONE ==> do retransmit. */
 				/*   3. else reclaim it.                                               */
-				
+
                 if ((q->head->ctrl & 0x1) != 0)
                 {
 					/* Bit15 of status : flag for simHw retry */
@@ -853,8 +853,8 @@ void zfHandleTxCompInt(void)
 						    q->head->status |= 0x8000;
 					    }
                     }
-					
-                    if (mcs < 16)				
+
+                    if (mcs < 16)
                     {
                         /* get new rate for retransmit */
                         if (simHwRetryCnt != 0 || zgEnableFwRetry == 0)
@@ -864,7 +864,7 @@ void zfHandleTxCompInt(void)
                                 if (zg5GhzFreq == 0)
                                 {
                                     //2.4GHz
-									if (buf[2] & 0x10) 
+									if (buf[2] & 0x10)
 									{
 										//40M
 										newMt = zc2Ghz40RetryRateTable[mt][mcs] >> 8;
@@ -888,12 +888,12 @@ void zfHandleTxCompInt(void)
 										//20M
 										newMt = zc2Ghz20RetryRateTable[mt][mcs] >> 8;
 										newMcs = zc2Ghz20RetryRateTable[mt][mcs] & 0xff;
-									}                                   
+									}
                                 }
                                 else
                                 {
                                     //5GHz
-									if (buf[2] & 0x10) 
+									if (buf[2] & 0x10)
 									{
 										//40M
 										newMt = zc5Ghz40RetryRateTable[mt][mcs] >> 8;
@@ -910,7 +910,7 @@ void zfHandleTxCompInt(void)
 										newMt = zc5Ghz20RetryRateTable[mt][mcs] >> 8;
 										newMcs = zc5Ghz20RetryRateTable[mt][mcs] & 0xff;
 									}
-                                    
+
                                 }
                             }
                             //else
@@ -918,12 +918,12 @@ void zfHandleTxCompInt(void)
                                 /* use the same rate do retransmit A-MPDU as MPDU */
                             //    newMt = mt;
                             //    newMcs = mcs;
-                                
+
                                 /* Clear AGG bit & protection bits */
                             //    buf[1] &= 0xffdc;
                                 //*(volatile u32_t*)(0x1c3b28) = 0x33333;
                             //}
-    
+
                             if ((newMt != 2) && ((buf[1] & 0x20) != 0))
                             {
                                 /* Clear AGG bit & protection bits */
@@ -934,7 +934,7 @@ void zfHandleTxCompInt(void)
                         {
 							/* use the same rate do retransmit => sim HwRetry */
 							newMt = mt;
-							newMcs = mcs;							
+							newMcs = mcs;
 						}
                     }
                     else
@@ -945,28 +945,28 @@ void zfHandleTxCompInt(void)
 
                     //zfUartSendStrAndHex((u8_t*)"O_", mt+(mcs<<16));
                     //zfUartSendStrAndHex((u8_t*)"N_", newMt+(newMcs<<16));
-					
+
 					/* 1=>no retransmit */
 					if (zgDontRetransmit)
 					{
 						newMcs = ZM_MCS_NONE;
 					}
-    
+
                     if (newMcs == ZM_MCS_NONE)
                     {
                         /* 1. Removed from TxQ */
                         desc = zfDmaGetPacket(q);
 						desc = zfExchangeDesc(desc);
                         //zfPutTraceBuffer((u32_t)desc | 0x04000000);
-                        
+
                         /* 2. Generate retry interrupt */
                         buf = (u16_t*)desc->dataAddr;
                         //if ((buf[4] & 0x0800) == 0x0800)
                         if( (buf[4] & 0x48) == 0x8 )
-                        {   // Prevent accumulating the null data tx failed 
+                        {   // Prevent accumulating the null data tx failed
                             zfGenerateTxCompEvent(buf, ZM_STATUS_TX_FAILED);
                         }
-                        
+
                         /* 3. Put to DnQ */
                         zfDmaReclaimPacket(&zgDnQ, desc);
                         /* Trigger PTA DN DMA */
@@ -994,13 +994,13 @@ void zfHandleTxCompInt(void)
                         /* Retransmit */
                         //1. Setup new MT and MCS
                         zm_hw_set_mt_mcs(buf, newMt, newMcs, sg);
-                        
+
                         //2. Set mac header retry bit
                         buf[4] |= 0x0800;
-                        
+
                         //3. Clear TxFail|BaFail control bit
                         q->head->ctrl &= 0xfffc;
-                        
+
                         //4. Set OWN bits
                         q->head->status |= 0x1;
 
@@ -1009,12 +1009,12 @@ void zfHandleTxCompInt(void)
                             buf[2] &= 0xffe7;
 
                         //zfUartSendStr((u8_t*)"Y");
-                    }     
-					
+                    }
+
 					/* 5. Restart DMA */
                     //set dma start address
 					/* check MAC DMA status */
-					//if ( (((*(volatile u32_t*)(0x1c3d30) >> 12) & 0xf) == 0xA) && 
+					//if ( (((*(volatile u32_t*)(0x1c3d30) >> 12) & 0xf) == 0xA) &&
 					//     (((*(volatile u32_t*)(0x1c3d3c) >> 12) & 0xf) == 0x8) )
                     dmaState = (*(volatile u32_t*)(0x1c3d30) >> 12);
                     ctlState = (*(volatile u32_t*)(0x1c3d3c) >> 12);
@@ -1037,34 +1037,34 @@ void zfHandleTxCompInt(void)
 						/* debug counter for retry fail handle but not match with Hw status */
 						*(volatile u32_t*)(0x117760) += 1;
                     	(*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_TXQ0_DMA_ADDR_OFFSET+(ii*8))))
-       				        	= ((u32_t)q->head);						
+       				        	= ((u32_t)q->head);
 					}
                     zm_wl_dma_trigger_reg = (1<<ii);
                     //zfPutTraceBuffer((u32_t)q->head | 0x0f000000);
 				//	zfUartSendStrAndHex((u8_t*)"d-H = ", (u32_t)q->head);
-                    
-						               
+
+
                 } //if ((zgTxQ->head->ctrl & 0x1) == 1)
 
 #if 1 /* BA fail handle block */
                 /* BA Fail */
                 else if ((q->head->ctrl & 0x2) != 0)
-                {                
-                    /* Get from TxQ */                                  
-                    desc = zfDmaGetPacket(q); 
-                    desc = zfExchangeDesc(desc);                    
-					
+                {
+                    /* Get from TxQ */
+                    desc = zfDmaGetPacket(q);
+                    desc = zfExchangeDesc(desc);
+
                     /* last one in an AMPDU */
                     if (zfCheckAGP(desc))
                     {
                         zgPendingTUCount--;
 						zfPauseUsbDma();
-                    }  
+                    }
                     zgRCBaErrorCnt++;
 					zfUpdateTxAggInfo(desc);
 
-                    zfBAFailHandler(q, ii, desc);                       					       					
-								
+                    zfBAFailHandler(q, ii, desc);
+
                 } //else if ((q->head->ctrl & 0x2) != 0)
 #endif /* BA fail handle block */
 				else /* Tx Completed */
@@ -1077,11 +1077,11 @@ void zfHandleTxCompInt(void)
                     #if ZM_BB_RESET == 1
                     zgRTSRetryCnt = 0;
                     #endif
-					
+
                     desc = zfDmaGetPacket(q);
 					desc = zfExchangeDesc(desc);
                     //zfPutTraceBuffer((u32_t)desc | 0x04000000);
-                    
+
                     /* 2. Generate retry interrupt */
                     buf = (u16_t*)desc->dataAddr;
 #if 0
@@ -1125,7 +1125,7 @@ void zfHandleTxCompInt(void)
                             genBAFrame = 0;
                         }
                     }
-                    else 
+                    else
 #endif
                     if (((buf[4] & 0x0800) == 0x0800) && ((buf[1] & 0x20) == 0) && ((buf[4] & 0x48) == 0x8) )
                     {   // Prevent accumulating the null data rtray count !
@@ -1139,12 +1139,12 @@ void zfHandleTxCompInt(void)
 					else if (!zfCheckAGG(desc))
 					{
 						/* single packet */
-                        zfGenerateTxCompEvent(buf, ZM_STATUS_TX_COMP);						
+                        zfGenerateTxCompEvent(buf, ZM_STATUS_TX_COMP);
 					}
 
-					/* softap */					
+					/* softap */
 				    zfUpdateTxAggInfo(desc);
-					
+
                     /* Last one in an AMPDU is completed,  */
                     /* setup BA Fail packets as completed TU in RTQ */
                     if (zfCheckAGG(desc) && zfCheckAGP(desc))
@@ -1152,28 +1152,28 @@ void zfHandleTxCompInt(void)
                         /* complete one TU */
                         zgPendingTUCount--;
 						zfPauseUsbDma();
-                        
+
                         /* check if any BA Fail packets in RTQ waiting */
 						if (zgRTQ.head && (!zfCheckAGP(zgRTQ.terminator)))
-                        {   
-                            /* SetUp Complete TU : Set the last one packet of RTS with AGP */                     
+                        {
+                            /* SetUp Complete TU : Set the last one packet of RTS with AGP */
                             zgRTQTUCount++;
                             zfSetRTQAGP();
                         }
                     }
-									    
+
                     zfDmaReclaimPacket(&zgDnQ, desc);
-                    
+
                     /* Trigger PTA DN DMA */
                     ZM_PTA_DN_DMA_TRIGGER_REG = 1;
 
                     //zfPutTraceBuffer((u32_t)desc | 0x08000000);
 
                     //zfUartSendStr((u8_t*)"t");
-                    
+
                     //zfUartSendStrAndHex((u8_t*)" desc=", (u32_t)desc);
                 } /* if (getDescFlag == 1) */
-                
+
                 #if ZM_CABQ_SUPPORT == 1
                 if (qNum == 1)
                 {
@@ -1195,8 +1195,8 @@ void zfHandleTxCompInt(void)
                     //}
                 }
                 #endif
-                
-                
+
+
             } /* while ((zgTxQ[ii].head != zgTxQ[ii].terminator)... */
         } /* for (ii=0; ii<3 ; ii++) */
 }
@@ -1205,7 +1205,7 @@ void zfHandleTxCompInt(void)
 void zfWlanIsr(void)
 {
     u32_t intr;
-        
+
     /* Read interrupt */
     intr = zm_wl_int_ctrl_reg;
     /* clear interrupt flag */
@@ -1227,16 +1227,16 @@ void zfWlanIsr(void)
 
         zfHandlePreTbttInt();
     }
-    
+
     /* ATIM interrupt */
     if ((intr & ZM_INT_ATIM_BIT) != 0)
     {
         zfUartSendStr((u8_t*)" ATIM ");
         zfHandleAtimInt();
     }
-    
-    
-    
+
+
+
     if ((intr & (ZM_INT_TXC_BIT|ZM_INT_RETRY_FAIL_BIT)) != 0)
     {
         zfHandleTxCompInt();
@@ -1257,9 +1257,9 @@ void zfTxSchedulerTask(void)
     //If agPendingTUCount < 2
         //If agRtQTUCount > 0, get a TU from RtQ and put to TxQ, agPendingTUCount++
         //If agDnQTUCount > 0, get a TU from DnQ and put to TxQ, agPendingTUCount++
-		
-    struct zsDmaDesc* desc;		
-    
+
+    struct zsDmaDesc* desc;
+
     /* first priority : RTQ */
 #if 0
 //	if (zgPendingTUCount<2)
@@ -1268,51 +1268,51 @@ void zfTxSchedulerTask(void)
 //        {
 #endif
     while ((zgPendingTUCount<2) && (zgRTQTUCount>0))
-    {			
-		    //zfUartSendStr((u8_t*)".");	
+    {
+		    //zfUartSendStr((u8_t*)".");
 
             if (zgRTQ.head)
             {
                 zgRTQTUCount--;
                 zgPendingTUCount++;
 				zfPauseUsbDma();
-                
+
                 while(!zfCheckAGP(zgRTQ.head))
                 {
                     desc = zfQueGetPacket(&zgRTQ);
-                    
-                    //Clear TxFail|BaFail control bit                       
-                    desc->ctrl &= 0xfffc;    
-                                    
+
+                    //Clear TxFail|BaFail control bit
+                    desc->ctrl &= 0xfffc;
+
                     //Set OWN bits
                     desc->status |= 0x1;
-                    
+
                     /* Put to TxQ */
 					zfDmaPutPacket(&zgTxQ[0], desc);
 
-                    //zfUartSendStrAndHex((u8_t*)"dp = ", (u32_t)desc);	
+                    //zfUartSendStrAndHex((u8_t*)"dp = ", (u32_t)desc);
                     //zfUartSendStr((u8_t*)"t");
-					
+
                     /* Trigger WLAN TX DMA */
-                    zm_wl_dma_trigger_reg = 1;                    
+                    zm_wl_dma_trigger_reg = 1;
                 }
                 /* Last one in TU */
                 desc = zfQueGetPacket(&zgRTQ);
-                    
-                //Clear TxFail|BaFail control bit                       
-                desc->ctrl &= 0xfffc;    
-                                    
+
+                //Clear TxFail|BaFail control bit
+                desc->ctrl &= 0xfffc;
+
                 //Set OWN bits
                 desc->status |= 0x1;
-                    
+
                 /* Put to TxQ */
-				zfDmaPutPacket(&zgTxQ[0], desc); 
-				
-                //zfUartSendStrAndHex((u8_t*)"dp = ", (u32_t)desc);					            
-                //zfUartSendStr((u8_t*)"R"); 
-               
+				zfDmaPutPacket(&zgTxQ[0], desc);
+
+                //zfUartSendStrAndHex((u8_t*)"dp = ", (u32_t)desc);
+                //zfUartSendStr((u8_t*)"R");
+
                 /* Trigger WLAN TX DMA */
-                zm_wl_dma_trigger_reg = 1;                
+                zm_wl_dma_trigger_reg = 1;
             }/* if (zgRTQ.head) */
       } /* while ((zgPendingTUCount<2) && (zgRTQTUCount>0)) */
 #if 0
@@ -1327,13 +1327,13 @@ void zfTxSchedulerTask(void)
         {
             zgDnQTUCount--;
             zgPendingTUCount++;
-            
-            zfSendTUFromDnQToTxQ(0);            
-            
+
+            zfSendTUFromDnQToTxQ(0);
+
             //zfUartSendStr((u8_t*)"D");
 			zfPauseUsbDma();
         }/* if (zgDnQTUCount>0) */
-    }/* if (zgPendingTUCount<2) */    
+    }/* if (zgPendingTUCount<2) */
 }
 
 

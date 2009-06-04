@@ -19,7 +19,7 @@ void zfTxSchedulerTask(void);
 
 /* USB_Boot.c */
 extern void zfGenUsbInterrupt(u8_t rspLen, u8_t rspType, u16_t rspSeq, u8_t *body);
- 
+
 #define ZM_CMD_REBOOT		0x93
 
 /* stream mode setting */

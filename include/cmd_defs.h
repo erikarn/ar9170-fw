@@ -26,7 +26,7 @@
 /*
  * ZM_CMD_REBOOT differs between STA and AP,
  * refer to sta.h and ap.h
- */ 
+ */
 #define ZM_CMD_FDC          0xA0
 #define ZM_CMD_WREEPROM     0xB0
 #define ZM_CMD_FW_DL_INIT   0xB5

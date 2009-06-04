@@ -40,23 +40,23 @@ u16_t zfGetChar(u32_t ms)
         {
             return (u16_t)(ZM_HUART_RX_BUFFER_REG&0xff);
         }
-        
+
         if (ms == 0)
         {
             return 0xffff;
         }
-        
+
         if (i++ >= 200)
         {
             j++;
             i = 0;
         }
-            
+
         if (j >= ms)
         {
             return 0xffff;
         }
-        
+
     }
 }
 #endif
@@ -81,7 +81,7 @@ void zfPutChar(u8_t ch)
 void zfCuartOut(u8_t* strPtr, u32_t len)
 {
     u32_t i;
-    
+
     for (i=0; i< len; i++)
     {
         zfPutChar(strPtr[i]);
@@ -93,12 +93,12 @@ void zfCuartOut(u8_t* strPtr, u32_t len)
 void zfUartSendStr(u8_t* str)
 {
     u32_t i = 0;
-    
+
     while (str[i] != 0)
     {
         i++;
     }
-    
+
     zfCuartOut(str, i);
 }
 
@@ -145,7 +145,7 @@ int zfUartSendHex(u32_t hex)
     zfItoa16(hex, str);
     zfUartSendStr(str);
 #endif
-    
+
     return 0;
 }
 
@@ -159,7 +159,7 @@ int zfUartSendHex8(u32_t hex)
     zfUartSendStr(str+6);
 
 #endif
-    
+
     return 0;
 }
 

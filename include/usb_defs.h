@@ -120,7 +120,7 @@
 
 #define ZM_INTR_SOURCE_3_REG \
     (*((volatile u8_t*)(ZM_FUSB_BASE+ZM_INTR_SOURCE_3_OFFSET)))
-    
+
 #define ZM_INTR_SOURCE_4_REG \
     (*((volatile u8_t*)(ZM_FUSB_BASE+ZM_INTR_SOURCE_4_OFFSET)))
 
@@ -234,7 +234,7 @@
     #if (HS_C1_INTERFACE_NUMBER >= 1)
         // Interface 0
         #define HS_C1_I0_ALT_NUMBER    0X01
-        #if (HS_C1_I0_ALT_NUMBER >= 1) 
+        #if (HS_C1_I0_ALT_NUMBER >= 1)
             // AlternateSetting 0X00
             #define HS_C1_I0_A0_bInterfaceNumber   0X00
             #define HS_C1_I0_A0_bAlternateSetting  0X00

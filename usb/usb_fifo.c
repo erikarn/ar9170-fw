@@ -96,14 +96,14 @@ void vUsbFIFO_EPxCfg_HS(void)
                             mUsbEPMap(EP1, HS_C1_I0_A0_EP1_MAP);
                             mUsbFIFOMap(HS_C1_I0_A0_EP1_FIFO_START, HS_C1_I0_A0_EP1_FIFO_MAP);
                             mUsbFIFOConfig(HS_C1_I0_A0_EP1_FIFO_START, HS_C1_I0_A0_EP1_FIFO_CONFIG);
-                            
+
                             for(i = HS_C1_I0_A0_EP1_FIFO_START + 1 ;
                                 i < HS_C1_I0_A0_EP1_FIFO_START + HS_C1_I0_A0_EP1_FIFO_NO ;
                                 i ++)
                             {
                                 mUsbFIFOConfig(i, (HS_C1_I0_A0_EP1_FIFO_CONFIG & (~BIT7)) );
                             }
-                            
+
                             mUsbEPMxPtSzHigh(EP1, HS_C1_I0_A0_EP1_DIRECTION, (HS_C1_I0_A0_EP1_MAX_PACKET & 0x7ff) );
                             mUsbEPMxPtSzLow(EP1, HS_C1_I0_A0_EP1_DIRECTION, (HS_C1_I0_A0_EP1_MAX_PACKET & 0x7ff) );
                             mUsbEPinHighBandSet(EP1 , HS_C1_I0_A0_EP1_DIRECTION , HS_C1_I0_A0_EP1_MAX_PACKET);
@@ -115,18 +115,18 @@ void vUsbFIFO_EPxCfg_HS(void)
                             mUsbEPMap(EP2, HS_C1_I0_A0_EP2_MAP);
                             mUsbFIFOMap(HS_C1_I0_A0_EP2_FIFO_START, HS_C1_I0_A0_EP2_FIFO_MAP);
                             mUsbFIFOConfig(HS_C1_I0_A0_EP2_FIFO_START, HS_C1_I0_A0_EP2_FIFO_CONFIG);
-                            
+
                             for(i = HS_C1_I0_A0_EP2_FIFO_START + 1 ;
                                 i < HS_C1_I0_A0_EP2_FIFO_START + HS_C1_I0_A0_EP2_FIFO_NO ;
                                 i ++)
                             {
                                 mUsbFIFOConfig(i, (HS_C1_I0_A0_EP2_FIFO_CONFIG & (~BIT7)) );
                             }
-                            
+
                             mUsbEPMxPtSzHigh(EP2, HS_C1_I0_A0_EP2_DIRECTION, (HS_C1_I0_A0_EP2_MAX_PACKET & 0x7ff) );
                             mUsbEPMxPtSzLow(EP2, HS_C1_I0_A0_EP2_DIRECTION, (HS_C1_I0_A0_EP2_MAX_PACKET & 0x7ff) );
                             mUsbEPinHighBandSet(EP2 , HS_C1_I0_A0_EP2_DIRECTION , HS_C1_I0_A0_EP2_MAX_PACKET);
-                            
+
                             //zfUartSendStr((u8_t *) "Initialize EP2\r\n");
                             #endif
                             #if (HS_C1_I0_A0_EP_NUMBER >= 3)
@@ -134,14 +134,14 @@ void vUsbFIFO_EPxCfg_HS(void)
                             mUsbEPMap(EP3, HS_C1_I0_A0_EP3_MAP);
                             mUsbFIFOMap(HS_C1_I0_A0_EP3_FIFO_START, HS_C1_I0_A0_EP3_FIFO_MAP);
                             mUsbFIFOConfig(HS_C1_I0_A0_EP3_FIFO_START, HS_C1_I0_A0_EP3_FIFO_CONFIG);
-                            
+
                             for(i = HS_C1_I0_A0_EP3_FIFO_START + 1 ;
                                 i < HS_C1_I0_A0_EP3_FIFO_START + HS_C1_I0_A0_EP3_FIFO_NO ;
                                 i ++)
                             {
                                 mUsbFIFOConfig(i, (HS_C1_I0_A0_EP3_FIFO_CONFIG & (~BIT7)) );
                             }
-                            
+
                             mUsbEPMxPtSzHigh(EP3, HS_C1_I0_A0_EP3_DIRECTION, (HS_C1_I0_A0_EP3_MAX_PACKET & 0x7ff) );
                             mUsbEPMxPtSzLow(EP3, HS_C1_I0_A0_EP3_DIRECTION, (HS_C1_I0_A0_EP3_MAX_PACKET & 0x7ff) );
                             mUsbEPinHighBandSet(EP3 , HS_C1_I0_A0_EP3_DIRECTION , HS_C1_I0_A0_EP3_MAX_PACKET);
@@ -153,14 +153,14 @@ void vUsbFIFO_EPxCfg_HS(void)
                             mUsbEPMap(EP4, HS_C1_I0_A0_EP4_MAP);
                             mUsbFIFOMap(HS_C1_I0_A0_EP4_FIFO_START, HS_C1_I0_A0_EP4_FIFO_MAP);
                             mUsbFIFOConfig(HS_C1_I0_A0_EP4_FIFO_START, HS_C1_I0_A0_EP4_FIFO_CONFIG);
-                            
+
                             for(i = HS_C1_I0_A0_EP4_FIFO_START + 1 ;
                                 i < HS_C1_I0_A0_EP4_FIFO_START + HS_C1_I0_A0_EP4_FIFO_NO ;
                                 i ++)
                             {
                                 mUsbFIFOConfig(i, (HS_C1_I0_A0_EP4_FIFO_CONFIG & (~BIT7)) );
                             }
-                            
+
                             mUsbEPMxPtSzHigh(EP4, HS_C1_I0_A0_EP4_DIRECTION, (HS_C1_I0_A0_EP4_MAX_PACKET & 0x7ff) );
                             mUsbEPMxPtSzLow(EP4, HS_C1_I0_A0_EP4_DIRECTION, (HS_C1_I0_A0_EP4_MAX_PACKET & 0x7ff) );
                             mUsbEPinHighBandSet(EP4 , HS_C1_I0_A0_EP4_DIRECTION , HS_C1_I0_A0_EP4_MAX_PACKET);
@@ -172,14 +172,14 @@ void vUsbFIFO_EPxCfg_HS(void)
                             mUsbEPMap(EP5, HS_C1_I0_A0_EP5_MAP);
                             mUsbFIFOMap(HS_C1_I0_A0_EP5_FIFO_START, HS_C1_I0_A0_EP5_FIFO_MAP);
                             mUsbFIFOConfig(HS_C1_I0_A0_EP5_FIFO_START, HS_C1_I0_A0_EP5_FIFO_CONFIG);
-                            
+
                             for(i = HS_C1_I0_A0_EP5_FIFO_START + 1 ;
                                 i < HS_C1_I0_A0_EP5_FIFO_START + HS_C1_I0_A0_EP5_FIFO_NO ;
                                 i ++)
                             {
                                 mUsbFIFOConfig(i, (HS_C1_I0_A0_EP5_FIFO_CONFIG & (~BIT7)) );
                             }
-                            
+
                             mUsbEPMxPtSzHigh(EP5, HS_C1_I0_A0_EP5_DIRECTION, (HS_C1_I0_A0_EP5_MAX_PACKET & 0x7ff) );
                             mUsbEPMxPtSzLow(EP5, HS_C1_I0_A0_EP5_DIRECTION, (HS_C1_I0_A0_EP5_MAX_PACKET & 0x7ff) );
                             mUsbEPinHighBandSet(EP5 , HS_C1_I0_A0_EP5_DIRECTION , HS_C1_I0_A0_EP5_MAX_PACKET);
@@ -228,14 +228,14 @@ void vUsbFIFO_EPxCfg_FS(void)
                             mUsbEPMap(EP1, FS_C1_I0_A0_EP1_MAP);
                             mUsbFIFOMap(FS_C1_I0_A0_EP1_FIFO_START, FS_C1_I0_A0_EP1_FIFO_MAP);
                             mUsbFIFOConfig(FS_C1_I0_A0_EP1_FIFO_START, FS_C1_I0_A0_EP1_FIFO_CONFIG);
-                            
+
                             for(i = FS_C1_I0_A0_EP1_FIFO_START + 1 ;
                                 i < FS_C1_I0_A0_EP1_FIFO_START + FS_C1_I0_A0_EP1_FIFO_NO ;
                                 i ++)
                             {
                                 mUsbFIFOConfig(i, (FS_C1_I0_A0_EP1_FIFO_CONFIG & (~BIT7)) );
                             }
-                            
+
                             mUsbEPMxPtSzHigh(EP1, FS_C1_I0_A0_EP1_DIRECTION, (FS_C1_I0_A0_EP1_MAX_PACKET & 0x7ff));
                             mUsbEPMxPtSzLow(EP1, FS_C1_I0_A0_EP1_DIRECTION, (FS_C1_I0_A0_EP1_MAX_PACKET & 0x7ff));
                         //``.JWEI 2003/04/29
@@ -248,18 +248,18 @@ void vUsbFIFO_EPxCfg_FS(void)
                             mUsbEPMap(EP2, FS_C1_I0_A0_EP2_MAP);
                             mUsbFIFOMap(FS_C1_I0_A0_EP2_FIFO_START, FS_C1_I0_A0_EP2_FIFO_MAP);
                             mUsbFIFOConfig(FS_C1_I0_A0_EP2_FIFO_START, FS_C1_I0_A0_EP2_FIFO_CONFIG);
-                            
+
                             for(i = FS_C1_I0_A0_EP2_FIFO_START + 1 ;
                                 i < FS_C1_I0_A0_EP2_FIFO_START + FS_C1_I0_A0_EP2_FIFO_NO ;
                                 i ++)
                             {
                                 mUsbFIFOConfig(i, (FS_C1_I0_A0_EP2_FIFO_CONFIG & (~BIT7)) );
                             }
-                            
+
                             mUsbEPMxPtSzHigh(EP2, FS_C1_I0_A0_EP2_DIRECTION, (FS_C1_I0_A0_EP2_MAX_PACKET & 0x7ff));
                             mUsbEPMxPtSzLow(EP2, FS_C1_I0_A0_EP2_DIRECTION, (FS_C1_I0_A0_EP2_MAX_PACKET & 0x7ff));
                             mUsbEPinHighBandSet(EP2 , FS_C1_I0_A0_EP2_DIRECTION, FS_C1_I0_A0_EP2_MAX_PACKET);
-                            
+
                             //zfUartSendStr((u8_t *) "Initialize EP2\r\n");
                             #endif
                             #if (FS_C1_I0_A0_EP_NUMBER >= 3)
@@ -267,14 +267,14 @@ void vUsbFIFO_EPxCfg_FS(void)
                             mUsbEPMap(EP3, FS_C1_I0_A0_EP3_MAP);
                             mUsbFIFOMap(FS_C1_I0_A0_EP3_FIFO_START, FS_C1_I0_A0_EP3_FIFO_MAP);
                             mUsbFIFOConfig(FS_C1_I0_A0_EP3_FIFO_START, FS_C1_I0_A0_EP3_FIFO_CONFIG);
-                            
+
                             for(i = FS_C1_I0_A0_EP3_FIFO_START + 1 ;
                                 i < FS_C1_I0_A0_EP3_FIFO_START + FS_C1_I0_A0_EP3_FIFO_NO ;
                                 i ++)
                             {
                                 mUsbFIFOConfig(i, (FS_C1_I0_A0_EP3_FIFO_CONFIG & (~BIT7)) );
                             }
-                            
+
                             mUsbEPMxPtSzHigh(EP3, FS_C1_I0_A0_EP3_DIRECTION, (FS_C1_I0_A0_EP3_MAX_PACKET & 0x7ff));
                             mUsbEPMxPtSzLow(EP3, FS_C1_I0_A0_EP3_DIRECTION, (FS_C1_I0_A0_EP3_MAX_PACKET & 0x7ff));
                             mUsbEPinHighBandSet(EP3 , FS_C1_I0_A0_EP3_DIRECTION, FS_C1_I0_A0_EP3_MAX_PACKET);
@@ -286,14 +286,14 @@ void vUsbFIFO_EPxCfg_FS(void)
                             mUsbEPMap(EP4, FS_C1_I0_A0_EP4_MAP);
                             mUsbFIFOMap(FS_C1_I0_A0_EP4_FIFO_START, FS_C1_I0_A0_EP4_FIFO_MAP);
                             mUsbFIFOConfig(FS_C1_I0_A0_EP4_FIFO_START, FS_C1_I0_A0_EP4_FIFO_CONFIG);
-                            
+
                             for(i = FS_C1_I0_A0_EP4_FIFO_START + 1 ;
                                 i < FS_C1_I0_A0_EP4_FIFO_START + FS_C1_I0_A0_EP4_FIFO_NO ;
                                 i ++)
                             {
                                 mUsbFIFOConfig(i, (FS_C1_I0_A0_EP4_FIFO_CONFIG & (~BIT7)) );
                             }
-                            
+
                             mUsbEPMxPtSzHigh(EP4, FS_C1_I0_A0_EP4_DIRECTION, (FS_C1_I0_A0_EP4_MAX_PACKET & 0x7ff));
                             mUsbEPMxPtSzLow(EP4, FS_C1_I0_A0_EP4_DIRECTION, (FS_C1_I0_A0_EP4_MAX_PACKET & 0x7ff));
                             mUsbEPinHighBandSet(EP4 , FS_C1_I0_A0_EP4_DIRECTION, FS_C1_I0_A0_EP4_MAX_PACKET);
@@ -305,14 +305,14 @@ void vUsbFIFO_EPxCfg_FS(void)
                             mUsbEPMap(EP5, FS_C1_I0_A0_EP5_MAP);
                             mUsbFIFOMap(FS_C1_I0_A0_EP5_FIFO_START, FS_C1_I0_A0_EP5_FIFO_MAP);
                             mUsbFIFOConfig(FS_C1_I0_A0_EP5_FIFO_START, FS_C1_I0_A0_EP5_FIFO_CONFIG);
-                            
+
                             for(i = FS_C1_I0_A0_EP5_FIFO_START + 1 ;
                                 i < FS_C1_I0_A0_EP5_FIFO_START + FS_C1_I0_A0_EP5_FIFO_NO ;
                                 i ++)
                             {
                                 mUsbFIFOConfig(i, (FS_C1_I0_A0_EP5_FIFO_CONFIG & (~BIT7)) );
                             }
-                            
+
                             mUsbEPMxPtSzHigh(EP5, FS_C1_I0_A0_EP5_DIRECTION, (FS_C1_I0_A0_EP5_MAX_PACKET & 0x7ff));
                             mUsbEPMxPtSzLow(EP5, FS_C1_I0_A0_EP5_DIRECTION, (FS_C1_I0_A0_EP5_MAX_PACKET & 0x7ff));
                             mUsbEPinHighBandSet(EP5 , FS_C1_I0_A0_EP5_DIRECTION, FS_C1_I0_A0_EP5_MAX_PACKET);

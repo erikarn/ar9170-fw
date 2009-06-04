@@ -136,7 +136,7 @@ u16_t u8HSConfigDescriptor01[] =
     m2BYTE(USB_INTERFACE_PROTOCOL, USB_INTERFACE_STRING_INDEX),
     m2BYTE(USB_EP_DESC_LEN, USB_EP_DESC_TYPE),                      // EP 1
     m2BYTE(USB_HS_EP1_ADDRESS, USB_HS_EP1_ATTRIBUTE),
-    USB_HS_EP1_MAX_PACKET_SIZE, 
+    USB_HS_EP1_MAX_PACKET_SIZE,
     m2BYTE(USB_HS_EP1_INTERVAL, USB_EP_DESC_LEN),                   // EP 2
     m2BYTE(USB_EP_DESC_TYPE, USB_HS_EP2_ADDRESS),
     m2BYTE(USB_HS_EP2_ATTRIBUTE, USB_HS_EP2_MAX_PACKET_SIZE),
@@ -170,7 +170,7 @@ u16_t u8FSConfigDescriptor01[] =
     m2BYTE(mHIGH_BYTE(USB_FS_EP2_MAX_PACKET_SIZE), USB_FS_EP2_INTERVAL),
     m2BYTE(USB_EP_DESC_LEN, USB_EP_DESC_TYPE),                      // EP 3
     m2BYTE(USB_FS_EP3_ADDRESS, USB_FS_EP3_ATTRIBUTE),
-    USB_FS_EP3_MAX_PACKET_SIZE, 
+    USB_FS_EP3_MAX_PACKET_SIZE,
     m2BYTE(USB_FS_EP3_INTERVAL, USB_EP_DESC_LEN),                   // EP 4
     m2BYTE(USB_EP_DESC_TYPE, USB_FS_EP4_ADDRESS),
     m2BYTE(USB_FS_EP4_ATTRIBUTE, USB_FS_EP4_MAX_PACKET_SIZE),
@@ -296,7 +296,7 @@ void zfPtaModeInit(void)
 #if ZM_DRV_INIT_USB_MODE == 0
 
     if (mUsbHighSpeedST())                  // First judge HS or FS??
-    {            
+    {
         // Set into 512 byte mode */
         ZM_SOC_USB_MODE_CTRL_REG |= BIT2;
     }
@@ -330,7 +330,7 @@ void zfPtaModeInit(void)
 
     /* Set the up stream mode maximum aggregate number */
     ZM_SOC_USB_MAX_AGGREGATE_REG = 0x02;
-    
+
     /* Set the up stream mode timeout value */
     ZM_SOC_USB_TIME_CTRL_REG = 0x100;
 #endif
@@ -565,10 +565,10 @@ void vUsb_suspend(void)
 	/* write watchdog magic pattern for suspend  */
 	ZM_WATCH_DOG_MAGIC_REG &= 0xFFFF;
 	ZM_WATCH_DOG_MAGIC_REG |= 0x98760000;
-	
+
 	/* Disable watchdog */
-	ZM_WATCH_DOG_REG = 0xFFFF;	
-	
+	ZM_WATCH_DOG_REG = 0xFFFF;
+
 // uP must do-over everything it should handle
 // and do before into the suspend mode
     //mUsbIntSuspClr();                       // Go Suspend status
@@ -708,7 +708,7 @@ BOOLEAN bGet_status(void)
     ZM_CBUS_FIFO_SIZE_REG = 0xf;
 
     eUsbCxFinishAction = ACT_DONE;
-    return TRUE; 
+    return TRUE;
 }
 
 /***********************************************************************/
@@ -726,7 +726,7 @@ BOOLEAN bClear_feature(void)
     UsbStatus[2] = 0;
     eUsbCxFinishAction = ACT_DONE;
 
-    return TRUE; 
+    return TRUE;
 }
 
 /***********************************************************************/
@@ -780,7 +780,7 @@ BOOLEAN bSet_feature(void)
                     ZM_PHY_TEST_SELECT_REG = TestPatn0[(mDEV_REQ_INDEX() >> 8) - 1];
                     eUsbCxFinishAction = ACT_DONE;
                     break;
-                        
+
                 case 0x4:   // Test_Packet
                 //    mUsbTsMdWr(TEST_PKY);
                 //    mUsbEP0DoneSet();           // special case: follow the test sequence
@@ -826,13 +826,13 @@ BOOLEAN bSet_feature(void)
                     //mUsbTsPkDoneSet();
                     ZM_CX_CONFIG_STATUS_REG = 0x02;
                     break;
-                
+
                 case 0x5:   // Test_Force_Enable
                     //FUSBPort[0x08] = 0x20;    //Start Test_Force_Enable
                     break;
-            
+
                 default:
-                    return FALSE;       
+                    return FALSE;
             }
             break;
     #endif
@@ -919,13 +919,13 @@ BOOLEAN bGet_descriptor(void)
                     pu8DescriptorEX = u8String00Descriptor;
                     //u16TxRxCounter = 4;
                     break;
-                
+
                 case 0x10:
                     //zfUartSendStr((u8_t *)"Index 0x10\r\n");
                     pu8DescriptorEX = u8String10Descriptor;
                     //u16TxRxCounter = 12;
                     break;
-                
+
                 case 0x20:
                     //zfUartSendStr((u8_t *)"Index 0x20\r\n");
                     pu8DescriptorEX = u8String20Descriptor;
@@ -948,7 +948,7 @@ BOOLEAN bGet_descriptor(void)
             u16TxRxCounter = mTABLE_LEN(u8DeviceQualifierDescriptorEX[0]);
             //u16TxRxCounter = mTABLE_LEN(u8DeviceQualifierDescriptorEX[0]);
             break;
-            
+
         case 7:                     // Other_Speed_Configuration
             //zfUartSendStr((u8_t *)"Other_Speed Descriptor\r\n");
             // It includes Configuration, Interface and Endpoint Table
@@ -1000,7 +1000,7 @@ BOOLEAN bSet_descriptor(void)
                     return FALSE;
             }
             break;
-                    
+
 
         case 3:                 // string descriptor
             // DescriptorIndex = low_byte of wValue
@@ -1009,11 +1009,11 @@ BOOLEAN bSet_descriptor(void)
                 case 0x00:
                     pu8DescriptorEX = u8String00Descriptor;
                     break;
-                
+
                 case 0x10:
                     pu8DescriptorEX = u8String10Descriptor;
                     break;
-                
+
                 case 0x20:
                     pu8DescriptorEX = u8String20Descriptor;
                     break;
@@ -1266,7 +1266,7 @@ void vUsbEP0TxData(void)
         }
 
         remainder = u8temp % 4;
-        
+
         // Check whether there are data needed to be filled into the FIFO
         if (remainder == 3)
         {
@@ -1543,7 +1543,7 @@ void VendorCommand(void)
 
             //zfUartSendStrAndHex((u8_t *) "u16TxRxCounter=", u16TxRxCounter);
 			zfUartSendStrAndHex((u8_t *) "pu8DescriptorEX=", (u32_t) pu8DescriptorEX);
-			
+
             if ((((u32_t)pu8DescriptorEX) & 0x300000) == 0x200000)
 			{
 				//zfUartSendStr((u8_t *) "CMD_VOID");
@@ -1568,7 +1568,7 @@ void VendorCommand(void)
                 /* goto firmware start address */
                 funcPtr = (void*)(ZM_FIRMWARE_SPI_ADDR+4);
                 funcPtr();
-                break;			
+                break;
 			}
     }
 }

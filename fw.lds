@@ -27,8 +27,8 @@ SECTIONS
 
 	/* anything else can be anywhere */
 
-	.text : { *(.text*) } > pram 
-	.rodata : { *(.rodata*) } > pram 
+	.text : { *(.text*) } > pram
+	.rodata : { *(.rodata*) } > pram
 	.data	: { *(.data*) } > pram
 	.bss	: { *(.bss) } > pram
 }

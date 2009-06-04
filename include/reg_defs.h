@@ -44,7 +44,7 @@
 
 #define ZM_WATCH_DOG_REG \
     (*((volatile u32_t*)(ZM_TIMER_REGISTER_BASE+ZM_WATCH_DOG_OFFSET)))
-    
+
 #define ZM_TIMER_CONTROL_REG \
     (*((volatile u32_t*)(ZM_TIMER_REGISTER_BASE+ZM_TIMER_CONTROL_OFFSET)))
 
@@ -62,16 +62,16 @@
 
 #define ZM_TIMER4_REG \
     (*((volatile u32_t*)(ZM_TIMER_REGISTER_BASE+ZM_TIMER4_OFFSET)))
-    
+
 #define ZM_TICK_TIMER_REG \
     (*((volatile u32_t*)(ZM_TIMER_REGISTER_BASE+ZM_TICK_TIMER_OFFSET)))
 
 #define ZM_TIMER_INTERRUPT_REG \
     (*((volatile u32_t*)(ZM_TIMER_REGISTER_BASE+ZM_TIMER_INTERRUPT_OFFSET)))
-    
+
 #define ZM_CLOCK_LOW_REG \
     (*((volatile u32_t*)(ZM_TIMER_REGISTER_BASE+ZM_CLOCK_LOW_OFFSET)))
-    
+
 #define ZM_CLOCK_HIGH_REG \
     (*((volatile u32_t*)(ZM_TIMER_REGISTER_BASE+ZM_CLOCK_HIGH_OFFSET)))
 
@@ -96,7 +96,7 @@
 #define ZM_INT_REGISTER_BASE               0x1D2000
 
 /* Definitions of interrupt register offset */
-#define ZM_INT_FLAG_OFFSET                 0x00 
+#define ZM_INT_FLAG_OFFSET                 0x00
 #define ZM_INT_FIQ_MASK_OFFSET             0x04
 #define ZM_INT_IRQ_MASK_OFFSET             0x08
 #define ZM_INT_PRIORITY1_OFFSET            0x0C
@@ -110,31 +110,31 @@
 /* Definitions of interrupt registers */
 #define ZM_INT_FLAG_REG \
     (*((volatile u32_t*)(ZM_INT_REGISTER_BASE+ZM_INT_FLAG_OFFSET)))
-    
+
 #define ZM_INT_FIQ_MASK_REG \
     (*((volatile u32_t*)(ZM_INT_REGISTER_BASE+ZM_INT_FIQ_MASK_OFFSET)))
 
 #define ZM_INT_IRQ_MASK_REG \
     (*((volatile u32_t*)(ZM_INT_REGISTER_BASE+ZM_INT_IRQ_MASK_OFFSET)))
-    
+
 #define ZM_INT_PRIORITY1_REG \
     (*((volatile u32_t*)(ZM_INT_REGISTER_BASE+ZM_INT_PRIORITY1_OFFSET)))
-    
+
 #define ZM_INT_PRIORITY2_REG \
     (*((volatile u32_t*)(ZM_INT_REGISTER_BASE+ZM_INT_PRIORITY2_OFFSET)))
-    
+
 #define ZM_INT_PRIORITY3_REG \
     (*((volatile u32_t*)(ZM_INT_REGISTER_BASE+ZM_INT_PRIORITY3_OFFSET)))
-    
+
 #define ZM_EXT_INT_CONTROL_REG \
     (*((volatile u32_t*)(ZM_INT_REGISTER_BASE+ZM_EXT_INT_CONTROL_OFFSET)))
 
 #define ZM_SW_INT_CONTROL_REG \
     (*((volatile u32_t*)(ZM_INT_REGISTER_BASE+ZM_SW_INT_CONTROL_OFFSET)))
-    
+
 #define ZM_INT_FIQ_ENCODE_REG \
     (*((volatile u32_t*)(ZM_INT_REGISTER_BASE+ZM_INT_FIQ_ENCODE_OFFSET)))
-    
+
 #define ZM_INT_IRQ_ENCODE_REG \
     (*((volatile u32_t*)(ZM_INT_REGISTER_BASE+ZM_INT_IRQ_ENCODE_OFFSET)))
 
@@ -167,7 +167,7 @@
 
 #define ZM_RAND_MODE_REG \
     (*((volatile u32_t*)(ZM_RAND_REGISTER_BASE+ZM_RAND_MODE_OFFSET)))
-   
+
 
 /* ZM_RAND_MODE_REG */
 #define ZM_RAND_MANUAL_BIT              0x000
@@ -189,7 +189,7 @@
 #define ZM_GPIO_PORT_DATA_REG \
     (*((volatile u32_t*)(ZM_GPIO_BASE_ADDRESS+ZM_GPIO_PORT_DATA_OFFSET)))
 
-    
+
 /*ZM_GPIO_PORT_DATA_REG */
 #define ZM_GPIO0_BIT                        0X0001
 #define ZM_GPIO1_BIT                        0X0002
@@ -211,7 +211,7 @@
 #define ZM_HUART_REGISTER_BASE              0x1C0000
 
 /* Definitions of interrupt register offset */
-#define ZM_HUART_RX_BUFFER_OFFSET           0x00 
+#define ZM_HUART_RX_BUFFER_OFFSET           0x00
 #define ZM_HUART_TX_HOLDING_OFFSET          0x04
 #define ZM_HUART_FIFO_CONTROL_OFFSET        0x10
 #define ZM_HUART_LINE_CONTROL_OFFSET        0x14
@@ -221,7 +221,7 @@
 #define ZM_HUART_SCRATCH_OFFSET	            0x24
 #define ZM_HUART_DIVISOR_LSB_OFFSET	        0x28
 #define ZM_HUART_DIVISOR_MSB_OFFSET	        0x2C
-#define ZM_HUART_WORD_RX_BUFFER_OFFSET      0x34 
+#define ZM_HUART_WORD_RX_BUFFER_OFFSET      0x34
 #define ZM_HUART_WORD_TX_HOLDING_OFFSET     0x38
 #define ZM_HUART_FIFO_COUNT_OFFSET	        0x3C
 #define ZM_HUART_REMAINDER_OFFSET           0x4C
@@ -229,7 +229,7 @@
 /* Definitions of interrupt registers */
 #define ZM_HUART_RX_BUFFER_REG \
     (*((volatile u32_t*)(ZM_HUART_REGISTER_BASE+ZM_HUART_RX_BUFFER_OFFSET)))
-    
+
 #define ZM_HUART_TX_HOLDING_REG \
     (*((volatile u32_t*)(ZM_HUART_REGISTER_BASE+ZM_HUART_TX_HOLDING_OFFSET)))
 
@@ -241,7 +241,7 @@
 
 #define ZM_HUART_MODEM_CONTROL_REG \
     (*((volatile u32_t*)(ZM_HUART_REGISTER_BASE+ZM_HUART_MODEM_CONTROL_OFFSET)))
-    
+
 #define ZM_HUART_LINE_STATUS_REG \
     (*((volatile u32_t*)(ZM_HUART_REGISTER_BASE+ZM_HUART_LINE_STATUS_OFFSET)))
 
@@ -259,7 +259,7 @@
 
 #define ZM_HUART_WORD_RX_BUFFER_REG \
   (*((volatile u32_t*)(ZM_HUART_REGISTER_BASE+ZM_HUART_WORD_RX_BUFFER_OFFSET)))
-    
+
 #define ZM_HUART_WORD_TX_HOLDING_REG \
   (*((volatile u32_t*)(ZM_HUART_REGISTER_BASE+ZM_HUART_WORD_TX_HOLDING_OFFSET)))
 
@@ -347,7 +347,7 @@
 
 #define ZM_PTA_PARAM1_REG \
     (*((volatile u32_t*)(ZM_PTA_REGISTER_BASE + ZM_PTA_PARAM1_OFFSET)))
-    
+
 #define ZM_PTA_PARAM2_REG \
     (*((volatile u32_t*)(ZM_PTA_REGISTER_BASE + ZM_PTA_PARAM2_OFFSET)))
 
@@ -359,7 +359,7 @@
 
 #define ZM_PTA_STATUS1_REG \
     (*((volatile u32_t*)(ZM_PTA_REGISTER_BASE + ZM_PTA_STATUS1_OFFSET)))
-    
+
 #define ZM_PTA_STATUS2_REG \
     (*((volatile u32_t*)(ZM_PTA_REGISTER_BASE + ZM_PTA_STATUS2_OFFSET)))
 
@@ -368,13 +368,13 @@
 
 #define ZM_PTA_AHB_INT_FLAG_REG \
     (*((volatile u32_t*)(ZM_PTA_REGISTER_BASE + ZM_PTA_AHB_INT_FLAG_OFFSET)))
-    
+
 #define ZM_AHB_INT_FLAG_REG \
     (*((volatile u32_t*)(ZM_PTA_REGISTER_BASE + ZM_AHB_INT_FLAG_OFFSET)))
 
 #define ZM_PTA_AHB_INT_MASK_REG \
     (*((volatile u32_t*)(ZM_PTA_REGISTER_BASE + ZM_PTA_AHB_INT_MASK_OFFSET)))
-    
+
 #define ZM_PTA_AHB_INT_ACK_REG \
     (*((volatile u32_t*)(ZM_PTA_REGISTER_BASE + ZM_PTA_AHB_INT_ACK_OFFSET)))
 
@@ -521,21 +521,21 @@
 #define ZM_CAM_ROLL_CALL_TABLE_L        0x704
 #define ZM_CAM_ROLL_CALL_TABLE_H        0x708
 #define ZM_CAM_ADDR                     0x70c
-#define ZM_CAM_DATA0                    0x720                 
-#define ZM_CAM_DATA1                    0x724                 
-#define ZM_CAM_DATA2                    0x728                 
-#define ZM_CAM_DATA3                    0x72c 
+#define ZM_CAM_DATA0                    0x720
+#define ZM_CAM_DATA1                    0x724
+#define ZM_CAM_DATA2                    0x728
+#define ZM_CAM_DATA3                    0x72c
 
-#define ZM_CAM_DBG0                     0x730                
-#define ZM_CAM_DBG1                     0x734                
+#define ZM_CAM_DBG0                     0x730
+#define ZM_CAM_DBG1                     0x734
 #define ZM_CAM_DBG2                     0x738
-#define ZM_CAM_TXKEY                    0x740  
+#define ZM_CAM_TXKEY                    0x740
 #define ZM_CAM_RXKEY                    0x750
 
 #define ZM_CAM_TX_ENC_TYPE              0x760
 #define ZM_CAM_RX_ENC_TYPE              0x770
 #define ZM_CAM_TX_SERACH_HIT            0x780
-#define ZM_CAM_RX_SERACH_HIT            0x790                
+#define ZM_CAM_RX_SERACH_HIT            0x790
 
 #define ZM_AMPDU_COUNT_OFF              0xb88
 #define ZM_MPDU_COUNT_OFF               0xb8c
@@ -547,72 +547,72 @@
     (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_INTERRUPT_CTRL_OFFSET)))
 
 #define zm_wl_atim_window_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_ATIM_WINDOW_PERIOD_OFFSET)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_ATIM_WINDOW_PERIOD_OFFSET)))
 
 #define zm_wl_bcn_period_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_BEACON_PERIOD_OFFSET)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_BEACON_PERIOD_OFFSET)))
 
 #define zm_wl_hash_tablel_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_HASH_TABLE_L))) 
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_HASH_TABLE_L)))
 #define zm_wl_hash_tableh_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_HASH_TABLE_H))) 
-    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_HASH_TABLE_H)))
+
 #define zm_wl_after_pnp_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_AFTER_PNP)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_AFTER_PNP)))
 
 #define zm_wl_misc_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_MISC_OFFSET)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_MISC_OFFSET)))
 
 #define zm_wl_tx_underrun_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_TX_UNDERRUN_COUNT)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_TX_UNDERRUN_COUNT)))
 
 #define zm_wl_rx_count_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_RX_TOTAL_COUNT)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_RX_TOTAL_COUNT)))
 #define zm_wl_rx_crc32_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_RX_CRC32_COUNT)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_RX_CRC32_COUNT)))
 #define zm_wl_rx_crc16_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_RX_CRC16_COUNT)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_RX_CRC16_COUNT)))
 #define zm_wl_rx_err_uni_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_RX_ERR_UNI)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_RX_ERR_UNI)))
 #define zm_wl_rx_overrun_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_RX_OVERRUN_COUNT)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_RX_OVERRUN_COUNT)))
 #define zm_wl_rx_err_mul_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_RX_ERR_MUL)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_RX_ERR_MUL)))
 #define zm_wl_rx_timeout_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_RX_TIMEOUT_COUNT)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_RX_TIMEOUT_COUNT)))
 
 #define zm_wl_tx_retry_count_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_TX_RETRY_COUNT)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_TX_RETRY_COUNT)))
 #define zm_wl_tx_count_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_TX_TOTAL_COUNT)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_TX_TOTAL_COUNT)))
 
 #define zm_cam_mode_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_MODE)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_MODE)))
 #define zm_cam_roll_call_tablel_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_ROLL_CALL_TABLE_L)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_ROLL_CALL_TABLE_L)))
 #define zm_cam_roll_call_tableh_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_ROLL_CALL_TABLE_H)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_ROLL_CALL_TABLE_H)))
 #define zm_cam_addr_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_ADDR)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_ADDR)))
 #define zm_cam_data0_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_DATA0)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_DATA0)))
 #define zm_cam_data1_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_DATA1)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_DATA1)))
 #define zm_cam_data2_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_DATA2)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_DATA2)))
 #define zm_cam_data3_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_DATA3)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_DATA3)))
 
 #define zm_cam_dbg0_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_DBG0)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_DBG0)))
 #define zm_cam_dbg1_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_DBG1)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_DBG1)))
 #define zm_cam_dbg2_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_DBG2)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_DBG2)))
 #define zm_cam_txkey_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_TXKEY)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_TXKEY)))
 #define zm_cam_rxkey_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_RXKEY)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_RXKEY)))
 
 #define zm_cam_txenc_reg \
     (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_TX_ENC_TYPE)))
@@ -621,13 +621,13 @@
 #define zm_cam_txhit_reg \
     (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_TX_SERACH_HIT)))
 #define zm_cam_rxhit_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_RX_SERACH_HIT)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_CAM_RX_SERACH_HIT)))
 
 #define zm_wl_ampdu_count_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_AMPDU_COUNT_OFF)))    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_AMPDU_COUNT_OFF)))
 #define zm_wl_mpdu_count_reg \
-    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_MPDU_COUNT_OFF)))    
-    
+    (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_MPDU_COUNT_OFF)))
+
 
 /* INTERRUPT Flag bits */
 #define ZM_INT_TXC_BIT              0x0001
@@ -691,7 +691,7 @@
 
 #define zm_wl_txq4_dma_addr_reg \
     (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_TXQ4_DMA_ADDR_OFFSET)))
-    
+
 #define zm_wl_rx_dma_addr_reg \
     (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_RX_DMA_ADDR_OFFSET)))
 

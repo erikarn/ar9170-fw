@@ -39,7 +39,7 @@ void zfDmaPutPacket(struct zsDmaQueue* q, struct zsDmaDesc* desc);
 /*    FUNCTION DESCRIPTION                  zfDmaInitDescriptor         */
 /*      Init zgUpQ, zgDnQ, zgTxQ, zgRxQ.                                */
 /*      Setup descriptors and data buffer address.                      */
-/*      Ring descriptors zgRxQ and zgDnQ by zfDmaReclaimPacket().       */ 
+/*      Ring descriptors zgRxQ and zgDnQ by zfDmaReclaimPacket().       */
 /*                                                                      */
 /*    ROUTINES CALLED                                                   */
 /*      zfDmaReclaimPacket                                              */
@@ -62,7 +62,7 @@ void zfDmaInitDescriptor(void)
 {
     u16_t i;
     struct zsDmaDesc* desc[ZM_TERMINATOR_NUMBER];
-    
+
     /* Init descriptos for terminators */
     for (i=0; i<ZM_TERMINATOR_NUMBER; i++)
     {
@@ -76,7 +76,7 @@ void zfDmaInitDescriptor(void)
         desc[i]->dataAddr = 0;
         desc[i]->nextAddr = 0;
     }
-    
+
     /* Assigned terminators to DMA queues */
     zgUpQ.head = zgUpQ.terminator = desc[0];
     zgDnQ.head = zgDnQ.terminator = desc[1];
@@ -86,16 +86,16 @@ void zfDmaInitDescriptor(void)
     zgTxQ[3].head = zgTxQ[3].terminator = desc[5];
     zgTxQ[4].head = zgTxQ[4].terminator = desc[6];
     zgRxQ.head = zgRxQ.terminator = desc[7];
-#if ZM_INT_USE_EP2 == 1	
+#if ZM_INT_USE_EP2 == 1
 	zgIntDesc = desc[8];
-#endif    
+#endif
 
 #if ZM_BAR_AUTO_BA == 1
-	#if ZM_INT_USE_EP2 == 1	
+	#if ZM_INT_USE_EP2 == 1
 		zgBADesc = desc[9];
 	#else
 		zgBADesc = desc[8];
-	#endif  
+	#endif
 #endif
 
     /* Init descriptors and memory blocks */
@@ -111,7 +111,7 @@ void zfDmaInitDescriptor(void)
         desc[0]->lastAddr = desc[0];
         desc[0]->dataAddr = ZM_BLOCK_BUFFER_BASE + (i*ZM_BLOCK_SIZE);
         desc[0]->nextAddr = 0;
-        
+
 		#if 0
         if (i < ZM_RX_BLOCK_NUMBER)
         {
@@ -133,14 +133,14 @@ void zfDmaInitDescriptor(void)
 		#endif
 
     }
-    
+
     /* Set DMA address registers */
     ZM_PTA_DN_DMA_ADDRH_REG = (u32_t)zgDnQ.head >> 16;
     ZM_PTA_DN_DMA_ADDRL_REG = (u32_t)zgDnQ.head & 0xffff;
     ZM_PTA_UP_DMA_ADDRH_REG = (u32_t)zgUpQ.head >> 16;
     ZM_PTA_UP_DMA_ADDRL_REG = (u32_t)zgUpQ.head & 0xffff;
 
-  
+
     zm_wl_txq0_dma_addr_reg = (u32_t)zgTxQ[0].head;
 
 #if 1
@@ -149,16 +149,16 @@ void zfDmaInitDescriptor(void)
     zm_wl_txq2_dma_addr_reg = (u32_t)zgTxQ[2].head;
 
     zm_wl_txq3_dma_addr_reg = (u32_t)zgTxQ[3].head;
-    
+
     zm_wl_txq4_dma_addr_reg = (u32_t)zgTxQ[4].head;
-#endif    
-    
+#endif
+
     zm_wl_rx_dma_addr_reg = (u32_t)zgRxQ.head;
-	
+
 #if ZM_TX_DELAY_DESC == 1
-	
+
 	zgTxDelayDescIdx = 0;
-	
+
 	for ( i=0; i<ZM_TX_DELAY_DESC_NUM; i++)
 	{
         zgTxDelayDesc[i] = (struct zsDmaDesc*)(ZM_TX_DELAY_DESC_BASE
@@ -170,7 +170,7 @@ void zfDmaInitDescriptor(void)
         zgTxDelayDesc[i]->lastAddr = zgTxDelayDesc[i];
         zgTxDelayDesc[i]->dataAddr = 0;
         zgTxDelayDesc[i]->nextAddr = 0;
-	}	
+	}
 #endif
 
 #if ZM_INT_USE_EP2 == 1
@@ -181,8 +181,8 @@ void zfDmaInitDescriptor(void)
     zgIntDesc->totalLen = 0;
     zgIntDesc->lastAddr = zgIntDesc;
     zgIntDesc->dataAddr = ZM_RSP_BUFFER;
-    zgIntDesc->nextAddr = 0;	
-	
+    zgIntDesc->nextAddr = 0;
+
 	/* Fill private id for rsp */
 	for (i=0; i<(ZM_INT_USE_EP2_HEADER_SIZE>>2); i++)
 	{
@@ -198,17 +198,17 @@ void zfDmaInitDescriptor(void)
     //zgBADesc->totalLen = 0;
     zgBADesc->lastAddr = zgBADesc;
     zgBADesc->dataAddr = ZM_BA_BUFFER;
-    zgBADesc->nextAddr = 0;	
+    zgBADesc->nextAddr = 0;
 
 	zgBADesc->dataSize = 36;
 	zgBADesc->totalLen = 36;
-						
+
 	/* Zero out */
 	for (i=0; i<128; i+=4)
 	{
 		*(volatile u32_t*)(ZM_BA_BUFFER + i) = 0;
-	}						
-						
+	}
+
 	*(volatile u32_t*)(ZM_BA_BUFFER + 0) = 0x00040020;
 	*(volatile u32_t*)(ZM_BA_BUFFER + 4) = 0x0026c401;
 #endif
@@ -218,7 +218,7 @@ void zfDmaInitDescriptor(void)
 	zgRTQ.head = zgRTQ.terminator = NULL;
     zgDnQTUCount = 0;
     zgRTQTUCount = 0;
-    zgPendingTUCount = 0;	
+    zgPendingTUCount = 0;
 
 #if 0
     zfUartSendStrAndHex((u8_t*)"ZM_BLOCK_NUMBER      =", ZM_BLOCK_NUMBER);
@@ -227,16 +227,16 @@ void zfDmaInitDescriptor(void)
     zfUartSendStrAndHex((u8_t*)"ZM_DESC_NUMBER       =", ZM_DESC_NUMBER);
     zfUartSendStrAndHex((u8_t*)"ZM_DESCRIPTOR_BASE   =", ZM_DESCRIPTOR_BASE);
     zfUartSendStrAndHex((u8_t*)"ZM_BLOCK_BUFFER_BASE =", ZM_BLOCK_BUFFER_BASE);
-    zfUartSendStrAndHex((u8_t*)"ZM_FRAME_MEMROY_SIZE =  ", ZM_FRAME_MEMROY_SIZE);	
+    zfUartSendStrAndHex((u8_t*)"ZM_FRAME_MEMROY_SIZE =  ", ZM_FRAME_MEMROY_SIZE);
     zfUartSendStrAndHex((u8_t*)"TxQ0=", (u32_t)zgTxQ[0].head);
     zfUartSendStrAndHex((u8_t*)"TxQ1=", (u32_t)zgTxQ[1].head);
     zfUartSendStrAndHex((u8_t*)"TxQ2=", (u32_t)zgTxQ[2].head);
     zfUartSendStrAndHex((u8_t*)"TxQ3=", (u32_t)zgTxQ[3].head);
     zfUartSendStrAndHex((u8_t*)"TxQ4=", (u32_t)zgTxQ[4].head);
-    zfUartSendStrAndHex((u8_t*)"RxQ =", (u32_t)zgRxQ.head);    
+    zfUartSendStrAndHex((u8_t*)"RxQ =", (u32_t)zgRxQ.head);
 #if ZM_INT_USE_EP2 == 1
     zfUartSendStrAndHex((u8_t*)"zgIntDesc     =", (u32_t)zgIntDesc);
-#endif	   
+#endif
 #endif
 }
 
@@ -263,16 +263,16 @@ void zfDmaInitDescriptor(void)
 struct zsDmaDesc* zfDmaGetPacket(struct zsDmaQueue* q)
 {
     struct zsDmaDesc* desc = NULL;
-    
+
     //if (((q->head->status & ZM_OWN_BITS_MASK) == ZM_OWN_BITS_SW)
     //        || ((q->head->status & ZM_OWN_BITS_MASK) == ZM_OWN_BITS_SE))
-	
+
     if ( (((q->head->status & ZM_OWN_BITS_MASK) == ZM_OWN_BITS_SW) && ((u32_t)q != (u32_t)&zgDnQ))
             || (((q->head->status & ZM_OWN_BITS_MASK) == ZM_OWN_BITS_SE) && ((u32_t)q == (u32_t)&zgDnQ)) )
-	
+
     {
         desc = q->head;
-        
+
         q->head = desc->lastAddr->nextAddr;
     }
     return desc;
@@ -303,8 +303,8 @@ void zfDmaReclaimPacket(struct zsDmaQueue* q, struct zsDmaDesc* desc)
 {
     struct zsDmaDesc* tmpDesc;
     struct zsDmaDesc tdesc;
-    
-	
+
+
     /* 1. Set OWN bit to 1 for all TDs to be added, clear ctrl and size */
     tmpDesc = desc;
     while (1)
@@ -315,30 +315,30 @@ void zfDmaReclaimPacket(struct zsDmaQueue* q, struct zsDmaDesc* desc)
         tmpDesc->dataSize = ZM_BLOCK_SIZE;
         //tmpDesc->dataAddr &= (~((u32_t)64-1));
         //tmpDesc->totalLen = 0;
-        
+
         /* TODO : Exception handle */
-        
+
         if (desc->lastAddr == tmpDesc)
         {
             break;
         }
         tmpDesc = tmpDesc->nextAddr;
-    } 
-    
+    }
+
     /* 3. Next address of Last TD to be added = first TD */
     desc->lastAddr->nextAddr = desc;
-    
+
     /* 2. Copy first TD to be added to TTD */
     zfMemoryCopyInWord(&tdesc, desc, sizeof(struct zsDmaDesc));
-    
+
     /* 4. set first TD OWN bit to 0 */
     desc->status &= (~ZM_OWN_BITS_MASK);
-    
+
     /* 5. Copy TTD to last TD */
     tdesc.status &= (~ZM_OWN_BITS_MASK);
     zfMemoryCopyInWord((void*)q->terminator, (void*)&tdesc, sizeof(struct zsDmaDesc));
     q->terminator->status |= ZM_OWN_BITS_HW;
-    
+
     /* Update terminator pointer */
     q->terminator = desc;
 }
@@ -368,8 +368,8 @@ void zfDmaPutPacket(struct zsDmaQueue* q, struct zsDmaDesc* desc)
 {
     struct zsDmaDesc* tmpDesc;
     struct zsDmaDesc tdesc;
-    
-	
+
+
     /* 1. Set OWN bit to 1 for all TDs to be added */
     tmpDesc = desc;
     while (1)
@@ -377,34 +377,34 @@ void zfDmaPutPacket(struct zsDmaQueue* q, struct zsDmaDesc* desc)
         tmpDesc->status =
                 ((tmpDesc->status & (~ZM_OWN_BITS_MASK)) | ZM_OWN_BITS_HW);
         /* TODO : Exception handle */
-        
+
         if (desc->lastAddr == tmpDesc)
         {
             break;
         }
         tmpDesc = tmpDesc->nextAddr;
     }
-    
+
     /* 3. Next address of Last TD to be added = first TD */
     desc->lastAddr->nextAddr = desc;
-    
+
     /* If there is only one descriptor, update pointer of last descriptor */
     if (desc->lastAddr == desc)
     {
         desc->lastAddr = q->terminator;
     }
-    
+
     /* 2. Copy first TD to be added to TTD */
     zfMemoryCopyInWord(&tdesc, desc, sizeof(struct zsDmaDesc));
-    
+
     /* 4. set first TD OWN bit to 0 */
     desc->status &= (~ZM_OWN_BITS_MASK);
-    
+
     /* 5. Copy TTD to last TD */
     tdesc.status &= (~ZM_OWN_BITS_MASK);
     zfMemoryCopyInWord((void*)q->terminator, (void*)&tdesc, sizeof(struct zsDmaDesc));
     q->terminator->status |= ZM_OWN_BITS_HW;
-        
+
     /* Update terminator pointer */
     q->terminator = desc;
 }
@@ -431,8 +431,8 @@ void zfDmaPutPacket(struct zsDmaQueue* q, struct zsDmaDesc* desc)
 /************************************************************************/
 void zfQuePutPacket(struct zsDmaQueue* q, struct zsDmaDesc* desc)
 {
-//	zfUartSendStrAndHex((u8_t*)"qp = ", (u32_t)desc);	
-	
+//	zfUartSendStrAndHex((u8_t*)"qp = ", (u32_t)desc);
+
     if (q->head)
     {
         /* put to tail */
@@ -441,10 +441,10 @@ void zfQuePutPacket(struct zsDmaQueue* q, struct zsDmaDesc* desc)
     }
     else
     {
-        /* empty */		
+        /* empty */
         q->head = q->terminator = desc;
     }
-	
+
 }
 
 
@@ -468,9 +468,9 @@ void zfQuePutPacket(struct zsDmaQueue* q, struct zsDmaDesc* desc)
 /*                                                                      */
 /************************************************************************/
 struct zsDmaDesc* zfQueGetPacket(struct zsDmaQueue* q)
-{	
+{
     struct zsDmaDesc* desc = NULL;
-    
+
     if (q->head)
     {
         desc = q->head;
@@ -480,7 +480,7 @@ struct zsDmaDesc* zfQueGetPacket(struct zsDmaQueue* q)
             q->head = q->terminator = NULL;
         }
         else
-        {        
+        {
             q->head = desc->lastAddr->nextAddr;
         }
     }
@@ -513,14 +513,14 @@ void zfRecycleTxQ(u8_t qNum)
 void zfRecycleRTQ(void)
 {
     struct zsDmaDesc* desc;
-	
+
 	desc = zfQueGetPacket(&zgRTQ);
     while (desc)
     {
         /* Put back to the Down Queue */
         zfDmaReclaimPacket(&zgDnQ, desc);
 		desc = zfQueGetPacket(&zgRTQ);
-    }		    	
+    }
 }
 
 
@@ -530,7 +530,7 @@ void zfRecycleRxQ(void)
 
     while ((zgRxQ.head != zgRxQ.terminator) && ((zgRxQ.head->status
             & ZM_OWN_BITS_MASK) != ZM_OWN_BITS_HW))
-    {            
+    {
         desc = zfDmaGetPacket(&zgRxQ);
 
         /* TODO : if len < 5+14+8 or len > zgRxMaxSize, discard rx frame */
@@ -552,24 +552,24 @@ void zfRecycleRxQ(void)
 
 struct zsDmaDesc* zfExchangeDesc(struct zsDmaDesc* desc)
 {
-#if ZM_TX_DELAY_DESC == 1	
+#if ZM_TX_DELAY_DESC == 1
 	struct zsDmaDesc* tmpDesc;
     zfMemoryCopyInWord((void*)zgTxDelayDesc[zgTxDelayDescIdx], (void*)desc, sizeof(struct zsDmaDesc));
-	
+
 	zgLastDelayDesc = (u32_t)desc;
 	zgNextStartDesc = (u32_t)(desc->lastAddr->nextAddr);
-	
+
 	/* The packet with single desc */
 	if (desc->lastAddr == desc)
 	{
 		zgTxDelayDesc[zgTxDelayDescIdx]->lastAddr = zgTxDelayDesc[zgTxDelayDescIdx];
 	}
-		
+
 	tmpDesc = zgTxDelayDesc[zgTxDelayDescIdx];
 	zgTxDelayDesc[zgTxDelayDescIdx] = desc;
-	
+
 	zgTxDelayDescIdx = (zgTxDelayDescIdx+1) & (ZM_TX_DELAY_DESC_NUM-1);
-	
+
 	return tmpDesc;
 #else
 //	zgLastDelayDesc = (u32_t)desc;
@@ -586,10 +586,10 @@ struct zsDmaDesc* zfExchangeDesc(struct zsDmaDesc* desc)
 u32_t zfLengthConfirm(struct zsDmaDesc* desc)
 {
 	u32_t ret = 0;
-	
+
 	u16_t desc_len = desc->totalLen;
 	u16_t ctrl_len = (*(volatile u32_t*)(desc->dataAddr) & 0xffff);
-	
+
 	/* check length */
 	//if ( desc_len != (ctrl_len+4) )
 	if ( desc_len > (ctrl_len+4) )
@@ -598,10 +598,10 @@ u32_t zfLengthConfirm(struct zsDmaDesc* desc)
 		{
 			*(volatile u32_t*)(0x117758) += 1;
 		}
-		
+
 		ret = 1;
 	}
-	
+
 	/* check FS bit and LS bit (this only for debug when large buffer size(1664)) */
 	//if ( (desc->ctrl & (ZM_LS_BIT | ZM_FS_BIT)) != (ZM_LS_BIT | ZM_FS_BIT))
 	//{
@@ -610,10 +610,10 @@ u32_t zfLengthConfirm(struct zsDmaDesc* desc)
 
 	if (ret)
 	{
-		*(volatile u32_t*)(0x117754) += 1;		
+		*(volatile u32_t*)(0x117754) += 1;
 	}
-		
-	return ret;	
+
+	return ret;
 }
 
 
@@ -624,15 +624,15 @@ u8_t zfCheckAGP(struct zsDmaDesc* desc)
 {
     u8_t ret = 0;
     u16_t* buf;
-	
+
 	buf = (u16_t*)desc->dataAddr;
-	
+
 	/* AGP : MAC ctrl Bit_14 */
 	if (buf[1] & 0x4000)
 	{
 		ret = 1;
 	}
-    
+
     return ret;
 }
 
@@ -641,17 +641,17 @@ u8_t zfCheckAGP(struct zsDmaDesc* desc)
 /* return 1 : aggregation packet     */
 u8_t zfCheckAGG(struct zsDmaDesc* desc)
 {
-    u16_t* buf;                
+    u16_t* buf;
     u8_t ret = 0;
-    
+
     buf = (u16_t*)desc->dataAddr;
-            
+
     /* if AGG bit = 1 */
     if ((buf[1] & 0x20) != 0)
     {
         ret = 1;
     }
-    
+
     return ret;
 }
 
