@@ -18,8 +18,9 @@ CPU_FLAGS = $(CPU) -ml
 CFLAGS += -c $(CPU_FLAGS)  -I./include -D$(TYPE)_ENABLED=1
 CFLAGS += -Wall
 CFLAGS += -g3
-CFLAGS += -O0
+CFLAGS += -Os
 CFLAGS += -nostartfiles
+CFLAGS += -ffunction-sections
 LDFLAGS += -static -Map fw.map -Tfw.lds
 LDFLAGS += -EL
 LDFLAGS += -x

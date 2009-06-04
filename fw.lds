@@ -7,7 +7,7 @@
  */
 MEMORY
 {
-    pram : ORIGIN = 0x200000, LENGTH = 32k
+    pram : ORIGIN = 0x200000, LENGTH = 16k
 }
 
 SECTIONS
