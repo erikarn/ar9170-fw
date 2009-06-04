@@ -83,7 +83,10 @@ extern void zfGenerateBAFailCntFrame(void);
 void __attribute__((section(".boot"))) zfbooter(void)
 {
     u32_t k;
-    
+
+  ZM_GPIO_PORT_TYPE_REG = 3;
+  ZM_GPIO_PORT_DATA_REG = 0;
+
   #if ZM_CLOCK_25M == 1
     ZM_HUART_DIVISOR_LSB_REG = 0xc;
   #else
@@ -141,8 +144,6 @@ void __attribute__((section(".boot"))) zfbooter(void)
     //ZM_FLASH_WAIT_STATE_REG = 0x33;    
         
     zfMainLoop();
-    
-    return;
 }
 
 /************************************************************************/
