@@ -4,9 +4,6 @@
 /* USB mode support */
 #define ZM_USB                  1
 
-/* FPGA mode support */
-#define ZM_FPGA					0
-
 /* stream mode setting
  *  hpfwu_2k.c             None
  *  hpfwu.c                    Rx

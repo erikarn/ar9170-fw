@@ -157,10 +157,8 @@ void __attribute__((section(".boot"))) zfbooter(void)
 #if ZM_CLOCK_25M == 1
     ZM_HUART_DIVISOR_LSB_REG = 0xc;
 #else
-#if ZM_FPGA == 0
     ZM_HUART_DIVISOR_LSB_REG = 0x14;  /* 40 MHz */
     ZM_HUART_REMAINDER_REG = 0xB38E;
-#endif
 #endif
 
 	/* watchdog magic pattern check */

@@ -100,11 +100,9 @@ u16_t zfInitRf(u32_t frequency,
                    delta_slope_coeff_man_shgi);
 
 
-#if ZM_FPGA == 0
     /* Real Chip */
     zfProgramADDAC();
 	zfHwSwapChain0andChain2();
-#endif
 
     zfHwConfigureMask();
     zfHwHTEnable();
@@ -367,17 +365,8 @@ void zfHwSwapChain0andChain2()
 //======================================================================================
 void zfHwConfigureMask()
 {
-#if ZM_FPGA == 1
-    //zfUartSendStr((u8_t*)"zfHwConfigureMask\n\r");
-
-    //zgHwConfigure.FPGA == 0x1)
-    //zgHwConfigure.FPGA_CHAIN == 0x1)
-    reg_write(0x99a4, 0x3);
-    reg_write(0xa39c, 0x3);
-#else
     reg_write(0x99a4, 0x5);
     reg_write(0xa39c, 0x5);
-#endif
 }
 
 
@@ -385,13 +374,6 @@ void zfHwConfigureMask()
 void zfHwHTEnable()
 {
 #if 0 /* compatibility for UB83 */
-#if ZM_FPGA == 1
-    //zfUartSendStr((u8_t*)"zfHwHTEnable\n\r");
-
-    reg_write(0x9804, 0x3c4);     //# Dyn HT2040
-    //reg_write(0x9804, 0x340);    //# Static HT20
-    //reg_write(0x9804, 0x0);         //# Legacy
-#else
 	/* Temp setting for bringup */
 	//reg_write(0x9804, 0x0);         //# Legacy
 
@@ -438,7 +420,6 @@ void zfHwHTEnable()
         }
 	}
 
-#endif
 
     wait_on_time(10);
 #endif	/* end of compatibility for UB83 */
@@ -449,7 +430,6 @@ void zfActiveBB()
 {
     reg_write(0x981c, 0x00000001);               // # Activate BB
     wait_on_time(10);
-#if ZM_FPGA == 0
 	/* force ADC alive */
 //    reg_write(0x99a4, 0x00000001);
 //    wait_on_time(10);
@@ -460,7 +440,6 @@ void zfActiveBB()
 
 	/* turn on ADC */
 //    reg_write(0x982c, 0x2000);
-#endif
 }
 
 
@@ -686,133 +665,6 @@ u16_t zfHwNoiseCalibration()
 
     //zfUartSendStr((u8_t*)"zfHwNoiseCalibration\n\r");
 
-#if ZM_FPGA == 1
-    if (1) //(zgHwConfigure.FPGA == 0x1)
-    {
-        hainans_in_sync = 0;
-        while (hainans_in_sync == 0 && loop_1<10)
-        {
-            rddata = reg_read(0x9860);
-	        //zfUartSendStrAndHex((u8_t*)"1:0x9860  ", rddata);
-            wrdata = rddata | 0x2;
-            reg_write(0x9860, wrdata);
-            rddata = reg_read(0x9860);
-	        //zfUartSendStrAndHex((u8_t*)"2:0x9860  ", rddata);
-
-	        loop_2 = 0;
-            done = reg_read(0x9860) & 0x2;
-            while (done != 0x0 && loop_2<100)
-            {
-                done = reg_read(0x9860) & 0x2;
-                //$tmp = reg_read(0x9860);
-                //printf "0x9860 0x%08x\n", $tmp;
-                wait_on_time(100);
-				loop_2++;
-            }
-	        //zfUartSendStr((u8_t*)":Noise Calibration done !!!!!\n\r");
-
-            if (0)//(zgHwConfigure.FPGA_CHAIN == 0x0)
-            {
-                rddata = reg_read(0x9800+(25<<2));
-                nf = (rddata >> 19) & 0x1ff;
-                if ((nf & 0x100) != 0x0)
-                {
-                    noisefloor = 0 - ((nf ^ 0x1ff) + 1);
-                }
-                else
-                {
-                    noisefloor = nf;
-                }
-		        //zfUartSendStrAndHex((u8_t*)"Noise Floor for Chain0 = -", (~noisefloor)+1);
-
-                if (1) //(zgHwConfigure.DYNAMIC_HT2040_EN == 1)
-                {
-                    rddata = reg_read(0x9800+(111<<2));
-                    nf = (rddata >> 23) & 0x1ff;
-                    if ((nf & 0x100) != 0x0)
-                    {
-                        noisefloor = 0 - ((nf ^ 0x1ff) + 1);
-                    }
-                    else
-                    {
-                        noisefloor = nf;
-                    }
-                //    zfUartSendStrAndHex((u8_t*)"Noise Floor for Chain0 (ext chan)= -", (~noisefloor)+1);
-                }
-                nf_diff = 0;
-            } /* if (zgHwConfigure.FPGA_CHAIN == 0x0) */
-            else
-            {
-                rddata = reg_read(0x9800+(25<<2));
-                nf = (rddata >> 19) & 0x1ff;
-                if ((nf & 0x100) != 0x0)
-                {
-                    noisefloor0 = 0 - ((nf ^ 0x1ff) + 1);
-                }
-                else
-                {
-                    noisefloor0 = nf;
-                }
-                //zfUartSendStrAndHex((u8_t*)":Noise Floor for Chain0 = -", (~noisefloor0)+1);
-
-                rddata = reg_read(0xa800+(25<<2));
-                nf = (rddata >> 19) & 0x1ff;
-                if ((nf & 0x100) != 0x0)
-                {
-                    noisefloor1 = 0 - ((nf ^ 0x1ff) + 1);
-                }
-                else
-                {
-                    noisefloor1 = nf;
-                }
-                //zfUartSendStrAndHex((u8_t*)":Noise Floor for Chain1 = -", (~noisefloor1)+1);
-
-                if (1) //(zgHwConfigure.DYNAMIC_HT2040_EN == 1)
-                {
-                    rddata = reg_read(0x9800+(111<<2));
-                    nf = (rddata >> 23) & 0x1ff;
-                    if ((nf & 0x100) != 0x0)
-                    {
-                        noisefloor0 = 0 - ((nf ^ 0x1ff) + 1);
-                    }
-                    else
-                    {
-                        noisefloor0 = nf;
-                    }
-                    //zfUartSendStrAndHex((u8_t*)":Noise Floor for Chain0 (ext chan)= -", (~noisefloor0)+1);
-
-                    rddata = reg_read(0xa800+(111<<2));
-                    nf = (rddata >> 23) & 0x1ff;
-                    if ((nf & 0x100) != 0x0)
-                    {
-                        noisefloor1 = 0 - ((nf ^ 0x1ff) + 1);
-                    }
-                    else
-                    {
-                        noisefloor1 = nf;
-                    }
-                    //zfUartSendStrAndHex((u8_t*)":Noise Floor for Chain1 (ext chan)= -", (~noisefloor1)+1);
-                }
-                nf_diff = (noisefloor0 - noisefloor1);
-            }/* if (zgHwConfigure.FPGA_CHAIN != 0x0) */
-
-            if (1) //(zgHwConfigure.FPGA == 0x1)
-            {
-                if (zfabs(nf_diff) < 2)
-                {
-                    hainans_in_sync = 1;
-                }
-                else
-                {
-                    reg_write(0xd47c, 0xe6);
-                    wait_on_time(10);
-					loop_1++;
-                }
-            }
-        }/* end while */
-    }/* if (zgHwConfigure.FPGA == 0x1) */
-    else
-#endif /* end #if ZM_FPGA == 1 */
     {
         rddata = reg_read(0x9860);
         //printf " 1:0x9860 0x%08x\n", $rddata;
@@ -1020,17 +872,6 @@ void zfFPGAInit()
 
 void zfHwInit(void)
 {
-#if ZM_FPGA == 1
-    /* FPGA init */
-    zfFPGAInit();
-
-	/* OTUS */
-	*(volatile u32_t*)0x1c947c = 0xe6;  /* PLL 24 MHz */
-	zfDelayMs(10);
-
-	/* FPGA init */
-    zfFPGAInit();
-#endif
     return;
 }
 
