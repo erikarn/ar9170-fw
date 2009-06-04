@@ -59,7 +59,7 @@
  *         0 : normal use EP3
  *         1 : fix use EP2
  */									
-#define ZM_INT_USE_EP2               1	
+#define ZM_INT_USE_EP2               0
 #define ZM_INT_USE_EP2_HEADER_SIZE  12							
 
 /* BAR fix with Marvell */
