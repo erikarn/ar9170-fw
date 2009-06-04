@@ -17,13 +17,12 @@ CPU = -m2
 CPU_FLAGS = $(CPU) -ml
 CFLAGS += -c $(CPU_FLAGS)  -I./include -D$(TYPE)_ENABLED=1
 CFLAGS += -Wall
-CFLAGS += -Os -nostartfiles
-#LDFLAGS += -static --oformat binary -Map fw.map -Tfw.lnk
+CFLAGS += -g3
+CFLAGS += -O0
+CFLAGS += -nostartfiles
 LDFLAGS += -static -Map fw.map -Tfw.lnk
-LDFLAGS += --strip-all
 LDFLAGS += -EL
 LDFLAGS += -x
-LDFLAGS += -s
 LDFLAGS += -e _zfbooter
 LDFLAGS += --gc-sections
 
@@ -51,18 +50,22 @@ FW += ashlsi3.o
 %.o: %.c
 	$(CC) $(CFLAGS) -o $@ $<
 
-fw: otus-$(TYPE).fw
-	$(OBJCOPY) --strip-unneeded -O binary otus-$(TYPE).fw otus-STA.bin
-	ln -sf otus-$(TYPE).fw ar9170.fw
+%.fw: %.elf
+	$(OBJCOPY) --strip-unneeded -O binary $< $@
 
-otus-$(TYPE).fw: $(FW)
+all:	ar9170.fw
+
+ar9170.fw:	otus-$(TYPE).fw
+	ln -fs otus-$(TYPE).fw ar9170.fw
+
+otus-$(TYPE).elf: $(FW) fw.lnk
 	$(LD) $(LDFLAGS) -o $@ $(FW)
 
 install:
 	install ar9170.fw /lib/firmware/
 
 clean:
-	rm -f *.o ap.fw sta.fw .files ar9170.fw otus-$(TYPE).*
-	rm -f $(TYPE)/*.o usb/*.o
+	rm -f *.o ap.fw sta.fw .files ar9170.fw otus-$(TYPE).* fw.map *~
+	rm -f AP/*.o STA/*.o usb/*.o
 
 .PHONY: all clean
