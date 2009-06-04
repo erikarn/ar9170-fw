@@ -280,37 +280,22 @@ void zfHandleCfgBcnInt(void)
 {
 	u32_t bcnCount;
 
-#if ZM_USB == 0
-    /* Generate config beacon interrupt */
-    ZM_PTA_AHB_INT_FLAG_REG = 0x8;
-#else
 	bcnCount =  *((volatile u32_t*)(ZM_WL_REGISTER_BASE+0xd9c));
     zfGenUsbInterrupt(4, 0xC2, 0x80, (u8_t *) &bcnCount);
-#endif
 
     return;
 }
 
 void zfHandlePreTbttInt(void)
 {
-#if ZM_USB == 0
-    /* Generate config beacon interrupt */
-    ZM_PTA_AHB_INT_FLAG_REG = 0x2;
-#else
     zfGenUsbInterrupt(0, 0xC0, 0x80, 0);
-#endif
 
     return;
 }
 
 void zfHandleAtimInt(void)
 {
-#if ZM_USB == 0
-    /* Generate config beacon interrupt */
-    ZM_PTA_AHB_INT_FLAG_REG = 0x2;
-#else
     zfGenUsbInterrupt(0, 0xC3, 0x80, 0);
-#endif
 
     return;
 }

@@ -245,9 +245,7 @@ void zfInit(void)
     zfInitTimer0();
 
     /* USB init */
-#if ZM_USB
     zfUsbInit();
-#endif
 
     //PCI only
     //ZM_PTA_MEM_CTRL_REG = 0xE000 | (0x10f000>>11); /* size=1K, enable=1 */
@@ -270,15 +268,10 @@ void zfInit(void)
     /* Trigger WLAN RX DMA */
     //zm_wl_dma_trigger_reg |= ZM_RXQ_TRIG_BIT;
 
-#if ZM_USB == 0
-    /* Firmware Ready */
-    ZM_PTA_AHB_INT_FLAG_REG = 0x8000;
-#else
     /* Firmware Ready */
     //ZM_CBUS_FIFO_SIZE_REG = 0xf;
     //ZM_EP0_DATA_REG = 0x12345678;
     //ZM_CX_CONFIG_STATUS_REG = 0x01;
-#endif
 
     /* initialize */
     zgRxMaxSize = 8192;
@@ -466,9 +459,7 @@ void zfMainLoop(void)
         zfWlanIsr();
 
         /* USB ISRs */
-#if ZM_USB
         zfUsbIsr();
-#endif
 
 #if ZM_BAR_AUTO_BA == 1
 		if (zgBARGotState == 1)

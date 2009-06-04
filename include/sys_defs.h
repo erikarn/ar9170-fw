@@ -1,9 +1,6 @@
 #ifndef _SYS_DEFS_H
 #define _SYS_DEFS_H
 
-/* USB mode support */
-#define ZM_USB                  1
-
 /* stream mode setting
  *  hpfwu_2k.c             None
  *  hpfwu.c                    Rx

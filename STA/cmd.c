@@ -97,9 +97,6 @@ struct zsSetKeyCmdStruct
 void zfCmdHandler(void)
 {
     u16_t i;
-#if ZM_USB == 0
-    u16_t cmd;
-#endif
     u8_t len, type;
     u32_t frequency;
     u32_t addr, val;
@@ -109,14 +106,6 @@ void zfCmdHandler(void)
     u8_t *rspBuf;
     struct zsSetKeyCmdStruct* setKeyCmd;
 
-#if ZM_USB == 0
-    cmd = ZM_PTA_CMD_REG;
-
-    if (cmd != ZM_CMD_CODE)
-    {
-        zfUartSendStrAndHex((u8_t*)"FTL:cmd=", cmd);
-    }
-#endif
 
     len = *(volatile u8_t*)ZM_CMD_BUFFER;
     type = *(volatile u8_t*)(ZM_CMD_BUFFER+1);
@@ -618,9 +607,6 @@ void zfCmdHandler(void)
                 *(volatile u32_t*)ZM_CMD_BUFFER);
     }
 
-#if ZM_USB == 0
-    ZM_PTA_AHB_INT_FLAG_REG = 0x1;
-#endif
 }
 
 void zfDisableCamUser(u16_t userId)
