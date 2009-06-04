@@ -1,0 +1,6 @@
+*.o
+*.fw
+*.elf
+*.bin
+fw.map
+*~
