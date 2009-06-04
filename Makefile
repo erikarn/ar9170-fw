@@ -43,7 +43,6 @@ FW += $(TYPE)/wlan.o
 
 # These comes from the Linux kernel
 FW += ashlsi3.o
-#FW += udivsi3.o
 
 %.o: %.S
 	$(CC) $(CFLAGS) -o $@ $<
