@@ -67,6 +67,6 @@ install:
 
 clean:
 	rm -f *.o ap.fw sta.fw .files ar9170.fw otus-$(TYPE).* fw.map *~
-	rm -f AP/*.o STA/*.o usb/*.o
+	rm -f AP/*{.o,~} STA/*{.o,~} usb/*{.o,~}
 
 .PHONY: all clean
