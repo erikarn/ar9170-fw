@@ -95,7 +95,7 @@ void morse(const char *txt)
 	};
 	unsigned int i, k;
 	const char *tmp = txt;
-	unsigned int base = 500000;
+	unsigned int base = 200000;
 
 	for (k = 0; k < base; k++)
 		ZM_GPIO_PORT_DATA_REG = 0;
