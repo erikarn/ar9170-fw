@@ -95,12 +95,13 @@ void morse(const char *txt)
 	};
 	unsigned int i, k;
 	const char *tmp = txt;
+	unsigned int base = 500000;
 
-	for (k = 0; k < 1000000; k++)
+	for (k = 0; k < base; k++)
 		ZM_GPIO_PORT_DATA_REG = 0;
 
 	while (*tmp) {
-		for (k = 0; k < 1000000; k++)
+		for (k = 0; k < base; k++)
 			ZM_GPIO_PORT_DATA_REG = 0;
 
 		if (*tmp >= 'A' && *tmp <= 'Z') {
@@ -109,21 +110,21 @@ void morse(const char *txt)
 
 			for (i = 0; i < (patterns[idx] & 7); i++) {
 				if (patterns[idx] & ((1 << 3)<< i))
-					dly = 3000000;
+					dly = 3 * base;
 				else
-					dly = 1000000;
+					dly = base;
 
 				for (k = 0; k < dly; k++)
 					ZM_GPIO_PORT_DATA_REG = 3;
 
-				for (k = 0; k < 1000000; k++)
+				for (k = 0; k < base; k++)
 					ZM_GPIO_PORT_DATA_REG = 0;
 			}
 		}
 		tmp++;
 	}
 
-	for (k = 0; k < 1000000; k++)
+	for (k = 0; k < base; k++)
 		ZM_GPIO_PORT_DATA_REG = 0;
 }
 
@@ -152,7 +153,6 @@ void __attribute__((section(".boot"))) zfbooter(void)
     u32_t k;
 
   ZM_GPIO_PORT_TYPE_REG = 3;
-  morse("BOOT");
 
 #if ZM_CLOCK_25M == 1
     ZM_HUART_DIVISOR_LSB_REG = 0xc;
