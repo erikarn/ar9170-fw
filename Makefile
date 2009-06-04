@@ -20,7 +20,7 @@ CFLAGS += -Wall
 CFLAGS += -g3
 CFLAGS += -O0
 CFLAGS += -nostartfiles
-LDFLAGS += -static -Map fw.map -Tfw.lnk
+LDFLAGS += -static -Map fw.map -Tfw.lds
 LDFLAGS += -EL
 LDFLAGS += -x
 LDFLAGS += -e _zfbooter
@@ -58,7 +58,7 @@ all:	ar9170.fw
 ar9170.fw:	otus-$(TYPE).fw
 	ln -fs otus-$(TYPE).fw ar9170.fw
 
-otus-$(TYPE).elf: $(FW) fw.lnk
+otus-$(TYPE).elf: $(FW) fw.lds
 	$(LD) $(LDFLAGS) -o $@ $(FW)
 
 install:
