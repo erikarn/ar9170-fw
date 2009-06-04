@@ -47,11 +47,6 @@ void zfHwInit(void);
 
 extern void zfDelayMs(u32_t msec);
 
-/* To push zfBooter() to 0x700004 */
-void zfDummyFunc(void)
-{
-}
-
 /************************************************************************/
 /*                                                                      */
 /*    FUNCTION DESCRIPTION                  zfbooter                    */
@@ -72,7 +67,7 @@ void zfDummyFunc(void)
 /*                                                                      */
 /************************************************************************/
 #define FIRMWARE_VERSION_STRING     __DATE__" "__TIME__
-void zfbooter(void)
+void __attribute__((section(".boot"))) zfbooter(void)
 {
     u32_t k;
     

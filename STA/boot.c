@@ -60,15 +60,6 @@ extern void zfGenerateBAFailCntFrame(void);
  * start routine should be at address 0x000004 on the resulting binary.
  */
 
-/* To push zfbooter() to 0x000004 */
-#if 0
-void zfDummyFunc(void)
-{
-	return;
-}
-#endif
-
-
 /************************************************************************/
 /*                                                                      */
 /*    FUNCTION DESCRIPTION                  zfbooter                    */
@@ -89,7 +80,7 @@ void zfDummyFunc(void)
 /*                                                                      */
 /************************************************************************/
 #define FIRMWARE_VERSION_STRING     __DATE__" "__TIME__
-void zfbooter(void)
+void __attribute__((section(".boot"))) zfbooter(void)
 {
     u32_t k;
     

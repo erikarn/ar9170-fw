@@ -7,7 +7,7 @@
  */
 MEMORY
 {
-    pram : ORIGIN = 0x00000000, LENGTH = 32k
+    pram : ORIGIN = 0x100000, LENGTH = 32k
 }
 
 SECTIONS
@@ -18,20 +18,16 @@ SECTIONS
 	 * such we must ensure our starting routine
 	 * is kept at that address.
 	 */
+	.padding : {
+		/* NOP NOP just in case */
+		LONG(0x00090009)
+	} > pram
 
-	. =  0x04;
+	.boot : { *(.boot) } > pram
 
-	/*
-	 * This is still not putting zfbooter at 0x04 ...
-	 * also note that STA needs to be changed for AP
-	 */
-	.zfboot_section : { STA/boot*(.text) } > pram
+	/* anything else can be anywhere */
 
-	/* The rest of the .text can go anywhere */
-	.text	: { *(.text) } > pram
-	
-	/* .text	: { *(.text) _zfbooter = ABSOLUTE(0x04); } > pram */
-	.text	: { *(.text) } > pram 
+	.text : { *(.text*) } > pram 
 	.rodata : { *(.rodata*) } > pram 
 	.data	: { *(.data*) } > pram
 	.bss	: { *(.bss) } > pram
