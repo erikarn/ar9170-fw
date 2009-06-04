@@ -713,29 +713,3 @@ void zfMainLoop(void)
 
     }/* end of while(1) */
 }
-
-
-#if 0
-/************************************************************************/
-/*                                                                      */
-/*    FUNCTION DESCRIPTION                  zfIdleTask                  */
-/*      Idle counter                                                    */
-/*                                                                      */
-/*    ROUTINES CALLED                                                   */
-/*                                                                      */
-/*    INPUTS                                                            */
-/*      void                                                            */
-/*                                                                      */
-/*    OUTPUTS                                                           */
-/*      void                                                            */
-/*                                                                      */
-/*    AUTHOR                                                            */
-/*      Stephen Chen   ZyDAS Communication Corporation        2005.10   */
-/*                                                                      */
-/************************************************************************/
-void zfIdleTask(void)
-{
-    zgIdleCount++;
-}
-
-#endif
