@@ -30,6 +30,6 @@ SECTIONS
 
 	.text : { *(.text*) } > pram
 	.rodata : { *(.rodata*) } > pram
-	.data	: { *(.data*) } > pram
 	.bss	: { *(.bss) } > pram
+	.data	: { *(.data*) } > pram
 }
