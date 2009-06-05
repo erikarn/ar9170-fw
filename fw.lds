@@ -7,6 +7,7 @@
  */
 MEMORY
 {
+    sram : ORIGIN = 0x100000, LENGTH = 64k
     pram : ORIGIN = 0x200000, LENGTH = 16k
 }
 
