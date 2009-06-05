@@ -36,6 +36,7 @@ FW += usb/usb.o
 FW += usb/usb_fifo.o
 FW += usb/usb_intrq.o
 FW += $(TYPE)/wlan.o
+FW += dbg.o
 
 # These comes from the Linux kernel
 FW += ashlsi3.o

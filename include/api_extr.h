@@ -51,5 +51,3 @@ u16_t zfSetChannel(u32_t frequency,
 extern void zfNotifySetChannel(void);
 
 #endif /* #ifndef _DESC_EXTR_H */
-
-extern void morse(const char *txt);
