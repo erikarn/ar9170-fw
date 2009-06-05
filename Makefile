@@ -8,7 +8,7 @@ AS = $(PFX)as
 OBJCOPY = $(PFX)objcopy
 
 # CPU is a Little endian sh2a-nofpu-or-sh3-nommu
-CPU = -m3
+CPU = -m2
 
 CPU_FLAGS = $(CPU) -ml
 CFLAGS += -c $(CPU_FLAGS)  -I./include -D$(TYPE)_ENABLED=1
