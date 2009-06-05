@@ -300,11 +300,6 @@ void zfHandleAtimInt(void)
     return;
 }
 
-#if ZM_BAR_AUTO_BA == 1
-#define ZM_LED_FOR_MARVELL_BAR  0
-#endif
-
-
 struct zsDmaDesc* zfFindHwTxHeader(void)
 {
     struct zsDmaQueue* q;
@@ -364,10 +359,6 @@ void zfHandleRxInterrupt(void)
 
 					if (zgBAAvailable)
 					{
-#if ZM_LED_FOR_MARVELL_BAR == 1
-						/* LED  */
-						*(volatile u32_t*)(0x1d0104) = 1;
-#endif
 
 						zgBADesc->lastAddr = zgBADesc;
 						zgBADesc->ctrl = (ZM_LS_BIT | ZM_FS_BIT);
@@ -445,10 +436,6 @@ void zfHandleRxInterrupt(void)
 							*(volatile u32_t*)(0x117730) += 1;
 						}
 
-#if ZM_LED_FOR_MARVELL_BAR == 1
-						/* LED  */
-						*(volatile u32_t*)(0x1d0104) = 0;
-#endif
 
     					//zfUartSendStr((u8_t*)"ba");
 					}
