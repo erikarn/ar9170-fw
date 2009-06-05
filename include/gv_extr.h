@@ -1,6 +1,7 @@
 #ifndef _GV_EXTR_H
 #define _GV_EXTR_H
 
+#include "intrq_defs.h"
 #include "desc.h"
 
 extern volatile u32_t zgIdleCount;
@@ -51,5 +52,5 @@ extern u8_t zgDontRetransmit;
 extern volatile u8_t zgIntrINQHead;
 extern volatile u8_t zgIntrINQTail;
 extern volatile u8_t zgIntrINQNum;
-extern volatile u8_t zgIntrINQ[4][60];
+extern volatile u8_t zgIntrINQ[ZM_INTRQ_NUM][ZM_INTRQ_BUF_SIZE];
 #endif
