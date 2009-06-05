@@ -75,7 +75,7 @@ void usb_dbg(const char *txt)
 	const char *tmp = txt;
 	while (*tmp)
 		tmp++;
-	zfGenUsbInterrupt(tmp - txt, 0xca, 0x80, (u8_t *)txt);
+	zfGenUsbInterrupt((tmp - txt + 3) & ~0x3, 0xca, 0x80, (u8_t *)txt);
 }
 
 void usb_dbg8(u8_t v)
