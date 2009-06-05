@@ -40,21 +40,10 @@ SECTIONS
 
 	/* anything else can be anywhere */
 
-	.text     : { *(.text*) } > pram
-	.rodata   : { *(.rodata*) } > pram
-	.bss	  : { *(.bss) } > pram
-	.data	  : { *(.data*) } > pram
+	.text	: { *(.text*) } > pram
+	.rodata	: { *(.rodata*) } > pram
+	.bss	: { *(.bss) } > pram
+	.data	: { *(.data*) } > pram
 
-	.sram     : { *(.sram*) } > sram
-	.uart     : { *(.uart*) } > uart
-	.timer    : { *(.timer*) } > timer
-	.vflash   : { *(.vflash*) } > vflash
-	.wlan     : { *(.wlan*) } > wlan
-	.pci2ahb  : { *(.pci2ahb*) } > pci2ahb
-	.security : { *(.security*) } > security
-	.gpio     : { *(.gpio*) } > gpio
-	.memctl   : { *(.memctl*) } > memctl
-	.irqctl   : { *(.irqctl*) } > irqctl
-	.usb      : { *(.usb*) } > usb
-	.pta      : { *(.pta*) } > pta
+	.sram	: { *(.sram*) } > sram
 }
