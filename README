@@ -42,5 +42,4 @@ Build and install
 -----------------
 
 make
-make fw
 sudo make install
