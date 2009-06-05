@@ -394,6 +394,16 @@ void zfJumpToBootCode(void)
 #undef ZM_BOOTCODE_ADDR
 }
 
+extern void vUsb_ep0setup(void);
+extern void vUsb_ep0tx(void);
+extern void vUsb_ep0rx(void);
+extern void vUsb_ep0end(void);
+extern void vUsb_ep0fail(void);
+extern void vUsb_rst(void);
+extern void vUsb_suspend(void);
+extern void vUsb_resm(void);
+extern void vUsb_sof(void);
+
 /***********************************************************************/
 //      vUsbHandler()
 //      Description:
@@ -404,17 +414,7 @@ void zfJumpToBootCode(void)
 /***********************************************************************/
 void vUsbHandler(u8_t usb_interrupt_level1)
 {
-register u8_t usb_interrupt_level2;
-//U_8 usb_interrupt_level2;
-extern void vUsb_ep0setup(void);
-extern void vUsb_ep0tx(void);
-extern void vUsb_ep0rx(void);
-extern void vUsb_ep0end(void);
-extern void vUsb_ep0fail(void);
-extern void vUsb_rst(void);
-extern void vUsb_suspend(void);
-extern void vUsb_resm(void);
-extern void vUsb_sof(void);
+    u8_t usb_interrupt_level2;
 
     if (usb_interrupt_level1 & BIT5)            //Group Byte 5
     {
