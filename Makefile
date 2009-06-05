@@ -62,7 +62,8 @@ install:
 	install ar9170.fw /lib/firmware/
 
 clean:
-	rm -f *.o ap.fw sta.fw .files ar9170.fw otus-$(TYPE).* fw.map *~
-	rm -f AP/*{.o,~} STA/*{.o,~} usb/*{.o,~}
+	@rm -f *.o ar9170.fw otus-AP.* otus-STA.* fw.map *~
+	@rm -f AP/*.o STA/*.o usb/*.o
+	@rm -f AP/*~ STA/*~ usb/*~
 
 .PHONY: all clean
