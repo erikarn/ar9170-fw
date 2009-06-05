@@ -20,7 +20,7 @@ MEMORY
     irqctl   : ORIGIN = 0x1d2000, LENGTH = 4k
     usb      : ORIGIN = 0x1e1000, LENGTH = 4k
     pta      : ORIGIN = 0x1e2000, LENGTH = 4k
-    pram     : ORIGIN = 0x200000, LENGTH = 16k /* should be 32k */
+    pram     : ORIGIN = 0x200000, LENGTH = 16k
 }
 
 SECTIONS
