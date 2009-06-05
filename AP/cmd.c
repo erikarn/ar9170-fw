@@ -36,10 +36,6 @@ extern void zfDKReSetStart(void);
 extern void zfDKReSetEnd(void);
 #endif
 
-#if ZM_DRV_INIT_USB_MODE == 1
-extern void zfUsbSaveSettings(u32_t *usb_ctrl, u32_t *max_agg, u32_t *agg_timeout);
-extern void zfUsbRestoreSettings(u32_t usb_ctrl, u32_t max_agg, u32_t agg_timeout);
-#endif
 
 #define zfwWriteReg(addr, val) (*(volatile u32_t*)(0x1c3000+(addr<<2)) = val)
 
@@ -763,13 +759,6 @@ void zfSwReset(void)
     /* Do the MAC software reset */
     zm_wl_power_state_ctrl_reg |= 0x20;
 
-#if ZM_DRV_INIT_USB_MODE == 1
-    /* When doing the USB reset, the settings will be gone,
-	   we need to save and restore them.
-     */
-    /* Save these settings */
-    zfUsbSaveSettings(&usb_mode_ctrl, &usb_max_agg_num, &usb_agg_timeout);
-#endif
 
     /* Reset USB FIFO */
     *((volatile u32_t *) (0x1d4004)) = 0x05;
@@ -777,10 +766,6 @@ void zfSwReset(void)
 
     zfPtaModeInit();
 
-#if ZM_DRV_INIT_USB_MODE == 1
-    /* Restore these settings */
-    zfUsbRestoreSettings(usb_mode_ctrl, usb_max_agg_num, usb_agg_timeout);
-#endif
 
     /* Restart DMA */
     zfDmaInitDescriptor();

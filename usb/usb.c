@@ -293,7 +293,6 @@ void zfPtaModeInit(void)
     ZM_PTA_DMA_MODE_CTRL_REG |= BIT0;
     ZM_PTA_DMA_MODE_CTRL_REG &= ~BIT0;
 
-#if ZM_DRV_INIT_USB_MODE == 0
 
     if (mUsbHighSpeedST())                  // First judge HS or FS??
     {
@@ -333,7 +332,6 @@ void zfPtaModeInit(void)
 
     /* Set the up stream mode timeout value */
     ZM_SOC_USB_TIME_CTRL_REG = 0x100;
-#endif
 }
 
 void zfUsbInit(void)
@@ -355,9 +353,7 @@ void zfUsbInit(void)
 //    vFUSB200Init();
 //    ZM_PHY_TEST_SELECT_REG = 0;             // Plug In
 
-#if ZM_DRV_INIT_USB_MODE == 0
     zfPtaModeInit();
-#endif
     //ZM_CBUS_CTRL_REG = 0x02;
     //ZM_CBUS_CTRL_REG = 0x01;
 
@@ -1573,20 +1569,3 @@ void VendorCommand(void)
     }
 }
 
-#if ZM_DRV_INIT_USB_MODE == 1
-void zfUsbSaveSettings(u32_t *usb_ctrl, u32_t *max_agg, u32_t *agg_timeout)
-{
-    *usb_ctrl = ZM_SOC_USB_MODE_CTRL_REG;
-    *max_agg = ZM_SOC_USB_MAX_AGGREGATE_REG;
-    *agg_timeout = ZM_SOC_USB_TIME_CTRL_REG;
-
-    zfUartSendStrAndHex((u8_t *) "usb_ctrl=", *usb_ctrl);
-}
-
-void zfUsbRestoreSettings(u32_t usb_ctrl, u32_t max_agg, u32_t agg_timeout)
-{
-    ZM_SOC_USB_MODE_CTRL_REG = usb_ctrl;
-    ZM_SOC_USB_MAX_AGGREGATE_REG = max_agg;
-    ZM_SOC_USB_TIME_CTRL_REG = agg_timeout;
-}
-#endif

@@ -183,9 +183,7 @@ void zfInit(void)
     //PCI only
     //ZM_PTA_MEM_CTRL_REG = 0xE000 | (0x10f000>>11); /* size=1K, enable=1 */
 
-#if ZM_DRV_INIT_USB_MODE == 0
     zfDmaInitDescriptor();
-#endif
 
     /* clear all interrupt */
     zm_wl_int_ctrl_reg = 0xffff;
@@ -195,9 +193,7 @@ void zfInit(void)
     zm_wl_hash_tableh_reg = 0xffffffff;
 
     /* Trigger DMA */
-#if ZM_DRV_INIT_USB_MODE == 0
     ZM_PTA_DN_DMA_TRIGGER_REG = 1;
-#endif
     /* Trigger WLAN RX DMA */
     //zm_wl_dma_trigger_reg |= ZM_RXQ_TRIG_BIT;
 

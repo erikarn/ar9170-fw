@@ -20,9 +20,6 @@
  */
 #define ZM_AGGREGATION_RECLAIM  2
 
-/* Use driver to set USB mode */
-#define ZM_DRV_INIT_USB_MODE    0
-
 #define ZM_TX_HANG_CHK            1
 
 /* CAM user space : 64/16 */
