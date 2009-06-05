@@ -226,13 +226,13 @@ u16_t u8OtherSpeedConfigDescriptorEX[] =
  * This can be stream mode (if enabled) or packet mode.
  * We use packet mode for AP and stream mode for STA.
  */
-#ifdef AP_ENABLED
+//#ifdef AP_ENABLED
 #define USB_TX_STREAM_MODE	0
-#define USB_RX_STREAM_MODE	0
-#else
-#define USB_TX_STREAM_MODE      1
-#define USB_RX_STREAM_MODE      1
-#endif
+#define USB_RX_STREAM_MODE	1
+//#else
+//#define USB_TX_STREAM_MODE      1
+//#define USB_RX_STREAM_MODE      1
+//#endif
 
 //extern u16_t u8HSConfigDescriptor01[];
 
