@@ -48,7 +48,7 @@ FW += ashlsi3.o
 	$(CC) $(CFLAGS) -o $@ $<
 
 %.fw: %.elf
-	$(OBJCOPY) --strip-unneeded -O binary $< $@
+	$(OBJCOPY) --strip-unneeded -O binary -R .uart -R .timer -R .vflash -R .wlan -R .pci2ahb -R .security -R .gpio -R .memctl -R .irqctl -R .usb -R .pta $< $@
 
 all:	ar9170.fw
 

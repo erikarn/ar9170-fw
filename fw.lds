@@ -7,8 +7,20 @@
  */
 MEMORY
 {
-    sram : ORIGIN = 0x100000, LENGTH = 64k
-    pram : ORIGIN = 0x200000, LENGTH = 16k
+    eeprom   : ORIGIN = 0x000000, LENGTH = 1024k
+    sram     : ORIGIN = 0x100000, LENGTH = 64k
+    uart     : ORIGIN = 0x1c0000, LENGTH = 4k
+    timer    : ORIGIN = 0x1c1000, LENGTH = 4k
+    vflash   : ORIGIN = 0x1c2000, LENGTH = 4k
+    wlan     : ORIGIN = 0x1c3000, LENGTH = 4k
+    pci2ahb  : ORIGIN = 0x1c4000, LENGTH = 4k
+    security : ORIGIN = 0x1c5000, LENGTH = 4k
+    gpio     : ORIGIN = 0x1d0000, LENGTH = 4k
+    memctl   : ORIGIN = 0x1d1000, LENGTH = 4k
+    irqctl   : ORIGIN = 0x1d2000, LENGTH = 4k
+    usb      : ORIGIN = 0x1e1000, LENGTH = 4k
+    pta      : ORIGIN = 0x1e2000, LENGTH = 4k
+    pram     : ORIGIN = 0x200000, LENGTH = 16k /* should be 32k */
 }
 
 SECTIONS
@@ -24,12 +36,25 @@ SECTIONS
 		LONG(0x00090009)
 	} > pram
 
-	.boot : { *(.boot) } > pram
+	.boot     : { *(.boot) } > pram
 
 	/* anything else can be anywhere */
 
-	.text : { *(.text*) } > pram
-	.rodata : { *(.rodata*) } > pram
-	.bss	: { *(.bss) } > pram
-	.data	: { *(.data*) } > pram
+	.text     : { *(.text*) } > pram
+	.rodata   : { *(.rodata*) } > pram
+	.bss	  : { *(.bss) } > pram
+	.data	  : { *(.data*) } > pram
+
+	.sram     : { *(.sram*) } > sram
+	.uart     : { *(.uart*) } > uart
+	.timer    : { *(.timer*) } > timer
+	.vflash   : { *(.vflash*) } > vflash
+	.wlan     : { *(.wlan*) } > wlan
+	.pci2ahb  : { *(.pci2ahb*) } > pci2ahb
+	.security : { *(.security*) } > security
+	.gpio     : { *(.gpio*) } > gpio
+	.memctl   : { *(.memctl*) } > memctl
+	.irqctl   : { *(.irqctl*) } > irqctl
+	.usb      : { *(.usb*) } > usb
+	.pta      : { *(.pta*) } > pta
 }
