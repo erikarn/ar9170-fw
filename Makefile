@@ -8,11 +8,7 @@ AS = $(PFX)as
 OBJCOPY = $(PFX)objcopy
 
 # CPU is a Little endian sh2a-nofpu-or-sh3-nommu
-#
-# This should be the correct CPU to use but the assmebler is
-# buggy when used with little endian option (-ml)...
-#CPU = -m2a-nofpu
-CPU = -m2
+CPU = -m3
 
 CPU_FLAGS = $(CPU) -ml
 CFLAGS += -c $(CPU_FLAGS)  -I./include -D$(TYPE)_ENABLED=1
