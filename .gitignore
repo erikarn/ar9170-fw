@@ -5,3 +5,6 @@
 fw.map
 *~
 *.dis
+toolchain/src
+toolchain/build
+toolchain/inst
