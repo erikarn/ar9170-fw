@@ -1,11 +1,13 @@
 # Type is AP or STA
 TYPE ?= STA
 
-PFX ?= /usr/share/gnush_v0901_elf-1/bin/sh-elf-
-CC = $(PFX)gcc
-LD = $(PFX)ld
-AS = $(PFX)as
-OBJCOPY = $(PFX)objcopy
+PFX ?= $(shell pwd)/toolchain/inst/bin/sh-elf-
+VALID_PFX = $(if $(wildcard $(PFX)gcc), $(PFX), \
+	$(error Error: sh2 gcc not found. To build your own, invoke 'make -C toolchain'.))
+CC = $(VALID_PFX)gcc
+LD = $(VALID_PFX)ld
+AS = $(VALID_PFX)as
+OBJCOPY = $(VALID_PFX)objcopy
 
 # CPU is a Little endian sh2a-nofpu-or-sh3-nommu
 CPU = -m2
