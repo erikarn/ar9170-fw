@@ -25,8 +25,8 @@ struct zsDmaDesc {
 	struct zsDmaDesc *nextAddr;	// Next TD address
 };
 
-/* Tx5 Dn Rx Up Int */
-#define ZM_TERMINATOR_NUMBER_B  8
+/* 5x Tx, Dn, Rx, Up */
+#define ZM_TERMINATOR_NUMBER_B		8
 
 #if ZM_BAR_AUTO_BA == 1
 #define ZM_TERMINATOR_NUMBER_BAR 	1
@@ -40,12 +40,18 @@ struct zsDmaDesc {
 #define ZM_TERMINATOR_NUMBER_INT 	0
 #endif
 
-#define ZM_TX_DELAY_DESC_NUM	16
-#define ZM_TERMINATOR_NUMBER (8 + ZM_TERMINATOR_NUMBER_BAR + \
-                                  ZM_TERMINATOR_NUMBER_INT + \
-				  ZM_TX_DELAY_DESC_NUM)
+#if ZM_TX_DELAY_DESC == 1
+#define ZM_TX_DELAY_DESC_NUM		16
+#else
+#define ZM_TX_DELAY_DESC_NUM		0
+#endif
 
-#define ZM_BLOCK_SIZE           (256+64)
+#define ZM_TERMINATOR_NUMBER (ZM_TERMINATOR_NUMBER_B + \
+			      ZM_TERMINATOR_NUMBER_BAR + \
+			      ZM_TERMINATOR_NUMBER_INT + \
+			      ZM_TX_DELAY_DESC_NUM)
+
+#define ZM_BLOCK_SIZE           (256 + 64)
 #define ZM_DESCRIPTOR_SIZE      (sizeof(struct zsDmaDesc))
 
 
@@ -54,7 +60,14 @@ struct zsDmaDesc {
  *
  * 0x100000			+--
  *				| terminator descriptors (zsDmaDesc)
- *				| (ZM_TERMINATOR_NUMBER)
+ *				|  - TX (5x, to wifi)
+ *				|  - Down (from USB host)
+ *				|  - RX (from wifi)
+ *				|  - Up (to USB host)
+ *				|  - BAR (optional, auto BA (?))
+ *				|  - USB Interrupt (optional, to USB host)
+ *				|  - delay descriptors (optional, BA buffering (?))
+ *				| total: ZM_TERMINATOR_NUMBER
  *				+--
  *				| block descriptors (zsDmaDesc)
  *				| (ZM_BLOCK_NUMBER)
@@ -70,9 +83,8 @@ struct zsDmaDesc {
 #define ZM_BLOCK_NUMBER         ((ZM_FRAME_MEMORY_SIZE-(ZM_DESCRIPTOR_SIZE* \
                                 ZM_TERMINATOR_NUMBER)-64)/(ZM_BLOCK_SIZE \
                                 +ZM_DESCRIPTOR_SIZE))
-#define ZM_DESC_NUMBER          (ZM_BLOCK_NUMBER + ZM_TERMINATOR_NUMBER)
 
-#define ZM_DESCRIPTOR_BASE		ZM_FRAME_MEMORY_BASE
+#define ZM_DESCRIPTOR_BASE	ZM_FRAME_MEMORY_BASE
 #define ZM_BLOCK_BUFFER_BASE	(((((ZM_BLOCK_NUMBER+ZM_TERMINATOR_NUMBER) \
                                 *ZM_DESCRIPTOR_SIZE) >> 6) << 6) + 0x40 \
                                 + ZM_FRAME_MEMORY_BASE)

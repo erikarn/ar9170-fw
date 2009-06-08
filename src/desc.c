@@ -127,10 +127,8 @@ void zfDmaInitDescriptor(void)
 	zgTxDelayDescIdx = 0;
 
 	for (i = 0; i < ZM_TX_DELAY_DESC_NUM; i++) {
-		zgTxDelayDesc[i] = (struct zsDmaDesc *)(ZM_TX_DELAY_DESC_BASE
-							+
-							(i *
-							 ZM_DESCRIPTOR_SIZE));
+		zgTxDelayDesc[i] = (struct zsDmaDesc *)(ZM_TX_DELAY_DESC_BASE +
+							(i * ZM_DESCRIPTOR_SIZE));
 		zgTxDelayDesc[i]->status = ZM_OWN_BITS_SW;
 		zgTxDelayDesc[i]->ctrl = 0;
 		zgTxDelayDesc[i]->dataSize = i;
