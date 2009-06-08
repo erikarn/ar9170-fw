@@ -22,10 +22,6 @@ extern void zfGenUsbInterrupt(u8_t rspLen, u8_t rspType, u16_t rspSeq, u8_t *bod
 
 #define ZM_CMD_REBOOT		0x93
 
-/* stream mode setting */
-#define USB_TX_STREAM_MODE      0
-#define USB_RX_STREAM_MODE      0
-
 #define ZM_TX_MAX_HANG_NUM        4//2
 #define ZM_TX_MAX_HANG_NUM_HAV   8//32
 
