@@ -24,18 +24,17 @@
 /************************************************************************/
 u8_t *zfGetFreeIntrINQTailBuf(void)
 {
-    u8_t *buf = NULL;
+	u8_t *buf = NULL;
 
-    if (((zgIntrINQTail + 1) & (ZM_INTRQ_NUM - 1)) != zgIntrINQHead)
-    {
-        buf = (u8_t *) zgIntrINQ[zgIntrINQTail];
+	if (((zgIntrINQTail + 1) & (ZM_INTRQ_NUM - 1)) != zgIntrINQHead) {
+		buf = (u8_t *) zgIntrINQ[zgIntrINQTail];
 
-        zgIntrINQTail += 1;
-        zgIntrINQTail &= (ZM_INTRQ_NUM - 1);
-        zgIntrINQNum++;
-    }
+		zgIntrINQTail += 1;
+		zgIntrINQTail &= (ZM_INTRQ_NUM - 1);
+		zgIntrINQNum++;
+	}
 
-    return buf;
+	return buf;
 }
 
 /************************************************************************/
@@ -57,16 +56,15 @@ u8_t *zfGetFreeIntrINQTailBuf(void)
 /************************************************************************/
 u8_t *zfGetIntrINQHeadBuf(void)
 {
-    u8_t *buf = NULL;
+	u8_t *buf = NULL;
 
 //    if (zgIntrINQNum != 0)
-    if (zgIntrINQNum > 0)
-    {
-        buf = (u8_t *) zgIntrINQ[zgIntrINQHead];
-        zgIntrINQHead += 1;
-        zgIntrINQHead &= ZM_INTRQ_NUM - 1;
-        zgIntrINQNum--;
-    }
+	if (zgIntrINQNum > 0) {
+		buf = (u8_t *) zgIntrINQ[zgIntrINQHead];
+		zgIntrINQHead += 1;
+		zgIntrINQHead &= ZM_INTRQ_NUM - 1;
+		zgIntrINQNum--;
+	}
 
-    return buf;
+	return buf;
 }
