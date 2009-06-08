@@ -31,10 +31,11 @@ FW += src/gv.o
 FW += src/hostif.o
 FW += src/mon.o
 FW += src/uart.o
+FW += src/wlan.o
+
 FW += usb/usb.o
 FW += usb/usb_fifo.o
 FW += usb/usb_intrq.o
-FW += src/wlan.o
 FW += dbg.o
 
 # These comes from the Linux kernel
