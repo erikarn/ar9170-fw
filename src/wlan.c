@@ -1010,49 +1010,7 @@ void zfHandleTxCompInt(u8_t flag)
 
                     /* 2. Generate retry interrupt */
                     buf = (u16_t*)desc->dataAddr;
-#if 0
-                    /* Check whether this is an aggregation frame */
-                    if (buf[1] & 0x20)
-                    {
-                        if (genBAFrame == 0)
-                        {
-                            BAStartSeq = (buf[15] >> 4);
-                            genBAFrame = 1;
-                            offsetBitMap = 0;
-                            BABitmap = 0;
-                            MPDUCnt = 0;
-                        }
 
-                        /* If this is not a BA fail frame */
-                        if ((desc->ctrl & 0x2) == 0)
-                        {
-                            BABitmap |= (1 << offsetBitMap);
-                        }
-                        else
-                        {
-                            /* Increase zgBAFailCnt counter */
-                            zgTally.BAFailCnt++;
-                        }
-
-                        offsetBitMap++;
-                        MPDUCnt++;
-
-                        /* Check whether push bit is on */
-                        if (buf[1] & 0x4000)
-                        {
-                        //    zfUartSendStrAndHex((u8_t *) "seq=", BAStartSeq);    Mark by ygwei
-                        //    zfUartSendStrAndHex((u8_t *) "bitmap=", BABitmap);
-                        //    zfUartSendStrAndHex((u8_t *) "len=", MPDUCnt);
-
-                            /* Generate a BA frame to upper layer */
-                            zfGenerateBAFrame(BAStartSeq, BABitmap, MPDUCnt);
-
-                            /* Set genBAFrame zero */
-                            genBAFrame = 0;
-                        }
-                    }
-                    else
-#endif
                     if (((buf[4] & 0x0800) == 0x0800) && ((buf[1] & 0x20) == 0) && ((buf[4] & 0x48) == 0x8) )
                     {   // Prevent accumulating the null data rtray count !
                         zfGenerateTxCompEvent(buf, ZM_STATUS_RETRY_COMP);

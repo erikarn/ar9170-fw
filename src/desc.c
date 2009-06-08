@@ -24,6 +24,7 @@
 #include "gv_extr.h"
 #include "reg_defs.h"
 #include "uart_extr.h"
+#include "compiler.h"
 
 /* Function prototypes */
 void zfDmaInitDescriptor(void);
@@ -31,7 +32,16 @@ struct zsDmaDesc* zfDmaGetPacket(struct zsDmaQueue* q);
 void zfDmaReclaimPacket(struct zsDmaQueue* q, struct zsDmaDesc* desc);
 void zfDmaPutPacket(struct zsDmaQueue* q, struct zsDmaDesc* desc);
 
-extern void copy_zsDmaDesc(struct zsDmaDesc *dst, const struct zsDmaDesc *src);
+static void __noinline copy_zsDmaDesc(struct zsDmaDesc *dst, const struct zsDmaDesc *src)
+{
+	dst->status = src->status;
+	dst->ctrl = src->ctrl;
+	dst->dataSize = src->dataSize;
+	dst->totalLen = src->totalLen;
+	dst->lastAddr = src->lastAddr;
+	dst->dataAddr = src->dataAddr;
+	dst->nextAddr = src->nextAddr;
+}
 
 /************************************************************************/
 /*                                                                      */

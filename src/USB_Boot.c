@@ -56,7 +56,7 @@ void zfUsbIsr(void)
         mUSB_STATUS_IN_INT_ENABLE();
 }
 
-void vUsb_Data_In(void)
+static void vUsb_Data_In(void)
 {
     //zfUartSendStr((u8_t *)"vUsb_Data_In\r\n");
 }
@@ -251,20 +251,6 @@ void zfGenUsbInterrupt(u8_t rspLen, u8_t rspType, u16_t rspSeq, u8_t *body)
     }
 
     mUSB_STATUS_IN_INT_ENABLE();
-}
-
-void zfGenerateBAFrame(u16_t seq, u32_t bitmap, u16_t cnt)
-{
-    u16_t buffer[30];
-    u16_t *ptr = (u16_t *) buffer;
-
-    /* Pack the BA information */
-    *ptr++ = seq;
-    *ptr++ = bitmap;
-    *ptr++ = bitmap >> 16;
-    *ptr++ = cnt;
-
-    zfGenUsbInterrupt(8, 0xC4, 0x82, (u8_t *)buffer);
 }
 
 void zfGenerateBAFailCntFrame(void)
