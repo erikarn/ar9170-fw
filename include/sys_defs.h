@@ -33,10 +33,6 @@
 
 #define ZM_BOARD_TYPE           ZM_BOARD_TYPE_FB50
 
-/* Firmware Loopback */
-#define ZM_FM_LOOPBACK          0
-
-
 /* ----- */
 
 #define ZM_CLOCK_25M            0   /* 0=>40MHz clock */
