@@ -14,9 +14,6 @@
 
 extern void zfDisableCamUser(u16_t userId);
 extern void zfEnableCamUser(u16_t userId);
-extern void zfWaitForCamReadReady(void);
-extern void zfWaitForCamWriteReady(void);
-extern void HW_CAM_Avail(void);
 extern void HW_CAM_Write128(const u32_t address, const u32_t * data);
 extern void HW_CAM_Read128(const u32_t address, u32_t * data);
 

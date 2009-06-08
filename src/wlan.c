@@ -217,17 +217,17 @@ void zfHandleCfgBcnInt(void)
 	zfGenUsbInterrupt(4, 0xC2, 0x80, (u8_t *) & bcnCount);
 }
 
-void zfHandlePreTbttInt(void)
+static void zfHandlePreTbttInt(void)
 {
 	zfGenUsbInterrupt(0, 0xC0, 0x80, 0);
 }
 
-void zfHandleAtimInt(void)
+static void zfHandleAtimInt(void)
 {
 	zfGenUsbInterrupt(0, 0xC3, 0x80, 0);
 }
 
-struct zsDmaDesc *zfFindHwTxHeader(void)
+static struct zsDmaDesc *zfFindHwTxHeader(void)
 {
 	struct zsDmaQueue *q;
 	struct zsDmaDesc *desc;

@@ -28,29 +28,21 @@ void zfEnableCamUser(u16_t userId)
 	return;
 }
 
-void zfWaitForCamReadReady(void)
+static void zfWaitForCamReadReady(void)
 {
 	while (((*(volatile u32_t *)0x1c373c) & 0x40000000) == 0) {
 	}
 	//zfUartSendStr((u8_t*)"R");
 }
 
-void zfWaitForCamWriteReady(void)
+static void zfWaitForCamWriteReady(void)
 {
 	while (((*(volatile u32_t *)0x1c373c) & 0x80000000) == 0) {
 	}
 	//zfUartSendStr((u8_t*)"W");
 }
 
-void zfDelayLoop(u32_t n)
-{
-	u32_t temp;
-	for (temp = 0; temp < n;) {
-		temp++;
-	}
-}
-
-void HW_CAM_Avail(void)
+static void HW_CAM_Avail(void)
 {
 	u32_t tmpValue;
 
