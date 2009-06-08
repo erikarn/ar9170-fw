@@ -43,27 +43,31 @@ struct zsDmaDesc {
 #define ZM_TX_DELAY_DESC_NUM	16
 #define ZM_TERMINATOR_NUMBER (8 + ZM_TERMINATOR_NUMBER_BAR + \
                                   ZM_TERMINATOR_NUMBER_INT + \
-							      ZM_TX_DELAY_DESC_NUM)
+				  ZM_TX_DELAY_DESC_NUM)
 
 #define ZM_BLOCK_SIZE           (256+64)
 #define ZM_DESCRIPTOR_SIZE      (sizeof(struct zsDmaDesc))
 
+
+/*
+ * Memory layout in RAM:
+ *
+ * 0x100000			+--
+ *				| terminator descriptors (zsDmaDesc)
+ *				| (ZM_TERMINATOR_NUMBER)
+ *				+--
+ *				| block descriptors (zsDmaDesc)
+ *				| (ZM_BLOCK_NUMBER)
+ * ZM_BLOCK_BUFFER_BASE		+-- align to multiple of 64
+ *				| block buffers (ZM_BLOCK_SIZE each)
+ *				| (ZM_BLOCK_NUMBER)
+ * 0x117000			+--
+ */
+
 #define ZM_FRAME_MEMORY_BASE    0x100000
+#define ZM_FRAME_MEMORY_SIZE    0x17000
 
-#if 1
-/* 64k */
-//#define ZM_FRAME_MEMROY_SIZE    0xf000
-/* 96k */
-#define ZM_FRAME_MEMROY_SIZE    0x17000
-
-#else
-/* fake phy */
-/* 128k / 96k */
-#define ZM_FRAME_MEMROY_SIZE    (ZM_BLOCK_SIZE+ZM_DESCRIPTOR_SIZE)*(160+60) + \
-                                (ZM_DESCRIPTOR_SIZE*ZM_TERMINATOR_NUMBER)+64
-#endif
-
-#define ZM_BLOCK_NUMBER         ((ZM_FRAME_MEMROY_SIZE-(ZM_DESCRIPTOR_SIZE* \
+#define ZM_BLOCK_NUMBER         ((ZM_FRAME_MEMORY_SIZE-(ZM_DESCRIPTOR_SIZE* \
                                 ZM_TERMINATOR_NUMBER)-64)/(ZM_BLOCK_SIZE \
                                 +ZM_DESCRIPTOR_SIZE))
 #define ZM_DESC_NUMBER          (ZM_BLOCK_NUMBER + ZM_TERMINATOR_NUMBER)

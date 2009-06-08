@@ -13,12 +13,7 @@
 #include "reg_defs.h"
 #include "uart_extr.h"
 #include "compiler.h"
-
-/* Function prototypes */
-void zfDmaInitDescriptor(void);
-struct zsDmaDesc *zfDmaGetPacket(struct zsDmaQueue *q);
-void zfDmaReclaimPacket(struct zsDmaQueue *q, struct zsDmaDesc *desc);
-void zfDmaPutPacket(struct zsDmaQueue *q, struct zsDmaDesc *desc);
+#include "api_extr.h"
 
 static void __noinline copy_zsDmaDesc(struct zsDmaDesc *dst,
 				      const struct zsDmaDesc *src)
@@ -45,10 +40,9 @@ void zfDmaInitDescriptor(void)
 	u16_t i;
 	struct zsDmaDesc *desc[ZM_TERMINATOR_NUMBER];
 
-	/* Init descriptos for terminators */
+	/* Init descriptors for terminators */
 	for (i = 0; i < ZM_TERMINATOR_NUMBER; i++) {
-		desc[i] = (struct zsDmaDesc *)(ZM_DESCRIPTOR_BASE
-					       + (i * ZM_DESCRIPTOR_SIZE));
+		desc[i] = (struct zsDmaDesc *)(ZM_DESCRIPTOR_BASE + (i * ZM_DESCRIPTOR_SIZE));
 		desc[i]->status = ZM_OWN_BITS_SW;
 		desc[i]->ctrl = 0;
 		desc[i]->dataSize = 0;
@@ -81,10 +75,8 @@ void zfDmaInitDescriptor(void)
 
 	/* Init descriptors and memory blocks */
 	for (i = 0; i < ZM_BLOCK_NUMBER; i++) {
-		desc[0] = (struct zsDmaDesc *)((ZM_DESCRIPTOR_BASE
-						+
-						(ZM_TERMINATOR_NUMBER *
-						 ZM_DESCRIPTOR_SIZE))
+		desc[0] = (struct zsDmaDesc *)((ZM_DESCRIPTOR_BASE +
+						(ZM_TERMINATOR_NUMBER * ZM_DESCRIPTOR_SIZE))
 					       + (i * ZM_DESCRIPTOR_SIZE));
 		desc[0]->status = ZM_OWN_BITS_SW;
 		desc[0]->ctrl = 0;
