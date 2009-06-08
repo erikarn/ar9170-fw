@@ -446,8 +446,6 @@ void __section(boot) zfbooter(void)
 	ZM_WATCH_DOG_MAGIC_REG &= 0xFFFF;
 	ZM_WATCH_DOG_MAGIC_REG |= 0x12340000;
 
-	zfHwInit();
-
 	zfInit();
 
 	/* Wait until UART Tx goes to IDLE */
