@@ -58,7 +58,7 @@ void zfUsbIsr(void)
 
 static void vUsb_Data_In(void)
 {
-    //zfUartSendStr((u8_t *)"vUsb_Data_In\r\n");
+    //zfUartSendStr((u8_t *)"vUsb_Data_In\n");
 }
 
 void vUsb_Reg_Out(void)
@@ -228,7 +228,7 @@ void zfGenUsbInterrupt(u8_t rspLen, u8_t rspType, u16_t rspSeq, u8_t *body)
     /* If there is not enough buffer */
     if ((u8RspBuf == NULL) || (zgIntrINQNum >= (ZM_INTRQ_NUM - 2)))
     {
-        zfUartSendStr((u8_t *) "Not enough INQ Buf\r\n");
+        zfUartSendStr((u8_t *) "Not enough INQ Buf\n");
     //    zfUartSendStrAndHex((u8_t *) "zgIntrINQHead=", zgIntrINQHead);
     //    zfUartSendStrAndHex((u8_t *) "zgIntrINQHead=", zgIntrINQTail);
     //    zfUartSendStrAndHex((u8_t *) "zgIntrINQHead=", zgIntrINQNum);

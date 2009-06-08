@@ -495,7 +495,7 @@ void zfCmdHandler(void)
     }
     else if (type == ZM_CMD_SWRST)
     {
-        //zfUartSendStr((u8_t *) "Software Reset\r\n");
+        //zfUartSendStr((u8_t *) "Software Reset\n");
         //zfSwReset();
         zfWorkAround_SwReset();
         *(volatile u8_t*)(rspBuf) = 0;
@@ -553,7 +553,7 @@ void zfCmdHandler(void)
             //zfUartSendHex(addr);
             //zfUartSendStr((u8_t *) " val=");
             //zfUartSendHex(val);
-            //zfUartSendStr((u8_t *) "\r\n");
+            //zfUartSendStr((u8_t *) "\n");
 
             for (iii = 0; iii < 4; iii++)
             {

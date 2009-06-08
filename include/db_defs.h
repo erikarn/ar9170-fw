@@ -17,8 +17,8 @@
 #ifndef _DB_DEFS_H
 #define _DB_DEFS_H
 
-#define ZM_DEBUGGER_VERSION_STR     "ZB1016 Debugger v0.01\n\r"
-#define ZM_COMMAND_LIST_STR         "===Command Listing===\n\r"
+#define ZM_DEBUGGER_VERSION_STR     "ZB1016 Debugger v0.01\n"
+#define ZM_COMMAND_LIST_STR         "===Command Listing===\n"
 
 #define DB_MAX_COMMAND_LENGTH       40   /* Maximum command line length */
 #define COMMAND_BUFFER_SIZE         6    /* Maximum command buffer size */

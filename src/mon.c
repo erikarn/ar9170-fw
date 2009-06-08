@@ -120,7 +120,7 @@ void zfPrintCpuUtilization(void)
 #endif
 
 	//zfSleepMilliSecond(10);
-	zfUartSendStr((u8_t *) "\n\r");
+	zfUartSendStr((u8_t *) "\n");
 
 	for (j = 100; j > 0; j -= 10) {
 		if (j == 10) {
@@ -150,7 +150,7 @@ void zfPrintCpuUtilization(void)
 			position--;
 			position &= (ZM_MONITOR_BUFFER_SIZE - 1);
 		}
-		zfUartSendStr((u8_t *) "\n\r");
+		zfUartSendStr((u8_t *) "\n");
 		//zfSleepMilliSecond(10);
 	}
 

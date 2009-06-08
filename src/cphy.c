@@ -113,7 +113,7 @@ u16_t zfInitRf(u32_t frequency,
               u32_t delta_slope_coeff_man_shgi,
 			  u32_t finiteLoopCount)
 {
-    //zfUartSendStr((u8_t*)"zfInitRf\n\r");
+    //zfUartSendStr((u8_t*)"zfInitRf\n");
 	u16_t ret;
 
     /* stroe frequency */
@@ -141,7 +141,7 @@ u16_t zfInitRf(u32_t frequency,
 
 	zfSetChannelEnd();
 
-    //zfUartSendStr((u8_t*)"zfInitRf done\n\r");
+    //zfUartSendStr((u8_t*)"zfInitRf done\n");
 	return ret;
 }
 
@@ -290,7 +290,7 @@ void zfHwTurnOffdyn(u32_t delta_slope_coeff_exp,
     u32_t rddata;
     u32_t wrdata;
 
-    //zfUartSendStr((u8_t*)"zfHwTurnOffdyn\n\r");
+    //zfUartSendStr((u8_t*)"zfHwTurnOffdyn\n");
 #if 0
     if (zgHwConfigure.DYNAMIC_HT2040_EN)
 	{
@@ -476,7 +476,7 @@ void zfHwCalibration()
     u32_t done;
 	u32_t loop;
 
-    //zfUartSendStr((u8_t*)"zfHwCalibration\n\r");
+    //zfUartSendStr((u8_t*)"zfHwCalibration\n");
 
     rddata = reg_read(0x9860);
     wrdata = rddata | 0x1;
@@ -493,7 +493,7 @@ void zfHwCalibration()
     }
 
     if (loop>=100)
-        zfUartSendStr((u8_t*)"HwCalibration  fail\n\r");
+        zfUartSendStr((u8_t*)"HwCalibration  fail\n");
 
     wait_on_time(10);
 }
@@ -521,7 +521,7 @@ u16_t zfAGCCalibration(u32_t finiteLoopCount)
 	s32_t nf, nf_ext;
 #endif
 
-    //zfUartSendStr((u8_t*)"zfAGCCalibration\n\r");
+    //zfUartSendStr((u8_t*)"zfAGCCalibration\n");
 #if ZM_DBG_TMP_AGC == 1
 	saveCR24 = reg_read(0x9800 + (24<<2));
 	reg_write(0x9800 + (24<<2), (saveCR24 | 0x20000));
@@ -547,7 +547,7 @@ u16_t zfAGCCalibration(u32_t finiteLoopCount)
     ret = done;
     if (loop>=finiteLoopCount)
     {
-        zfUartSendStr((u8_t*)"AGC+Noise Calibration fail on time\n\r");
+        zfUartSendStr((u8_t*)"AGC+Noise Calibration fail on time\n");
     }
 
 #if ZM_DBG_TMP_AGC == 1
@@ -686,7 +686,7 @@ u16_t zfHwNoiseCalibration()
 	//int loop_1 = 0;
 	int loop_2 = 0;
 
-    //zfUartSendStr((u8_t*)"zfHwNoiseCalibration\n\r");
+    //zfUartSendStr((u8_t*)"zfHwNoiseCalibration\n");
 
     {
         rddata = reg_read(0x9860);
@@ -707,7 +707,7 @@ u16_t zfHwNoiseCalibration()
 			zfDelayUs(100);
 			loop_2++;
         }
-        //zfUartSendStr((u8_t*)"Noise Calibration done !!!!!\n\r");
+        //zfUartSendStr((u8_t*)"Noise Calibration done !!!!!\n");
 
 #if 0
 /* only for hw status check- display information */
@@ -823,7 +823,7 @@ u16_t zfHwNoiseCalibration()
 	//if (loop_1>=10 || loop_2>=100)
 	if (loop_2>=1000)
 	{
-        zfUartSendStr((u8_t*)"Noise Calibration fail!!\n\r");
+        zfUartSendStr((u8_t*)"Noise Calibration fail!!\n");
 		*(volatile u32_t*)(0x117700) = *(volatile u32_t*)(0x117700) + 1;
 		return 1;
 	}
