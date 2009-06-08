@@ -59,7 +59,7 @@ install:
 
 clean:
 	@rm -f *.o ar9170.fw ar9170.elf *~
-	@rm -f STA/*.o usb/*.o
-	@rm -f STA/*~ usb/*~ include/*~
+	@rm -f src/*.o usb/*.o
+	@rm -f src/*~ usb/*~ include/*~
 
 .PHONY: all clean
