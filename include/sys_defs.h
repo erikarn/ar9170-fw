@@ -1,18 +1,6 @@
 #ifndef _SYS_DEFS_H
 #define _SYS_DEFS_H
 
-/* stream mode setting
- *  hpfwu_2k.c             None
- *  hpfwu.c                    Rx
- *  hpfwu_txstream.c      Tx / Rx
- *
- *  2k     hpfwu_2k.c
- *  xp     hpfwu_txstream.c
- *  vista  hpfwu_txstream.c
- *  linux  hpfwu.c
- */
-#define USB_SW_TX_STREAM_MODE   0
-
 /* AGG Reclaim */
 /* 0: Disable
  * 1: Reclaim this packet if retry counter greater than 3
@@ -26,14 +14,6 @@
 
 /* DeBug mode base include: Uart input and output */
 #define ZM_UART		        	1
-
-#define ZM_BOARD_TYPE_CHIP      0
-#define ZM_BOARD_TYPE_MIMO2     1
-#define ZM_BOARD_TYPE_FB50      2
-
-#define ZM_BOARD_TYPE           ZM_BOARD_TYPE_FB50
-
-/* ----- */
 
 #define ZM_CLOCK_25M            0	/* 0=>40MHz clock */
 				    /* 1=>25MHz clock */
