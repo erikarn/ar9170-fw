@@ -32,11 +32,11 @@ FW += src/hostif.o
 FW += src/uart.o
 FW += src/wlan.o
 FW += src/cam.o
+FW += src/dbg.o
 
 FW += usb/usb.o
 FW += usb/usb_fifo.o
 FW += usb/usb_intrq.o
-FW += dbg.o
 
 # These comes from the Linux kernel
 FW += ashlsi3.o
