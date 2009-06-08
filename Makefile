@@ -44,7 +44,7 @@ FW += ashlsi3.o
 %.o: %.S
 	$(CC) $(CFLAGS) -o $@ $<
 
-%.o: %.c
+%.o: %.c include/*
 	$(CC) $(CFLAGS) -o $@ $<
 
 %.fw: %.elf
