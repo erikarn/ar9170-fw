@@ -13,7 +13,7 @@ OBJCOPY = $(VALID_PFX)objcopy
 CPU = -m2
 
 CPU_FLAGS = $(CPU) -ml
-CFLAGS += -c $(CPU_FLAGS)  -I./include -D$(TYPE)_ENABLED=1
+CFLAGS += -c $(CPU_FLAGS)  -I./include
 CFLAGS += -Wall
 CFLAGS += -g3
 CFLAGS += -Os
