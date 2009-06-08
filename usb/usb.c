@@ -5,21 +5,6 @@
 #include "usb_std.h"
 #include "reg_defs.h"
 
-#define USB_DEVICE_DESC_TYPE            0x01
-#define USB_DEVICE_DESC_LEN             0x12
-#define USB_SPEC_VERSION                0x0200
-#define USB_DEVICE_CLASS                0xFF
-#define USB_DEVICE_SUB_CLASS            0xFF
-#define USB_DEVICE_PROTOCOL             0xFF
-#define USB_MAX_PKT_SIZE                0x40
-#define USB_VENDOR_ID                   0x0ACE
-#define USB_PRODUCT_ID                  0x1221
-#define USB_DEVICE_BCD                  0x4890
-#define USB_MANUFACTURER_INDEX          0x10
-#define USB_PRODUCT_INDEX               0x20
-#define USB_SERIAL_INDEX                0x00
-#define USB_CONFIGURATION_NUM           0x01
-
 #define USB_CONFIG_DESC_TYPE            0x02
 #define USB_CONFIG_DESC_LEN             0x09
 #define USB_TOTAL_DESC_LEN              0x002E
