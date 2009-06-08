@@ -110,4 +110,6 @@ struct zsDmaQueue {
 	struct zsDmaDesc *terminator;
 };
 
+extern struct zsDmaDesc *zfExchangeDesc(struct zsDmaDesc *desc);
+
 #endif				/* #ifndef _DESC_DEFS_H */

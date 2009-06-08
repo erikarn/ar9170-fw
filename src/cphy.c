@@ -305,8 +305,6 @@ u16_t zfAGCCalibration(u32_t finiteLoopCount)
 	return ret;
 }
 
-extern u8_t zg5GhzFreq;
-
 u16_t zfInitRf(u32_t frequency,
 	       u32_t delta_slope_coeff_exp,
 	       u32_t delta_slope_coeff_man,

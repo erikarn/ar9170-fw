@@ -12,6 +12,8 @@
 #include "api_extr.h"
 #include "uart_extr.h"
 #include "sta.h"
+#include "desc.h"
+#include "usb_extr.h"
 
 void zfHandleTxCompInt(u8_t flag);
 
@@ -23,9 +25,6 @@ void zfHandleTxCompInt(u8_t flag);
         buf[2] |= newMt; \
         buf[3] |= (newMcs<<2); \
 		buf[3] |= ((sg & 0x1)<<15);}
-
-extern struct zsDmaDesc *zfExchangeDesc(struct zsDmaDesc *desc);
-extern void zfGenUsbInterrupt(u8_t rspLen, u8_t rspType, u16_t rspSeq, u8_t * body);
 
 #define ZM_STATUS_TX_COMP       0x00
 #define ZM_STATUS_RETRY_COMP    0x01
