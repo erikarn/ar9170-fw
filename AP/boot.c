@@ -23,8 +23,9 @@
 #include "reg_defs.h"
 #include "gv_extr.h"
 #include "api_extr.h"
-#include "ap.h"
 #include "usb_defs.h"
+#include "dbg.h"
+#include "ap.h"
 
 //#if ZM_TX_HANG_CHK == 1
 #include "desc.h"
@@ -35,17 +36,15 @@ void zfInit(void);
 void zfMainLoop(void);
 void zfIdleTask(void);
 void zfFPGAInit(void);
-void zfWorkAround_SwReset(void);
 
 /* testing for OTUS phy access with Tx path */
 void zfPhyTxPathTest(void);
-
-void zfHwInit(void);
 
 #define ZM_WATCH_DOG_TIMER		   0x100
 #define _ZF_WATCH_DOG(time)		   ZM_WATCH_DOG_REG = time
 
 extern void zfDelayMs(u32_t msec);
+extern void zfHwInit(void);
 
 /************************************************************************/
 /*                                                                      */
@@ -234,6 +233,82 @@ void zfInit(void)
 	u8Watchdog_Enable = 1;
 }
 
+void zfWorkAround_SwReset(void)
+{
+   	u32_t val;
+    u32_t agg_wait_counter;
+    u32_t agg_density;
+	u32_t bcnStartAddr;
+	u32_t rctlReg, rcthReg;
+    u32_t camModeReg;
+    u32_t ackPowerReg;
+    u32_t rtsctsTPCReg;
+    u32_t rxBBReg;
+    u16_t ii;
+//	u8_t  chState;
+
+    /* Save aggregation parameters */
+    agg_wait_counter = *(volatile u32_t*)(0x1c3b9c);
+    agg_density = *(volatile u32_t*)(0x1c3ba0);
+	bcnStartAddr = *(volatile u32_t*)(0x1c3d98);
+    rctlReg = zm_cam_roll_call_tablel_reg;
+    rcthReg = zm_cam_roll_call_tableh_reg;
+	camModeReg = zm_cam_mode_reg;
+	ackPowerReg = *(volatile u32_t*)(0x1c3694);
+	rtsctsTPCReg = *(volatile u32_t*)(0x1c3bb4);
+	rxBBReg = *(volatile u32_t*)(0x1c5960); /* 0x1c8960 write only */
+
+    /* TX/RX must be stopped by now */
+    val = *(volatile u32_t*)(0x1c3500);
+    val |= 0x20;
+
+	/* Manipulate CCA threshold to stop transmission */
+//	*(volatile u32_t*)(0x1c5968) = 0x300;
+
+	/* check Rx state in 0(idle) 9(disable) */
+//	chState = (0x1c3684 >> 16) & 0xf;
+//	while( (chState != 0) && (chState != 9) )
+//	{
+//		chState = (0x1c3684 >> 16) & 0xf;
+//	}
+
+    *(volatile u32_t*)(0x1c3500) = val;
+
+    for (ii = 0; ii < 64;ii++)
+    {
+    }
+
+    /* Restore aggregation parameters */
+    *(volatile u32_t*)(0x1c3b9c) = agg_wait_counter;
+    *(volatile  u32_t*)(0x1c3ba0) = agg_density;
+	*(volatile u32_t*)(0x1c3d98) = bcnStartAddr;
+    zm_cam_roll_call_tablel_reg = rctlReg;
+    zm_cam_roll_call_tableh_reg = rcthReg;
+	zm_cam_mode_reg = camModeReg;
+	*(volatile u32_t*)(0x1c3694) = ackPowerReg;
+	*(volatile u32_t*)(0x1c3bb4) = rtsctsTPCReg;
+	*(volatile u32_t*)(0x1c8960) = rxBBReg;
+
+	/* Manipulate CCA threshold to resume transmission */
+//	*(volatile u32_t*)(0x1c5968) = 0x000;
+
+	/* Discard tx */
+	zfRecycleRTQ();
+
+	zfRecycleTxQ(0);
+	zfRecycleTxQ(1);
+
+	/* rewrite TxQ0 start addr */
+	zm_wl_txq0_dma_addr_reg = (u32_t)zgTxQ[0].head;
+	zm_wl_txq1_dma_addr_reg = (u32_t)zgTxQ[1].head;
+	//zm_wl_dma_trigger_reg = ZM_TXQ0_TRIG_BIT;
+
+    /* Restart RxQ */
+    zfRecycleRxQ();
+
+    /* Trigger Rx DMA */
+    zm_wl_dma_trigger_reg = 0x100;
+}
 
 /************************************************************************/
 /*                                                                      */
@@ -564,106 +639,3 @@ void zfMainLoop(void)
 
     }/* end of while(1) */
 }
-
-
-void zfWorkAround_SwReset(void)
-{
-   	u32_t val;
-    u32_t agg_wait_counter;
-    u32_t agg_density;
-	u32_t bcnStartAddr;
-	u32_t rctlReg, rcthReg;
-    u32_t camModeReg;
-    u32_t ackPowerReg;
-    u32_t rtsctsTPCReg;
-    u32_t rxBBReg;
-    u16_t ii;
-//	u8_t  chState;
-
-    /* Save aggregation parameters */
-    agg_wait_counter = *(volatile u32_t*)(0x1c3b9c);
-    agg_density = *(volatile u32_t*)(0x1c3ba0);
-	bcnStartAddr = *(volatile u32_t*)(0x1c3d98);
-    rctlReg = zm_cam_roll_call_tablel_reg;
-    rcthReg = zm_cam_roll_call_tableh_reg;
-	camModeReg = zm_cam_mode_reg;
-	ackPowerReg = *(volatile u32_t*)(0x1c3694);
-	rtsctsTPCReg = *(volatile u32_t*)(0x1c3bb4);
-	rxBBReg = *(volatile u32_t*)(0x1c5960); /* 0x1c8960 write only */
-
-    /* TX/RX must be stopped by now */
-    val = *(volatile u32_t*)(0x1c3500);
-    val |= 0x20;
-
-	/* Manipulate CCA threshold to stop transmission */
-//	*(volatile u32_t*)(0x1c5968) = 0x300;
-
-	/* check Rx state in 0(idle) 9(disable) */
-//	chState = (0x1c3684 >> 16) & 0xf;
-//	while( (chState != 0) && (chState != 9) )
-//	{
-//		chState = (0x1c3684 >> 16) & 0xf;
-//	}
-
-    *(volatile u32_t*)(0x1c3500) = val;
-
-    for (ii = 0; ii < 64;ii++)
-    {
-    }
-
-    /* Restore aggregation parameters */
-    *(volatile u32_t*)(0x1c3b9c) = agg_wait_counter;
-    *(volatile  u32_t*)(0x1c3ba0) = agg_density;
-	*(volatile u32_t*)(0x1c3d98) = bcnStartAddr;
-    zm_cam_roll_call_tablel_reg = rctlReg;
-    zm_cam_roll_call_tableh_reg = rcthReg;
-	zm_cam_mode_reg = camModeReg;
-	*(volatile u32_t*)(0x1c3694) = ackPowerReg;
-	*(volatile u32_t*)(0x1c3bb4) = rtsctsTPCReg;
-	*(volatile u32_t*)(0x1c8960) = rxBBReg;
-
-	/* Manipulate CCA threshold to resume transmission */
-//	*(volatile u32_t*)(0x1c5968) = 0x000;
-
-	/* Discard tx */
-	zfRecycleRTQ();
-
-	zfRecycleTxQ(0);
-	zfRecycleTxQ(1);
-
-	/* rewrite TxQ0 start addr */
-	zm_wl_txq0_dma_addr_reg = (u32_t)zgTxQ[0].head;
-	zm_wl_txq1_dma_addr_reg = (u32_t)zgTxQ[1].head;
-	//zm_wl_dma_trigger_reg = ZM_TXQ0_TRIG_BIT;
-
-    /* Restart RxQ */
-    zfRecycleRxQ();
-
-    /* Trigger Rx DMA */
-    zm_wl_dma_trigger_reg = 0x100;
-}
-
-#if 0
-/************************************************************************/
-/*                                                                      */
-/*    FUNCTION DESCRIPTION                  zfIdleTask                  */
-/*      Idle counter                                                    */
-/*                                                                      */
-/*    ROUTINES CALLED                                                   */
-/*                                                                      */
-/*    INPUTS                                                            */
-/*      void                                                            */
-/*                                                                      */
-/*    OUTPUTS                                                           */
-/*      void                                                            */
-/*                                                                      */
-/*    AUTHOR                                                            */
-/*      Stephen Chen   Atheros Communications, Inc.             2005.10 */
-/*                                                                      */
-/************************************************************************/
-void zfIdleTask(void)
-{
-    zgIdleCount++;
-}
-
-#endif
