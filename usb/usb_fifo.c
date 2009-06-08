@@ -5,37 +5,37 @@
 #include "usb_std.h"
 #include "uart_extr.h"
 
-void mUsbEPMap(u8_t EPn, u8_t MAP)
+static void mUsbEPMap(u8_t EPn, u8_t MAP)
 {
 	u8_t *reg = (u8_t *) (ZM_FUSB_BASE + 0x30 + (EPn - 1));
 	*reg = MAP;
 }
 
-void mUsbFIFOMap(u8_t FIFOn, u8_t MAP)
+static void mUsbFIFOMap(u8_t FIFOn, u8_t MAP)
 {
 	u8_t *reg = (u8_t *) (ZM_FUSB_BASE + 0x80 + FIFOn);
 	*reg = MAP;
 }
 
-void mUsbFIFOConfig(u8_t FIFOn, u8_t cfg)
+static void mUsbFIFOConfig(u8_t FIFOn, u8_t cfg)
 {
 	u8_t *reg = (u8_t *) (ZM_FUSB_BASE + 0x90 + FIFOn);
 	*reg = cfg;
 }
 
-void mUsbEPMxPtSzHigh(u8_t EPn, u8_t dir, u16_t size)
+static void mUsbEPMxPtSzHigh(u8_t EPn, u8_t dir, u16_t size)
 {
 	u8_t *reg = (u8_t *) (ZM_FUSB_BASE + ZM_EP_IN_MAX_SIZE_HIGH_OFFSET + ((((dir) * 0x20) + EPn) << 1));
 	*reg = (size >> 8) & 0xf;
 }
 
-void mUsbEPMxPtSzLow(u8_t EPn, u8_t dir, u16_t size)
+static void mUsbEPMxPtSzLow(u8_t EPn, u8_t dir, u16_t size)
 {
 	u8_t *reg = (u8_t *) (ZM_FUSB_BASE + ZM_EP_IN_MAX_SIZE_LOW_OFFSET + ((((dir) * 0x20) + EPn) << 1));
 	*reg = (size & 0xff);
 }
 
-void mUsbEPinHighBandSet(u8_t EPn, u8_t dir, u16_t size)
+static void mUsbEPinHighBandSet(u8_t EPn, u8_t dir, u16_t size)
 {
 	u8_t *reg = (u8_t *) (ZM_FUSB_BASE + ZM_EP_IN_MAX_SIZE_HIGH_OFFSET + (EPn << 1));
 
