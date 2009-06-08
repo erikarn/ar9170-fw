@@ -23,115 +23,88 @@ extern void zfJumpToBootCode(void);
 
 void zfCmdHandler(void)
 {
-	u16_t i, ret;
-	u32_t frequency;
-	u32_t addr, val;
+	u16_t i, j, ret;
+	u32_t val;
 	u16_t row;
 	u16_t wordId, byteId, nibbleId;
 	u32_t data[4];
-	u8_t *rspBuf;
 	struct ar9170_cmd *cmd = (void *)ZM_CMD_BUFFER;
+	struct ar9170_cmd *resp;
 
-	rspBuf = zfGetFreeIntrINQTailBuf();
+	resp = (void *)zfGetFreeIntrINQTailBuf();
 
 	/* For command response, we have to let it pass the upper layer */
-	if (!rspBuf) {
-		zfUartSendStrAndHex((u8_t *) "rspBuf == NULL, zgIntrINQNum=", zgIntrINQNum);
-
+	if (!resp) {
 		/* Overwrite the latest buffer */
-		rspBuf = (u8_t *) zgIntrINQ[zgIntrINQTail];
+		resp = (void *)zgIntrINQ[zgIntrINQTail];
 	}
 
-	*(volatile u32_t *)rspBuf = *(volatile u32_t *)ZM_CMD_BUFFER;
+	resp->cmd = cmd->cmd;
+	resp->len = cmd->len;
+	resp->padding = cmd->padding;
 
 	switch (cmd->cmd) {
 	case ZM_CMD_ECHO:
-		for (i = 0; i < cmd->len; i++)
-			*(volatile u8_t *)(rspBuf + 4 + i) = *(volatile u8_t *)(ZM_CMD_BUFFER + 4 + i);
+		for (i = 0; i < cmd->len / 4; i++)
+			resp->echo.vals[i] = cmd->echo.vals[i];
 
 		zgBlockTx = 0;
 		break;
 	case ZM_CMD_RREG:
-		for (i = 0; i < cmd->len; i += 4) {
-			addr = *(volatile u32_t *)(ZM_CMD_BUFFER + 4 + i);
-			*(volatile u32_t *)(rspBuf + 4 + i) = *(volatile u32_t *)addr;
-
-			//zfUartSendStrAndHex((u8_t*)"r  addr=", addr);
-			//zfUartSendStrAndHex((u8_t*)"   value=", *(volatile u32_t*)addr);
-		}
-		*(volatile u8_t *)(rspBuf) = cmd->len;
+		for (i = 0; i < cmd->len / 4; i++)
+			resp->rreg_res.vals[i] = *cmd->rreg.regs[i];
+		resp->len = cmd->len;
 		break;
 	case ZM_CMD_WREG:
-		*(volatile u8_t *)(rspBuf) = 0;
-		for (i = 0; i < cmd->len; i += 8) {
-			addr = *(volatile u32_t *)(ZM_CMD_BUFFER + 4 + i);
-			val = *(volatile u32_t *)(ZM_CMD_BUFFER + 8 + i);
-			*(volatile u32_t *)addr = val;
-		}
+		resp->len = 0;
+		for (i = 0; i < cmd->len / 8; i ++)
+			*cmd->wreg.regs[i].addr = cmd->wreg.regs[i].val;
 		break;
-	case ZM_CMD_RF_INIT: {
-		u32_t delta_slope_coeff_exp = *(volatile u32_t *)(ZM_CMD_BUFFER + 16);
-		u32_t delta_slope_coeff_man = *(volatile u32_t *)(ZM_CMD_BUFFER + 20);
-		u32_t delta_slope_coeff_exp_shgi = *(volatile u32_t *)(ZM_CMD_BUFFER + 24);
-		u32_t delta_slope_coeff_man_shgi = *(volatile u32_t *)(ZM_CMD_BUFFER + 28);
+	case ZM_CMD_RF_INIT:
+		zgDYNAMIC_HT2040_EN = cmd->rf_init.dynht2040;
+		zgHT_ENABLE = cmd->rf_init.ht_settings & 1;
+		zgExtOffset = cmd->rf_init.ht_settings >> 2;
 
-		u32_t finiteLoopCount = *(volatile u32_t *)(ZM_CMD_BUFFER + 32);
+		ret = zfInitRf(cmd->rf_init.freq,
+			       cmd->rf_init.delta_slope_coeff_exp,
+			       cmd->rf_init.delta_slope_coeff_man,
+			       cmd->rf_init.delta_slope_coeff_exp_shgi,
+			       cmd->rf_init.delta_slope_coeff_man_shgi,
+			       cmd->rf_init.finiteLoopCount);
 
-		frequency = *(volatile u32_t *)(ZM_CMD_BUFFER + 4);
-		zgDYNAMIC_HT2040_EN = (u8_t) (*(volatile u32_t *)(ZM_CMD_BUFFER + 8));
-		zgHT_ENABLE = (u8_t) ((*(volatile u32_t *)(ZM_CMD_BUFFER + 12)) & 0x1);
-		zgExtOffset = (u8_t) ((*(volatile u32_t *)(ZM_CMD_BUFFER + 12)) >> 2);
-
-		ret = zfInitRf(frequency,
-			       delta_slope_coeff_exp,
-			       delta_slope_coeff_man,
-			       delta_slope_coeff_exp_shgi, delta_slope_coeff_man_shgi, finiteLoopCount);
-
-		*(volatile u8_t *)(rspBuf) = 28;
-		*(volatile u32_t *)(rspBuf + 4) = ret;
-		*(volatile u32_t *)(rspBuf + 8) = *(volatile u32_t *)(0x1bc000 + 0x9800 + (25 << 2));
-		*(volatile u32_t *)(rspBuf + 12) = *(volatile u32_t *)(0x1bc000 + 0xa800 + (25 << 2));
-		*(volatile u32_t *)(rspBuf + 16) = *(volatile u32_t *)(0x1bc000 + 0xb800 + (25 << 2));
-		*(volatile u32_t *)(rspBuf + 20) = *(volatile u32_t *)(0x1bc000 + 0x9800 + (111 << 2));
-		*(volatile u32_t *)(rspBuf + 24) = *(volatile u32_t *)(0x1bc000 + 0xa800 + (111 << 2));
-		*(volatile u32_t *)(rspBuf + 28) = *(volatile u32_t *)(0x1bc000 + 0xb800 + (111 << 2));
+		resp->len = sizeof(struct ar9170_rf_init_result);
+		resp->rf_init_res.ret = ret;
+		resp->rf_init_res.regs[0] = *(volatile u32_t *)(0x1bc000 + 0x9800 + (25 << 2));
+		resp->rf_init_res.regs[1] = *(volatile u32_t *)(0x1bc000 + 0xa800 + (25 << 2));
+		resp->rf_init_res.regs[2] = *(volatile u32_t *)(0x1bc000 + 0xb800 + (25 << 2));
+		resp->rf_init_res.regs[3] = *(volatile u32_t *)(0x1bc000 + 0x9800 + (111 << 2));
+		resp->rf_init_res.regs[4] = *(volatile u32_t *)(0x1bc000 + 0xa800 + (111 << 2));
+		resp->rf_init_res.regs[5] = *(volatile u32_t *)(0x1bc000 + 0xb800 + (111 << 2));
 		break;
-		}
-	case ZM_CMD_FREQUENCY: {
-		u32_t delta_slope_coeff_exp = *(volatile u32_t *)(ZM_CMD_BUFFER + 16);
-		u32_t delta_slope_coeff_man = *(volatile u32_t *)(ZM_CMD_BUFFER + 20);
-		u32_t delta_slope_coeff_exp_shgi = *(volatile u32_t *)(ZM_CMD_BUFFER + 24);
-		u32_t delta_slope_coeff_man_shgi = *(volatile u32_t *)(ZM_CMD_BUFFER + 28);
+	case ZM_CMD_FREQUENCY:
+		zgDYNAMIC_HT2040_EN = cmd->rf_init.dynht2040;
+		zgHT_ENABLE = cmd->rf_init.ht_settings & 1;
+		zgExtOffset = cmd->rf_init.ht_settings >> 2;
 
-		u32_t finiteLoopCount = *(volatile u32_t *)(ZM_CMD_BUFFER + 32);
+		ret = zfSetChannel(cmd->rf_init.freq,
+				   cmd->rf_init.delta_slope_coeff_exp,
+				   cmd->rf_init.delta_slope_coeff_man,
+				   cmd->rf_init.delta_slope_coeff_exp_shgi,
+				   cmd->rf_init.delta_slope_coeff_man_shgi,
+				   cmd->rf_init.finiteLoopCount);
 
-		frequency = *(volatile u32_t *)(ZM_CMD_BUFFER + 4);
-		zgDYNAMIC_HT2040_EN = (u8_t) (*(volatile u32_t *)(ZM_CMD_BUFFER + 8));
-		zgHT_ENABLE = (u8_t) ((*(volatile u32_t *)(ZM_CMD_BUFFER + 12)) & 0x1);
-		zgExtOffset = (u8_t) ((*(volatile u32_t *)(ZM_CMD_BUFFER + 12)) >> 2);
-		//zfUartSendStrAndHex((u8_t*)"delta_slope_coeff_exp=", delta_slope_coeff_exp);
-		//zfUartSendStrAndHex((u8_t*)"delta_slope_coeff_man=", delta_slope_coeff_man);
-		//zfUartSendStrAndHex((u8_t*)"delta_slope_coeff_exp_shgi=", delta_slope_coeff_exp_shgi);
-		//zfUartSendStrAndHex((u8_t*)"delta_slope_coeff_man_shgi=", delta_slope_coeff_man_shgi);
-
-		ret = zfSetChannel(frequency,
-				   delta_slope_coeff_exp,
-				   delta_slope_coeff_man,
-				   delta_slope_coeff_exp_shgi, delta_slope_coeff_man_shgi, finiteLoopCount);
-
-		*(volatile u8_t *)(rspBuf) = 28;
-		*(volatile u32_t *)(rspBuf + 4) = ret;
-		*(volatile u32_t *)(rspBuf + 8) = *(volatile u32_t *)(0x1bc000 + 0x9800 + (25 << 2));
-		*(volatile u32_t *)(rspBuf + 12) = *(volatile u32_t *)(0x1bc000 + 0xa800 + (25 << 2));
-		*(volatile u32_t *)(rspBuf + 16) = *(volatile u32_t *)(0x1bc000 + 0xb800 + (25 << 2));
-		*(volatile u32_t *)(rspBuf + 20) = *(volatile u32_t *)(0x1bc000 + 0x9800 + (111 << 2));
-		*(volatile u32_t *)(rspBuf + 24) = *(volatile u32_t *)(0x1bc000 + 0xa800 + (111 << 2));
-		*(volatile u32_t *)(rspBuf + 28) = *(volatile u32_t *)(0x1bc000 + 0xb800 + (111 << 2));
+		resp->len = sizeof(struct ar9170_rf_init_result);
+		resp->rf_init_res.ret = ret;
+		resp->rf_init_res.regs[0] = *(volatile u32_t *)(0x1bc000 + 0x9800 + (25 << 2));
+		resp->rf_init_res.regs[1] = *(volatile u32_t *)(0x1bc000 + 0xa800 + (25 << 2));
+		resp->rf_init_res.regs[2] = *(volatile u32_t *)(0x1bc000 + 0xb800 + (25 << 2));
+		resp->rf_init_res.regs[3] = *(volatile u32_t *)(0x1bc000 + 0x9800 + (111 << 2));
+		resp->rf_init_res.regs[4] = *(volatile u32_t *)(0x1bc000 + 0xa800 + (111 << 2));
+		resp->rf_init_res.regs[5] = *(volatile u32_t *)(0x1bc000 + 0xb800 + (111 << 2));
 		break;
-		}
 	case ZM_CMD_FREQ_STRAT:
 		zfNotifySetChannel();
-		*(volatile u8_t *)(rspBuf) = 0;
+		resp->len = 0;
 		break;
 	case ZM_CMD_EKEY:
 		/* for 64 to 16 user space */
@@ -139,10 +112,9 @@ void zfCmdHandler(void)
 			cmd->setkey.user = MAX_USER;
 
 		if ((cmd->setkey.user > (MAX_USER + 3)) || (cmd->setkey.keyId > 1)) {
-			*(volatile u8_t *)(rspBuf) = 1;
-			//zfUartSendStr((u8_t*)"Invalid user or key ID!");
+			resp->len = 1;
 		} else {
-			*(volatile u8_t *)(rspBuf) = 1;
+			resp->len = 1;
 
 			/* Disable Key */
 			zfDisableCamUser(cmd->setkey.user);
@@ -193,14 +165,9 @@ void zfCmdHandler(void)
 		}
 		break;
 	case ZM_CMD_DKEY:
-		*(volatile u8_t *)(rspBuf) = 0;
-		val = *(volatile u32_t *)(ZM_CMD_BUFFER + 4);
-		val = val & 0xffff;
-
-		//zfUartSendStrAndHex((u8_t*)"ZM_CMD_DKEY: user=", val);
-
 		/* Disable Key */
-		zfDisableCamUser(val);
+		resp->len = 0;
+		zfDisableCamUser(cmd->disablekey.idx);
 		break;
 	case ZM_CMD_TALLY:
 		/* Update Tally */
@@ -233,21 +200,21 @@ void zfCmdHandler(void)
 		zgTally.TxAmpduCnt += zm_wl_ampdu_count_reg >> 16;
 		zgTally.TxMpduCnt += zm_wl_mpdu_count_reg >> 16;
 
-		*(volatile u8_t *)(rspBuf) = 56;
-		*(volatile u32_t *)(rspBuf + 4) = zgTally.TxUnderRun;
-		*(volatile u32_t *)(rspBuf + 8) = zgTally.RxTotalCount;
-		*(volatile u32_t *)(rspBuf + 12) = zgTally.RxCRC32;
-		*(volatile u32_t *)(rspBuf + 16) = zgTally.RxCRC16;
-		*(volatile u32_t *)(rspBuf + 20) = zgTally.RxUniError;
-		*(volatile u32_t *)(rspBuf + 24) = zgTally.RxOverRun;
-		*(volatile u32_t *)(rspBuf + 28) = zgTally.RxMulError;
-		*(volatile u32_t *)(rspBuf + 32) = zgTally.TxRetryCount;
-		*(volatile u32_t *)(rspBuf + 36) = zgTally.TxTotalCount;
-		*(volatile u32_t *)(rspBuf + 40) = zgTally.RxTimeOut;
-		*(volatile u32_t *)(rspBuf + 44) = zgTally.AggTxCnt;
-		*(volatile u32_t *)(rspBuf + 48) = zgTally.BAFailCnt;
-		*(volatile u32_t *)(rspBuf + 52) = zgTally.TxAmpduCnt;
-		*(volatile u32_t *)(rspBuf + 56) = zgTally.TxMpduCnt;
+		resp->len = sizeof(struct ar9170_tally);
+		resp->tally.tx_underrun = zgTally.TxUnderRun;
+		resp->tally.rx_total_cnt = zgTally.RxTotalCount;
+		resp->tally.rx_crc32 = zgTally.RxCRC32;
+		resp->tally.rx_crc16 = zgTally.RxCRC16;
+		resp->tally.rx_unicast_error = zgTally.RxUniError;
+		resp->tally.rx_overrun = zgTally.RxOverRun;
+		resp->tally.rx_mul_error = zgTally.RxMulError;
+		resp->tally.tx_retry_cnt = zgTally.TxRetryCount;
+		resp->tally.tx_total_cnt = zgTally.TxTotalCount;
+		resp->tally.rx_timeout = zgTally.RxTimeOut;
+		resp->tally.agg_tx_cnt = zgTally.AggTxCnt;
+		resp->tally.ba_fail_cnt = zgTally.BAFailCnt;
+		resp->tally.tx_ampdu_cnt = zgTally.TxAmpduCnt;
+		resp->tally.tx_mpdu_cnt = zgTally.TxMpduCnt;
 
 		zgTally.TxUnderRun = 0;
 		zgTally.RxTotalCount = 0;
@@ -259,30 +226,26 @@ void zfCmdHandler(void)
 		zgTally.TxRetryCount = 0;
 		zgTally.TxTotalCount = 0;
 		zgTally.RxTimeOut = 0;
-
 		zgTally.AggTxCnt = 0;
 		zgTally.BAFailCnt = 0;
 		zgTally.TxAmpduCnt = 0;
 		zgTally.TxMpduCnt = 0;
 		break;
 	case ZM_CMD_TALLY_APD:
-		*(volatile u8_t *)(rspBuf) = 36;
-
-		*(volatile u32_t *)(rspBuf + 4) = zgTally.RxMPDU;
-		*(volatile u32_t *)(rspBuf + 8) = zgTally.RxDropMPDU;
-		*(volatile u32_t *)(rspBuf + 12) = zgTally.RxDelMPDU;
-
-		*(volatile u32_t *)(rspBuf + 16) = zgTally.RxPhyMiscError;
-		*(volatile u32_t *)(rspBuf + 20) = zgTally.RxPhyXRError;
-		*(volatile u32_t *)(rspBuf + 24) = zgTally.RxPhyOFDMError;
-		*(volatile u32_t *)(rspBuf + 28) = zgTally.RxPhyCCKError;
-		*(volatile u32_t *)(rspBuf + 32) = zgTally.RxPhyHTError;
-		*(volatile u32_t *)(rspBuf + 36) = zgTally.RxPhyTotalCount;
+		resp->len = sizeof(struct ar9170_tally_apd);
+		resp->tally_apd.rx_mpdu = zgTally.RxMPDU;
+		resp->tally_apd.rx_drop_mpdu = zgTally.RxDropMPDU;
+		resp->tally_apd.rx_del_mpdu = zgTally.RxDelMPDU;
+		resp->tally_apd.rx_phy_misc_error = zgTally.RxPhyMiscError;
+		resp->tally_apd.rx_phy_xr_error = zgTally.RxPhyXRError;
+		resp->tally_apd.rx_phy_ofdm_error = zgTally.RxPhyOFDMError;
+		resp->tally_apd.rx_phy_cck_error = zgTally.RxPhyCCKError;
+		resp->tally_apd.rx_phy_ht_error = zgTally.RxPhyHTError;
+		resp->tally_apd.rx_phy_total_cnt = zgTally.RxPhyTotalCount;
 
 		zgTally.RxMPDU = 0;
 		zgTally.RxDropMPDU = 0;
 		zgTally.RxDelMPDU = 0;
-
 		zgTally.RxPhyMiscError = 0;
 		zgTally.RxPhyXRError = 0;
 		zgTally.RxPhyOFDMError = 0;
@@ -291,17 +254,17 @@ void zfCmdHandler(void)
 		zgTally.RxPhyTotalCount = 0;
 		break;
 	case ZM_CMD_CONFIG:
-		*(volatile u8_t *)(rspBuf) = 0;
-		zgRxMaxSize = *(volatile u32_t *)(ZM_CMD_BUFFER + 4);
-		zgDontRetransmit = (u8_t) (*(volatile u32_t *)(ZM_CMD_BUFFER + 8));
+		resp->len = 0;
+		zgRxMaxSize = cmd->cfg.max_rx_size;
+		zgDontRetransmit = cmd->cfg.dont_retransmit;
 		break;
 	case ZM_CMD_SWRST:
 		zfWorkAround_SwReset();
-		*(volatile u8_t *)(rspBuf) = 0;
+		resp->len = 0;
 		break;
 	case ZM_CMD_FW_RETRY:
-		zgEnableFwRetry = (u8_t) (*(volatile u32_t *)(ZM_CMD_BUFFER + 4));
-		*(volatile u8_t *)(rspBuf) = 0;
+		resp->len = 0;
+		zgEnableFwRetry = cmd->fw_retry.fw_retry;
 		break;
 	case ZM_CMD_REBOOT:
 		/* write watchdog magic pattern for suspend  */
@@ -324,31 +287,17 @@ void zfCmdHandler(void)
 		zfJumpToBootCode();
 		break;
 	case ZM_CMD_WREEPROM: {
-		/* TODO: modify ZM_CMD_WREEPROM to multiple write */
-		u16_t ii, iii;
+		for (i = 0; i < cmd->len / 8; i++) {
+			val = cmd->wreg.regs[i].val;
 
-		for (ii = 0; ii < cmd->len; ii += 8) {
-
-			addr = *(volatile u32_t *)(ZM_CMD_BUFFER + 4 + ii);
-			val = *(volatile u32_t *)(ZM_CMD_BUFFER + 8 + ii);
-			//        addr = *(volatile u32_t*)(ZM_CMD_BUFFER+4);
-			//        val = *(volatile u32_t*)(ZM_CMD_BUFFER+8);
-			//zfUartSendStr((u8_t *) "EEPROM Write, addr=");
-			//zfUartSendHex(addr);
-			//zfUartSendStr((u8_t *) " val=");
-			//zfUartSendHex(val);
-			//zfUartSendStr((u8_t *) "\n");
-
-			for (iii = 0; iii < 4; iii++) {
-				*((volatile u8_t *)(addr + iii)) = val;
+			for (j = 0; j < 4; j++) {
+				*((u8_t *)cmd->wreg.regs[i].addr + j) = val;
 				val = val >> 8;
 			}
 		}
 		}
 		break;
-	case ZM_CMD_FW_DL_INIT: {
-		u32_t val;
-
+	case ZM_CMD_FW_DL_INIT:
 		/* Software Reset, before we use new downloaded SPI firmware */
 		val = *(volatile u32_t *)(0x1c3500);
 		val |= 0x20;
@@ -361,8 +310,7 @@ void zfCmdHandler(void)
 
 		u8Watchdog_Enable = 0;
 
-		*(volatile u8_t *)(rspBuf) = cmd->len;
-		}
+		resp->len = cmd->len;
 		break;
 	default:
 		break;
