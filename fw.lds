@@ -12,7 +12,7 @@
 MEMORY
 {
     eeprom   : ORIGIN = 0x000000, LENGTH = 1024k
-    sram     : ORIGIN = 0x100000, LENGTH = 64k
+    sram     : ORIGIN = 0x100000, LENGTH = 96k
     uart     : ORIGIN = 0x1c0000, LENGTH = 4k
     timer    : ORIGIN = 0x1c1000, LENGTH = 4k
     vflash   : ORIGIN = 0x1c2000, LENGTH = 4k
