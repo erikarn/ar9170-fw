@@ -76,7 +76,19 @@ struct zsDmaDesc {
  *				| block buffers (ZM_BLOCK_SIZE each)
  *				| (ZM_BLOCK_NUMBER)
  * 0x117000			+--
+ *				|
+ * 0x117780			+--
+ *				| BA buffer (128 bytes)
+ *				+--
+ *				| CMD buffer (128 bytes)
+ *				+--
+ *				| RSP buffer (128 bytes)
+ *				+--
  */
+
+#define ZM_BA_BUFFER        0x117780	//Reserve 128
+#define ZM_CMD_BUFFER       0x117800	//Reserve 128
+#define ZM_RSP_BUFFER       0x117880	//Reserve 128
 
 #define ZM_FRAME_MEMORY_SIZE	0x17000
 
