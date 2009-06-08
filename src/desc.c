@@ -103,16 +103,10 @@ void zfDmaInitDescriptor(void)
 	ZM_PTA_UP_DMA_ADDRL_REG = (u32_t) zgUpQ.head & 0xffff;
 
 	zm_wl_txq0_dma_addr_reg = (u32_t) zgTxQ[0].head;
-
-#if 1
 	zm_wl_txq1_dma_addr_reg = (u32_t) zgTxQ[1].head;
-
 	zm_wl_txq2_dma_addr_reg = (u32_t) zgTxQ[2].head;
-
 	zm_wl_txq3_dma_addr_reg = (u32_t) zgTxQ[3].head;
-
 	zm_wl_txq4_dma_addr_reg = (u32_t) zgTxQ[4].head;
-#endif
 
 	zm_wl_rx_dma_addr_reg = (u32_t) zgRxQ.head;
 
@@ -171,11 +165,8 @@ struct zsDmaDesc *zfDmaGetPacket(struct zsDmaQueue *q)
 	//if (((q->head->status & ZM_OWN_BITS_MASK) == ZM_OWN_BITS_SW)
 	//        || ((q->head->status & ZM_OWN_BITS_MASK) == ZM_OWN_BITS_SE))
 
-	if ((((q->head->status & ZM_OWN_BITS_MASK) == ZM_OWN_BITS_SW)
-	     && ((u32_t) q != (u32_t) & zgDnQ))
-	    || (((q->head->status & ZM_OWN_BITS_MASK) == ZM_OWN_BITS_SE)
-		&& ((u32_t) q == (u32_t) & zgDnQ)))
-	{
+	if ((((q->head->status & ZM_OWN_BITS_MASK) == ZM_OWN_BITS_SW) && (q != &zgDnQ)) ||
+	    (((q->head->status & ZM_OWN_BITS_MASK) == ZM_OWN_BITS_SE) && (q != &zgDnQ))) {
 		desc = q->head;
 
 		q->head = desc->lastAddr->nextAddr;
@@ -206,9 +197,9 @@ void zfDmaReclaimPacket(struct zsDmaQueue *q, struct zsDmaDesc *desc)
 
 		/* TODO : Exception handle */
 
-		if (desc->lastAddr == tmpDesc) {
+		if (desc->lastAddr == tmpDesc)
 			break;
-		}
+
 		tmpDesc = tmpDesc->nextAddr;
 	}
 
@@ -280,17 +271,15 @@ void zfRecycleRxQ(void)
 {
 	struct zsDmaDesc *desc;
 
-	while ((zgRxQ.head != zgRxQ.terminator) && ((zgRxQ.head->status
-						     & ZM_OWN_BITS_MASK) !=
-						    ZM_OWN_BITS_HW)) {
+	while ((zgRxQ.head != zgRxQ.terminator) &&
+	       ((zgRxQ.head->status & ZM_OWN_BITS_MASK) != ZM_OWN_BITS_HW)) {
 		desc = zfDmaGetPacket(&zgRxQ);
 
 		/* TODO : if len < 5+14+8 or len > zgRxMaxSize, discard rx frame */
-		if (desc->totalLen < zgRxMaxSize) {
+		if (desc->totalLen < zgRxMaxSize)
 			zfDmaPutPacket(&zgUpQ, desc);
-		} else {
+		else
 			zfDmaReclaimPacket(&zgRxQ, desc);
-		}
 	}
 
 	zm_wl_rx_dma_addr_reg = (u32_t) zgRxQ.head;
