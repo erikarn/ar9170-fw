@@ -12,7 +12,6 @@ void zfDisableCamUser(u16_t userId)
 	} else if (userId <= 63) {
 		zm_cam_roll_call_tableh_reg &= (~((u32_t) 1 << (userId - 32)));
 	}
-	return;
 }
 
 void zfEnableCamUser(u16_t userId)
@@ -25,21 +24,18 @@ void zfEnableCamUser(u16_t userId)
 	} else if (userId <= 63) {
 		zm_cam_roll_call_tableh_reg |= (((u32_t) 1) << (userId - 32));
 	}
-	return;
 }
 
 static void zfWaitForCamReadReady(void)
 {
 	while (((*(volatile u32_t *)0x1c373c) & 0x40000000) == 0) {
 	}
-	//zfUartSendStr((u8_t*)"R");
 }
 
 static void zfWaitForCamWriteReady(void)
 {
 	while (((*(volatile u32_t *)0x1c373c) & 0x80000000) == 0) {
 	}
-	//zfUartSendStr((u8_t*)"W");
 }
 
 static void HW_CAM_Avail(void)
