@@ -260,12 +260,12 @@ void zfPtaModeInit(void)
 #ifdef AHB_LOOPBACK
     /* Disable up stream and down stream */
     ZM_SOC_USB_MODE_CTRL_REG &= ~(BIT0 | BIT1);
-    //zfUartSendStr((u8_t *) "Disable up stream and down stream\r\n");
+    //zfUartSendStr((u8_t *) "Disable up stream and down stream\n");
 #else
     /* Enable up stream and down stream */
     ZM_SOC_USB_MODE_CTRL_REG |= (BIT0 | BIT1);
     //ZM_SOC_USB_MODE_CTRL_REG |= BIT0;
-    //zfUartSendStr((u8_t *) "Enable up stream and down stream\r\n");
+    //zfUartSendStr((u8_t *) "Enable up stream and down stream\n");
 #endif
 
     /* Set the up stream mode maximum aggregate number */
@@ -484,7 +484,7 @@ void vUsb_ep0fail(void)
 void vUsb_rst(void)
 {
     //mUsbIntBusRstClr();
-    zfUartSendStr((u8_t *) "vUsb_rst\r\n");
+    zfUartSendStr((u8_t *) "vUsb_rst\n");
     ZM_INTR_SOURCE_7_REG &= ~0x02;
 
     UsbChirpFinish = FALSE;
@@ -509,7 +509,7 @@ void vUsb_suspend(void)
 // uP must do-over everything it should handle
 // and do before into the suspend mode
     //mUsbIntSuspClr();                       // Go Suspend status
-    zfUartSendStr((u8_t *) "vUsb_suspend\r\n");
+    zfUartSendStr((u8_t *) "vUsb_suspend\n");
     ZM_INTR_SOURCE_7_REG &= ~0x04;
 
 //    mSHOW_MSG(" Sp");
@@ -529,7 +529,7 @@ void vUsb_resm(void)
 // and do before into the suspend mode
 
 //    mUsbIntResmClr();                       // uP must wakeup immediately
-    zfUartSendStr((u8_t *) "vUsb_resm\r\n");
+    zfUartSendStr((u8_t *) "vUsb_resm\n");
     ZM_INTR_SOURCE_7_REG &= ~0x08;
 //    mSHOW_MSG(" Rm");
 //    mSHOW_CHAR1('m');
@@ -568,49 +568,49 @@ BOOLEAN bSet_interface(void);
     switch (mDEV_REQ_REQ())                 // by Standard Request codes
     {
         case USB_GET_STATUS:
-            //zfUartSendStr((u8_t *) "USB_GET_STATUS\r\n");
+            //zfUartSendStr((u8_t *) "USB_GET_STATUS\n");
             return (bGet_status());
 
         case USB_CLEAR_FEATURE:
-            //zfUartSendStr((u8_t *) "USB_CLEAR_FEATURE\r\n");
+            //zfUartSendStr((u8_t *) "USB_CLEAR_FEATURE\n");
             return (bClear_feature());
 
         case USB_SET_FEATURE:
-            //zfUartSendStr((u8_t *) "USB_SET_FEATURE\r\n");
+            //zfUartSendStr((u8_t *) "USB_SET_FEATURE\n");
             return (bSet_feature());
 
         case USB_SET_ADDRESS:
-            //zfUartSendStr((u8_t *) "USB_SET_ADDRESS\r\n");
+            //zfUartSendStr((u8_t *) "USB_SET_ADDRESS\n");
             if (!bUsbEP0HaltSt)
                 return (bSet_address());
             break;
 
         case USB_GET_DESCRIPTOR:
-            //zfUartSendStr((u8_t *) "USB_GET_DESCRIPTOR\r\n");
+            //zfUartSendStr((u8_t *) "USB_GET_DESCRIPTOR\n");
             if (!bUsbEP0HaltSt)
                 return (bGet_descriptor());
             break;
 
         case USB_GET_CONFIGURATION:
-             //zfUartSendStr((u8_t *) "USB_GET_CONFIGURATION\r\n");
+             //zfUartSendStr((u8_t *) "USB_GET_CONFIGURATION\n");
             if (!bUsbEP0HaltSt)
                 return (bGet_configuration());
             break;
 
         case USB_SET_CONFIGURATION:
-            //zfUartSendStr((u8_t *) "USB_SET_CONFIGURATION\r\n");
+            //zfUartSendStr((u8_t *) "USB_SET_CONFIGURATION\n");
             if (!bUsbEP0HaltSt)
                 return (bSet_configuration());
             break;
 
         case USB_GET_INTERFACE:
-            //zfUartSendStr((u8_t *) "USB_GET_INTERFACE\r\n");
+            //zfUartSendStr((u8_t *) "USB_GET_INTERFACE\n");
             if (!bUsbEP0HaltSt)
                 return (bGet_interface());
             break;
 
         case USB_SET_INTERFACE:
-            //zfUartSendStr((u8_t *) "USB_SET_INTERFACE\r\n");
+            //zfUartSendStr((u8_t *) "USB_SET_INTERFACE\n");
             if (!bUsbEP0HaltSt)
                 return (bSet_interface());
             break;
@@ -812,14 +812,14 @@ BOOLEAN bGet_descriptor(void)
         case 1:                 // device descriptor
             //pu8DescriptorEX = u8DeviceDescriptorEX;
             //u16TxRxCounter = mTABLE_LEN(u8DeviceDescriptorEX[0]);
-            //zfUartSendStr((u8_t *)"Device Descriptor\r\n");
+            //zfUartSendStr((u8_t *)"Device Descriptor\n");
             pu8DescriptorEX = u8UsbDeviceDescriptor;
             u16TxRxCounter = mTABLE_LEN(u8UsbDeviceDescriptor[0]);
             break;
 
         case 2:                 // configuration descriptor
                                 // It includes Configuration, Interface and Endpoint Table
-            //zfUartSendStr((u8_t *)"Configuration Descriptor\r\n");
+            //zfUartSendStr((u8_t *)"Configuration Descriptor\n");
             switch (mDEV_REQ_VALUE_LOW())
             {
                 case 0x00:      // configuration no: 0
@@ -834,23 +834,23 @@ BOOLEAN bGet_descriptor(void)
 
         case 3:                 // string descriptor
                                 // DescriptorIndex = low_byte of wValue
-            //zfUartSendStr((u8_t *)"String Descriptor\r\n");
+            //zfUartSendStr((u8_t *)"String Descriptor\n");
             switch (mDEV_REQ_VALUE_LOW())
             {
                 case 0x00:
-                    //zfUartSendStr((u8_t *)"Index 0x00\r\n");
+                    //zfUartSendStr((u8_t *)"Index 0x00\n");
                     pu8DescriptorEX = u8String00Descriptor;
                     //u16TxRxCounter = 4;
                     break;
 
                 case 0x10:
-                    //zfUartSendStr((u8_t *)"Index 0x10\r\n");
+                    //zfUartSendStr((u8_t *)"Index 0x10\n");
                     pu8DescriptorEX = u8String10Descriptor;
                     //u16TxRxCounter = 12;
                     break;
 
                 case 0x20:
-                    //zfUartSendStr((u8_t *)"Index 0x20\r\n");
+                    //zfUartSendStr((u8_t *)"Index 0x20\n");
                     pu8DescriptorEX = u8String20Descriptor;
                     //u16TxRxCounter = 24;
                     break;
@@ -866,14 +866,14 @@ BOOLEAN bGet_descriptor(void)
             break;
 
         case 6:                     // Device_Qualifier descritor
-            //zfUartSendStr((u8_t *) "Device_Qualifier Descriptor\r\n");
+            //zfUartSendStr((u8_t *) "Device_Qualifier Descriptor\n");
             pu8DescriptorEX = u8DeviceQualifierDescriptorEX;
             u16TxRxCounter = mTABLE_LEN(u8DeviceQualifierDescriptorEX[0]);
             //u16TxRxCounter = mTABLE_LEN(u8DeviceQualifierDescriptorEX[0]);
             break;
 
         case 7:                     // Other_Speed_Configuration
-            //zfUartSendStr((u8_t *)"Other_Speed Descriptor\r\n");
+            //zfUartSendStr((u8_t *)"Other_Speed Descriptor\n");
             // It includes Configuration, Interface and Endpoint Table
             pu8DescriptorEX = u8OtherSpeedConfigDescriptorEX;
             u16TxRxCounter = u8OtherSpeedConfigDescriptorEX[1];
@@ -927,7 +927,7 @@ BOOLEAN bSet_configuration(void)
 {
 void vUsbClrEPx(void);
 
-    //zfUartSendStr((u8_t *) "bSet_configuration\r\n");
+    //zfUartSendStr((u8_t *) "bSet_configuration\n");
 
     if (mLOW_BYTE(mDEV_REQ_VALUE()) == 0)
     {

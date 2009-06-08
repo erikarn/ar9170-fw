@@ -10,7 +10,7 @@ void mUsbEPMap(u8_t EPn, u8_t MAP)
     u8_t *reg = (u8_t*) (ZM_FUSB_BASE+0x30+(EPn-1));
     *reg = MAP;
 
-    //zfUartSendStr("mUsbEPMap\r\n");
+    //zfUartSendStr("mUsbEPMap\n");
     //zfUartSendStrAndHex("EPn=", EPn);
     //zfUartSendStrAndHex("MAP=", MAP);
 }
@@ -20,7 +20,7 @@ void mUsbFIFOMap(u8_t FIFOn, u8_t MAP)
     u8_t *reg = (u8_t*) (ZM_FUSB_BASE+0x80+FIFOn);
     *reg = MAP;
 
-    //zfUartSendStr("mUsbFIFOMap\r\n");
+    //zfUartSendStr("mUsbFIFOMap\n");
     //zfUartSendStrAndHex("FIFOn=", FIFOn);
     //zfUartSendStrAndHex("MAP=", MAP);
 }
@@ -30,7 +30,7 @@ void mUsbFIFOConfig(u8_t FIFOn, u8_t cfg)
     u8_t *reg = (u8_t*) (ZM_FUSB_BASE+0x90+FIFOn);
     *reg = cfg;
 
-    //zfUartSendStr((u8_t *)"mUsbFIFOConfig\r\n");
+    //zfUartSendStr((u8_t *)"mUsbFIFOConfig\n");
     //zfUartSendStrAndHex((u8_t *)"FIFOn=", FIFOn);
     //zfUartSendStrAndHex((u8_t *)"cfg=", cfg);
 }
@@ -74,7 +74,7 @@ void vUsbFIFO_EPxCfg_HS(void)
 {
     int i;
 
-    //zfUartSendStr((u8_t *) "vUsbFIFO_EPxCfg_HS\r\n");
+    //zfUartSendStr((u8_t *) "vUsbFIFO_EPxCfg_HS\n");
 
     switch (u8UsbConfigValue)
     {
@@ -108,7 +108,7 @@ void vUsbFIFO_EPxCfg_HS(void)
                             mUsbEPMxPtSzLow(EP1, HS_C1_I0_A0_EP1_DIRECTION, (HS_C1_I0_A0_EP1_MAX_PACKET & 0x7ff) );
                             mUsbEPinHighBandSet(EP1 , HS_C1_I0_A0_EP1_DIRECTION , HS_C1_I0_A0_EP1_MAX_PACKET);
 
-                            //zfUartSendStr((u8_t *) "Initialize EP1\r\n");
+                            //zfUartSendStr((u8_t *) "Initialize EP1\n");
 #endif
 #if (HS_C1_I0_A0_EP_NUMBER >= 2)
                             //EP0X02
@@ -127,7 +127,7 @@ void vUsbFIFO_EPxCfg_HS(void)
                             mUsbEPMxPtSzLow(EP2, HS_C1_I0_A0_EP2_DIRECTION, (HS_C1_I0_A0_EP2_MAX_PACKET & 0x7ff) );
                             mUsbEPinHighBandSet(EP2 , HS_C1_I0_A0_EP2_DIRECTION , HS_C1_I0_A0_EP2_MAX_PACKET);
 
-                            //zfUartSendStr((u8_t *) "Initialize EP2\r\n");
+                            //zfUartSendStr((u8_t *) "Initialize EP2\n");
 #endif
 #if (HS_C1_I0_A0_EP_NUMBER >= 3)
                             //EP0X03
@@ -146,7 +146,7 @@ void vUsbFIFO_EPxCfg_HS(void)
                             mUsbEPMxPtSzLow(EP3, HS_C1_I0_A0_EP3_DIRECTION, (HS_C1_I0_A0_EP3_MAX_PACKET & 0x7ff) );
                             mUsbEPinHighBandSet(EP3 , HS_C1_I0_A0_EP3_DIRECTION , HS_C1_I0_A0_EP3_MAX_PACKET);
 
-                            //zfUartSendStr((u8_t *) "Initialize EP3\r\n");
+                            //zfUartSendStr((u8_t *) "Initialize EP3\n");
 #endif
 #if (HS_C1_I0_A0_EP_NUMBER >= 4) || fFLASH_DISK
                             //EP0X04
@@ -165,7 +165,7 @@ void vUsbFIFO_EPxCfg_HS(void)
                             mUsbEPMxPtSzLow(EP4, HS_C1_I0_A0_EP4_DIRECTION, (HS_C1_I0_A0_EP4_MAX_PACKET & 0x7ff) );
                             mUsbEPinHighBandSet(EP4 , HS_C1_I0_A0_EP4_DIRECTION , HS_C1_I0_A0_EP4_MAX_PACKET);
 
-                            //zfUartSendStr((u8_t *) "Initialize EP4\r\n");
+                            //zfUartSendStr((u8_t *) "Initialize EP4\n");
 #endif
 #if (HS_C1_I0_A0_EP_NUMBER >= 5)
                             //EP0X05
@@ -206,7 +206,7 @@ void vUsbFIFO_EPxCfg_FS(void)
 {
     int i;
 
-    //zfUartSendStr((u8_t *) "vUsbFIFO_EPxCfg_FS\r\n");
+    //zfUartSendStr((u8_t *) "vUsbFIFO_EPxCfg_FS\n");
 
     switch (u8UsbConfigValue)
     {
@@ -241,7 +241,7 @@ void vUsbFIFO_EPxCfg_FS(void)
                         //``.JWEI 2003/04/29
                             mUsbEPinHighBandSet(EP1 , FS_C1_I0_A0_EP1_DIRECTION, FS_C1_I0_A0_EP1_MAX_PACKET);
 
-                            //zfUartSendStr((u8_t *) "Initialize EP1\r\n");
+                            //zfUartSendStr((u8_t *) "Initialize EP1\n");
 #endif
 #if (FS_C1_I0_A0_EP_NUMBER >= 2)
                             //EP0X02
@@ -260,7 +260,7 @@ void vUsbFIFO_EPxCfg_FS(void)
                             mUsbEPMxPtSzLow(EP2, FS_C1_I0_A0_EP2_DIRECTION, (FS_C1_I0_A0_EP2_MAX_PACKET & 0x7ff));
                             mUsbEPinHighBandSet(EP2 , FS_C1_I0_A0_EP2_DIRECTION, FS_C1_I0_A0_EP2_MAX_PACKET);
 
-                            //zfUartSendStr((u8_t *) "Initialize EP2\r\n");
+                            //zfUartSendStr((u8_t *) "Initialize EP2\n");
 #endif
 #if (FS_C1_I0_A0_EP_NUMBER >= 3)
                             //EP0X03
@@ -279,7 +279,7 @@ void vUsbFIFO_EPxCfg_FS(void)
                             mUsbEPMxPtSzLow(EP3, FS_C1_I0_A0_EP3_DIRECTION, (FS_C1_I0_A0_EP3_MAX_PACKET & 0x7ff));
                             mUsbEPinHighBandSet(EP3 , FS_C1_I0_A0_EP3_DIRECTION, FS_C1_I0_A0_EP3_MAX_PACKET);
 
-                            //zfUartSendStr((u8_t *) "Initialize EP3\r\n");
+                            //zfUartSendStr((u8_t *) "Initialize EP3\n");
 #endif
 #if (FS_C1_I0_A0_EP_NUMBER >= 4) || fFLASH_DISK
                             //EP0X04
@@ -298,7 +298,7 @@ void vUsbFIFO_EPxCfg_FS(void)
                             mUsbEPMxPtSzLow(EP4, FS_C1_I0_A0_EP4_DIRECTION, (FS_C1_I0_A0_EP4_MAX_PACKET & 0x7ff));
                             mUsbEPinHighBandSet(EP4 , FS_C1_I0_A0_EP4_DIRECTION, FS_C1_I0_A0_EP4_MAX_PACKET);
 
-                            //zfUartSendStr((u8_t *) "Initialize EP4\r\n");
+                            //zfUartSendStr((u8_t *) "Initialize EP4\n");
 #endif
 #if (FS_C1_I0_A0_EP_NUMBER >= 5)
                             //EP0X05
