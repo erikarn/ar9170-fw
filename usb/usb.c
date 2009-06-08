@@ -4,7 +4,6 @@
 #include "usb_extr.h"
 #include "usb_std.h"
 #include "reg_defs.h"
-#include "gv_extr.h"
 
 #define USB_DEVICE_DESC_TYPE            0x01
 #define USB_DEVICE_DESC_LEN             0x12
