@@ -10,7 +10,7 @@
 #include "gv_extr.h"
 #include "reg_defs.h"
 #include "uart_extr.h"
-#include "cmd_defs.h"
+#include "usbcmds.h"
 #include "api_extr.h"
 #include "intrq_extr.h"
 #include "sta.h"
@@ -21,28 +21,16 @@ extern void zfResetUSBFIFO(void);
 extern void zfTurnOffPower(void);
 extern void zfJumpToBootCode(void);
 
-struct zsSetKeyCmdStruct {
-	u16_t user;
-	u16_t keyId;
-	u16_t type;
-	u8_t macAddr[6];
-	u32_t key[4];
-};
-
 void zfCmdHandler(void)
 {
 	u16_t i, ret;
-	u8_t len, type;
 	u32_t frequency;
 	u32_t addr, val;
 	u16_t row;
 	u16_t wordId, byteId, nibbleId;
 	u32_t data[4];
 	u8_t *rspBuf;
-	struct zsSetKeyCmdStruct *setKeyCmd;
-
-	len = *(volatile u8_t *)ZM_CMD_BUFFER;
-	type = *(volatile u8_t *)(ZM_CMD_BUFFER + 1);
+	struct ar9170_cmd *cmd = (void *)ZM_CMD_BUFFER;
 
 	rspBuf = zfGetFreeIntrINQTailBuf();
 
@@ -56,26 +44,26 @@ void zfCmdHandler(void)
 
 	*(volatile u32_t *)rspBuf = *(volatile u32_t *)ZM_CMD_BUFFER;
 
-	switch (type) {
+	switch (cmd->cmd) {
 	case ZM_CMD_ECHO:
-		for (i = 0; i < len; i++)
+		for (i = 0; i < cmd->len; i++)
 			*(volatile u8_t *)(rspBuf + 4 + i) = *(volatile u8_t *)(ZM_CMD_BUFFER + 4 + i);
 
 		zgBlockTx = 0;
 		break;
 	case ZM_CMD_RREG:
-		for (i = 0; i < len; i += 4) {
+		for (i = 0; i < cmd->len; i += 4) {
 			addr = *(volatile u32_t *)(ZM_CMD_BUFFER + 4 + i);
 			*(volatile u32_t *)(rspBuf + 4 + i) = *(volatile u32_t *)addr;
 
 			//zfUartSendStrAndHex((u8_t*)"r  addr=", addr);
 			//zfUartSendStrAndHex((u8_t*)"   value=", *(volatile u32_t*)addr);
 		}
-		*(volatile u8_t *)(rspBuf) = len;
+		*(volatile u8_t *)(rspBuf) = cmd->len;
 		break;
 	case ZM_CMD_WREG:
 		*(volatile u8_t *)(rspBuf) = 0;
-		for (i = 0; i < len; i += 8) {
+		for (i = 0; i < cmd->len; i += 8) {
 			addr = *(volatile u32_t *)(ZM_CMD_BUFFER + 4 + i);
 			val = *(volatile u32_t *)(ZM_CMD_BUFFER + 8 + i);
 			*(volatile u32_t *)addr = val;
@@ -146,64 +134,62 @@ void zfCmdHandler(void)
 		*(volatile u8_t *)(rspBuf) = 0;
 		break;
 	case ZM_CMD_EKEY:
-		setKeyCmd = (struct zsSetKeyCmdStruct *)(ZM_CMD_BUFFER + 4);
-
 		/* for 64 to 16 user space */
-		if (setKeyCmd->user > (MAX_USER + 3))
-			setKeyCmd->user = MAX_USER;
+		if (cmd->setkey.user > (MAX_USER + 3))
+			cmd->setkey.user = MAX_USER;
 
-		if ((setKeyCmd->user > (MAX_USER + 3)) || (setKeyCmd->keyId > 1)) {
+		if ((cmd->setkey.user > (MAX_USER + 3)) || (cmd->setkey.keyId > 1)) {
 			*(volatile u8_t *)(rspBuf) = 1;
 			//zfUartSendStr((u8_t*)"Invalid user or key ID!");
 		} else {
 			*(volatile u8_t *)(rspBuf) = 1;
 
 			/* Disable Key */
-			zfDisableCamUser(setKeyCmd->user);
+			zfDisableCamUser(cmd->setkey.user);
 
 			/* Set encrypt type */
-			if (setKeyCmd->user <= (MAX_USER + 3)) {
-				if (setKeyCmd->user >= MAX_USER) {
+			if (cmd->setkey.user <= (MAX_USER + 3)) {
+				if (cmd->setkey.user >= MAX_USER) {
 					/* default */
 					row = DEFAULT_ENCRY_TYPE;
 					wordId = 0;
-					nibbleId = (setKeyCmd->user - MAX_USER) & 0x7;
+					nibbleId = (cmd->setkey.user - MAX_USER) & 0x7;
 				} else {
-					row = ENCRY_TYPE_START_ADDR + (setKeyCmd->user >> 5);
-					wordId = (setKeyCmd->user >> 3) & 0x3;
-					nibbleId = setKeyCmd->user & 0x7;
+					row = ENCRY_TYPE_START_ADDR + (cmd->setkey.user >> 5);
+					wordId = (cmd->setkey.user >> 3) & 0x3;
+					nibbleId = cmd->setkey.user & 0x7;
 				}
 
 				HW_CAM_Read128(row, data);
 				data[wordId] &= (~(0xf << ((u32_t) nibbleId * 4)));
-				data[wordId] |= (setKeyCmd->type << ((u32_t) nibbleId * 4));
+				data[wordId] |= (cmd->setkey.type << ((u32_t) nibbleId * 4));
 				HW_CAM_Write128(row, data);
 			}
 
 			/* Set MAC address */
-			if (setKeyCmd->user < MAX_USER) {
-				wordId = (setKeyCmd->user >> 2) & 0x3;
-				byteId = setKeyCmd->user & 0x3;
-				row = (setKeyCmd->user >> 4) * 6;
+			if (cmd->setkey.user < MAX_USER) {
+				wordId = (cmd->setkey.user >> 2) & 0x3;
+				byteId = cmd->setkey.user & 0x3;
+				row = (cmd->setkey.user >> 4) * 6;
 
 				for (i = 0; i < 6; i++) {
 					HW_CAM_Read128(row + i, data);
 					data[wordId] &= (~(0xff << ((u32_t) byteId * 8)));
-					data[wordId] |= (setKeyCmd->macAddr[i] << ((u32_t) byteId * 8));
+					data[wordId] |= (cmd->setkey.macAddr[i] << ((u32_t) byteId * 8));
 					HW_CAM_Write128(row + i, data);
 				}
 			}
 
 			/* Set key */
-			row = KEY_START_ADDR + (setKeyCmd->user * 2) + setKeyCmd->keyId;
+			row = KEY_START_ADDR + (cmd->setkey.user * 2) + cmd->setkey.keyId;
 
 			for (i = 0; i < 4; i++)
-				data[i] = setKeyCmd->key[i];
+				data[i] = cmd->setkey.key[i];
 
 			HW_CAM_Write128(row, data);
 
 			/* Enable Key */
-			zfEnableCamUser(setKeyCmd->user);
+			zfEnableCamUser(cmd->setkey.user);
 		}
 		break;
 	case ZM_CMD_DKEY:
@@ -341,7 +327,7 @@ void zfCmdHandler(void)
 		/* TODO: modify ZM_CMD_WREEPROM to multiple write */
 		u16_t ii, iii;
 
-		for (ii = 0; ii < len; ii += 8) {
+		for (ii = 0; ii < cmd->len; ii += 8) {
 
 			addr = *(volatile u32_t *)(ZM_CMD_BUFFER + 4 + ii);
 			val = *(volatile u32_t *)(ZM_CMD_BUFFER + 8 + ii);
@@ -375,7 +361,7 @@ void zfCmdHandler(void)
 
 		u8Watchdog_Enable = 0;
 
-		*(volatile u8_t *)(rspBuf) = len;
+		*(volatile u8_t *)(rspBuf) = cmd->len;
 		}
 		break;
 	default:

@@ -6,8 +6,6 @@ extern void zfLinkTest(void);
 
 extern u32_t reg_read_PHY(u32_t addr);
 
-#define ZM_CMD_REBOOT		0x94
-
 #define ZM_TX_MAX_HANG_NUM	2
 #define ZM_TX_MAX_HANG_NUM_HAV	32
 

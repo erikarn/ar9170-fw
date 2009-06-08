@@ -5,7 +5,7 @@
 #include "desc.h"
 #include "gv_extr.h"
 #include "reg_defs.h"
-#include "cmd_defs.h"
+#include "usbcmds.h"
 #include "uart_extr.h"
 #include "api_extr.h"
 
