@@ -22,19 +22,19 @@ LDFLAGS += -x
 LDFLAGS += -e _zfbooter
 LDFLAGS += --gc-sections
 
-FW += STA/boot.o
-FW += STA/USB_Boot.o
-FW += STA/cmd.o
-FW += STA/cphy.o
-FW += STA/desc.o
-FW += STA/gv.o
-FW += STA/hostif.o
-FW += STA/mon.o
-FW += STA/uart.o
+FW += src/boot.o
+FW += src/USB_Boot.o
+FW += src/cmd.o
+FW += src/cphy.o
+FW += src/desc.o
+FW += src/gv.o
+FW += src/hostif.o
+FW += src/mon.o
+FW += src/uart.o
 FW += usb/usb.o
 FW += usb/usb_fifo.o
 FW += usb/usb_intrq.o
-FW += STA/wlan.o
+FW += src/wlan.o
 FW += dbg.o
 
 # These comes from the Linux kernel
@@ -58,7 +58,7 @@ install:
 	install ar9170.fw /lib/firmware/
 
 clean:
-	@rm -f *.o ar9170.fw otus-STA.* fw.map *~
+	@rm -f *.o ar9170.fw ar9170.elf *~
 	@rm -f STA/*.o usb/*.o
 	@rm -f STA/*~ usb/*~ include/*~
 
