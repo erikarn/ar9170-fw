@@ -213,26 +213,13 @@ u16_t u8OtherSpeedConfigDescriptorEX[] =
     0x0000
 };
 
-/* stream mode setting
- *  hpfwu_2k.c             None
- *  hpfwu.c                    Rx
- *  hpfwu_txstream.c      Tx / Rx
+/*
+ * stream mode setting
  *
- *  2k     hpfwu_2k.c
- *  xp     hpfwu_txstream.c
- *  vista  hpfwu_txstream.c
- *  linux  hpfwu.c
- *
- * This can be stream mode (if enabled) or packet mode.
- * We use packet mode for AP and stream mode for STA.
+ * Needs to be RX stream/TX packet for ar9170.
  */
-//#ifdef AP_ENABLED
 #define USB_TX_STREAM_MODE	0
 #define USB_RX_STREAM_MODE	1
-//#else
-//#define USB_TX_STREAM_MODE      1
-//#define USB_RX_STREAM_MODE      1
-//#endif
 
 //extern u16_t u8HSConfigDescriptor01[];
 
