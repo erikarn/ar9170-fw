@@ -139,11 +139,12 @@ void zfCmdHandler(void)
 		*(volatile u32_t *)(rspBuf + 20) = *(volatile u32_t *)(0x1bc000 + 0x9800 + (111 << 2));
 		*(volatile u32_t *)(rspBuf + 24) = *(volatile u32_t *)(0x1bc000 + 0xa800 + (111 << 2));
 		*(volatile u32_t *)(rspBuf + 28) = *(volatile u32_t *)(0x1bc000 + 0xb800 + (111 << 2));
-		}
 		break;
+		}
 	case ZM_CMD_FREQ_STRAT:
 		zfNotifySetChannel();
 		*(volatile u8_t *)(rspBuf) = 0;
+		break;
 	case ZM_CMD_EKEY:
 		setKeyCmd = (struct zsSetKeyCmdStruct *)(ZM_CMD_BUFFER + 4);
 
