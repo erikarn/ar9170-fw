@@ -1,6 +1,3 @@
-# Type is AP or STA
-TYPE ?= STA
-
 PFX ?= $(shell pwd)/toolchain/inst/bin/sh-elf-
 VALID_PFX = $(if $(wildcard $(PFX)gcc), $(PFX), \
 	$(error Error: sh2 gcc not found. To build your own, invoke 'make -C toolchain'.))
@@ -25,19 +22,19 @@ LDFLAGS += -x
 LDFLAGS += -e _zfbooter
 LDFLAGS += --gc-sections
 
-FW += $(TYPE)/boot.o
-FW += $(TYPE)/USB_Boot.o
-FW += $(TYPE)/cmd.o
-FW += $(TYPE)/cphy.o
-FW += $(TYPE)/desc.o
-FW += $(TYPE)/gv.o
-FW += $(TYPE)/hostif.o
-FW += $(TYPE)/mon.o
-FW += $(TYPE)/uart.o
+FW += STA/boot.o
+FW += STA/USB_Boot.o
+FW += STA/cmd.o
+FW += STA/cphy.o
+FW += STA/desc.o
+FW += STA/gv.o
+FW += STA/hostif.o
+FW += STA/mon.o
+FW += STA/uart.o
 FW += usb/usb.o
 FW += usb/usb_fifo.o
 FW += usb/usb_intrq.o
-FW += $(TYPE)/wlan.o
+FW += STA/wlan.o
 FW += dbg.o
 
 # These comes from the Linux kernel
@@ -54,18 +51,15 @@ FW += ashlsi3.o
 
 all:	ar9170.fw
 
-ar9170.fw:	otus-$(TYPE).fw
-	ln -fs otus-$(TYPE).fw ar9170.fw
-
-otus-$(TYPE).elf: $(FW) fw.lds
+ar9170.elf: $(FW) fw.lds
 	$(LD) $(LDFLAGS) -o $@ $(FW)
 
 install:
 	install ar9170.fw /lib/firmware/
 
 clean:
-	@rm -f *.o ar9170.fw otus-AP.* otus-STA.* fw.map *~
-	@rm -f AP/*.o STA/*.o usb/*.o
-	@rm -f AP/*~ STA/*~ usb/*~ include/*~
+	@rm -f *.o ar9170.fw otus-STA.* fw.map *~
+	@rm -f STA/*.o usb/*.o
+	@rm -f STA/*~ usb/*~ include/*~
 
 .PHONY: all clean
