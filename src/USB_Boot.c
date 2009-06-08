@@ -9,11 +9,6 @@
 #include "uart_extr.h"
 #include "api_extr.h"
 
-#if ZM_INT_USE_EP2 == 1
-#include "desc.h"
-void vUsb_Status_In(void);
-#endif
-
 void vUsbHandler(u8_t usb_interrupt_level1);
 
 extern u8_t *zfGetIntrINQHeadBuf(void);
@@ -96,7 +91,7 @@ void vUsb_Reg_Out(void)
 #define INT_IN_DESC_dataAddr   ZM_RSP_BUFFER + ZM_INT_USE_EP2_HEADER_SIZE
 #endif
 
-void vUsb_Status_In(void)
+static void vUsb_Status_In(void)
 {
     u16_t count;
 #if ZM_INT_USE_EP2 != 1
