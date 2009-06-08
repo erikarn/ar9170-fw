@@ -107,21 +107,6 @@
 #define USB_STRING20_DESC_ADDR          0x13B0
 #define USB_STRING30_DESC_ADDR          0x13E0
 
-#if 0
-u16_t UsbDeviceDescriptor[] =
-{
-    m2BYTE(USB_DEVICE_DESC_LEN, USB_DEVICE_DESC_TYPE),
-    USB_SPEC_VERSION,
-    m2BYTE(USB_DEVICE_CLASS, USB_DEVICE_SUB_CLASS),
-    m2BYTE(USB_DEVICE_PROTOCOL, USB_MAX_PKT_SIZE),
-    USB_VENDOR_ID,
-    USB_PRODUCT_ID,
-    USB_DEVICE_BCD,
-    m2BYTE(USB_MANUFACTURER_INDEX, USB_PRODUCT_INDEX),
-    m2BYTE(USB_SERIAL_INDEX, USB_CONFIGURATION_NUM)
-};
-#endif
-
 u16_t u8HSConfigDescriptor01[] =
 {
     m2BYTE(USB_CONFIG_DESC_LEN, USB_CONFIG_DESC_TYPE),
@@ -239,36 +224,6 @@ void vUsbEP0RxData(void);
 
 #define fBUS_POWER                 1
 u16_t   UsbStatus[3];
-
-#if 0
-void vFUSB200Init(void)
-{
-    /* Clear USB reset interrupt */
-    ZM_INTR_SOURCE_7_REG &= 0xFD;
-
-// Disable all fifo interrupt
-    /* Clear all USB OUT FIFO */
-    ZM_INTR_MASK_BYTE_1_REG = 0xff;
-    ZM_INTR_MASK_BYTE_2_REG = 0xff;
-    ZM_INTR_MASK_BYTE_3_REG = 0xff;
-    //ZM_INTR_MASK_BYTE_4_REG = 0x3f;
-
-    /* Clear all USB IN FIFO */
-    ZM_INTR_MASK_BYTE_5_REG = 0xff;
-    ZM_INTR_MASK_BYTE_6_REG = 0xff;
-
-// Soft Reset
-    ZM_MAIN_CTRL_REG = 0x10;
-    ZM_MAIN_CTRL_REG &= ~0x10;
-
-// Clear all fifo
-    ZM_TEST_REG = 0x01;                     // will be cleared after one cycle.
-    ZM_INTR_MASK_BYTE_0_REG = 0x40;         // Mask out INT status
-
-// Enable Chip
-    ZM_MAIN_CTRL_REG = 0x20;
-}
-#endif
 
 void zfPtaModeInit(void)
 {
@@ -636,13 +591,6 @@ BOOLEAN bSet_interface(void);
                 return (bGet_descriptor());
             break;
 
-#if 0
-        case USB_SET_DESCRIPTOR:
-            if (!bUsbEP0HaltSt)
-                return (bSet_descriptor());
-            break;
-#endif
-
         case USB_GET_CONFIGURATION:
              //zfUartSendStr((u8_t *) "USB_GET_CONFIGURATION\r\n");
             if (!bUsbEP0HaltSt)
@@ -859,13 +807,6 @@ BOOLEAN bSet_address(void)
 BOOLEAN bGet_descriptor(void)
 {
 // Change Descriptor type
-#if 0
-    u8ConfigDescriptorEX[mTABLE_IDX(1)] =
-        m2BYTE(CONFIG_LENGTH, DT_CONFIGURATION);
-    u8OtherSpeedConfigDescriptorEX[mTABLE_IDX(1)] =
-        m2BYTE(CONFIG_LENGTH, DT_OTHER_SPEED_CONFIGURATION);
-#endif
-
     switch (mDEV_REQ_VALUE_HIGH())
     {
         case 1:                 // device descriptor
@@ -950,73 +891,6 @@ BOOLEAN bGet_descriptor(void)
     vUsbEP0TxData();
     return TRUE;
 }
-
-#if 0
-
-#if !fLESS_SPEC_CODE
-/***********************************************************************/
-//      bSet_descriptor()
-//      Description:
-//          1. Point to the start location of the correct descriptor.
-//          2. set the transfer length
-//      input: none
-//      output: TRUE or FALSE (BOOLEAN)
-/***********************************************************************/
-BOOLEAN bSet_descriptor(void)
-{
-    switch (mHIGH_BYTE(mDEV_REQ_VALUE()))
-    {
-        case 1:                 // device descriptor
-            pu8DescriptorEX = u8DeviceDescriptorEX;
-            break;
-
-        case 2:                 // configuration descriptor
-            // It includes Configuration, Interface and Endpoint Table
-            // DescriptorIndex = low_byte of wValue
-            switch (mLOW_BYTE(mDEV_REQ_VALUE()))
-            {
-                case 0x00:      // configuration no: 0
-                    pu8DescriptorEX = u8ConfigDescriptorEX;
-                    break;
-                default:
-                    return FALSE;
-            }
-            break;
-
-
-        case 3:                 // string descriptor
-            // DescriptorIndex = low_byte of wValue
-            switch (mLOW_BYTE(mDEV_REQ_VALUE()))
-            {
-                case 0x00:
-                    pu8DescriptorEX = u8String00Descriptor;
-                    break;
-
-                case 0x10:
-                    pu8DescriptorEX = u8String10Descriptor;
-                    break;
-
-                case 0x20:
-                    pu8DescriptorEX = u8String20Descriptor;
-                    break;
-
-                default:
-                    return FALSE;
-            }
-            break;
-        default:
-            return FALSE;
-    }
-    u16TxRxCounter = mTABLE_LEN(pu8DescriptorEX[0]);
-
-    if (u16TxRxCounter > mDEV_REQ_LENGTH())
-        u16TxRxCounter = mDEV_REQ_LENGTH();
-
-    eUsbCxCommand = CMD_SET_DESCRIPTOR;
-    return TRUE;
-}
-#endif
-#endif
 
 /***********************************************************************/
 //      bGet_configuration()
@@ -1414,23 +1288,6 @@ void VendorCommand(void);
             {
                 u8OtherSpeedConfigDescriptorEX[ii] = u8FSConfigDescriptor01[ii];
             }
-
-#if 0
-            MaxPktSize = HS_C1_I0_A0_EP1_MAX_PACKET;
-        // Device stays in High Speed
-            u8DeviceDescriptorEX = u8HSDeviceDescriptor;
-
-        // copy Device Qualifierdescriptors (from rom to sram)
-            for (ii = mTABLE_WID(2) ; ii < mTABLE_WID(8); ii ++)
-                u8DeviceQualifierDescriptorEX[ii] = u8FSDeviceDescriptor[ii];
-
-        // Number of Other-speed Configurations
-        // byte 9 Reserved for future use, must be zero
-            u8DeviceQualifierDescriptorEX[mTABLE_IDX(8)]
-                = mHIGH_BYTE(u8FSDeviceDescriptor[mTABLE_IDX(17)]);
-            u8ConfigDescriptorEX = u8HSConfigDescriptor01;
-            u8OtherSpeedConfigDescriptorEX = u8FSConfigDescriptor01;
-#endif
         }
         else
         {
@@ -1451,23 +1308,6 @@ void VendorCommand(void);
             {
                 u8OtherSpeedConfigDescriptorEX[ii] = u8HSConfigDescriptor01[ii];
             }
-
-#if 0
-            MaxPktSize = FS_C1_I0_A0_EP1_MAX_PACKET;
-        // Device stays in Full Speed
-            u8DeviceDescriptorEX = u8FSDeviceDescriptor;
-
-        // copy Device Qualifierdescriptors (from rom to sram)
-            for (ii = mTABLE_WID(2) ; ii < mTABLE_WID(8); ii ++)
-                u8DeviceQualifierDescriptorEX[ii] = u8HSDeviceDescriptor[ii];
-
-        // Number of Other-speed Configurations
-        // byte 9 Reserved for future use, must be zero
-            u8DeviceQualifierDescriptorEX[mTABLE_IDX(8)]
-                = mHIGH_BYTE(u8HSDeviceDescriptor[mTABLE_IDX(17)]);
-            u8ConfigDescriptorEX = u8FSConfigDescriptor01;
-            u8OtherSpeedConfigDescriptorEX = u8HSConfigDescriptor01;
-#endif
         }
      //Change bLength
         u8DeviceQualifierDescriptorEX[0] = 0x060A;
