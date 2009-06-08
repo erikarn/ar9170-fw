@@ -1,9 +1,13 @@
 /*
- * The ar9170 firwmare gets stuffed into the
- * device's Program RAM, which has a size of 32K.
- * We use our own linker script to customize
- * the location of expected code but also to
- * avoid running out of the allowed space.
+ * The ar9170 firwmare gets copied into the device's
+ * Program RAM (pram), which has a size of 32K, but
+ * also has to accomodate the stack the device uses,
+ * which starts at the top of the 32k, so we pretend
+ * that we just have 16k of pram.
+ *
+ * This section documents some of the other areas
+ * mapped into the firmware processor's address space
+ * as well.
  */
 MEMORY
 {
