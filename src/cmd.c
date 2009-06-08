@@ -1,19 +1,9 @@
-/************************************************************************/
-/*  Copyright (c) 2000-2005  ZyDAS Technology Corporation               */
-/*                                                                      */
-/*  Module Name : cmd.c                                                 */
-/*                                                                      */
-/*  Abstract                                                            */
-/*      This module contains host Commands handle functions.            */
-/*                                                                      */
-/*  ROUTINES                                                            */
-/*                                                                      */
-/*      zfCmdHandler                                                    */
-/*                                                                      */
-/*  NOTES                                                               */
-/*      None                                                            */
-/*                                                                      */
-/************************************************************************/
+/*
+ * Copyright (c) 2000-2005  ZyDAS Technology Corporation
+ * Copyright	2009	Johannes Berg <johannes@sipsolutions.net>
+ *
+ * Code to handle commands from the host driver.
+ */
 #include "sys_defs.h"
 #include "dt_defs.h"
 #include "desc.h"
@@ -23,44 +13,15 @@
 #include "cmd_defs.h"
 #include "api_extr.h"
 #include "intrq_extr.h"
-
 #include "sta.h"
+#include "cam.h"
 
-void HW_CAM_Read128(u32_t address, u32_t *data);
-void zfDisableCamUser(u16_t userId);
-void zfEnableCamUser(u16_t userId);
-void HW_CAM_Write128(u32_t address, u32_t *data);
-void zfSwReset(void);
-
-extern void zfDKReSetStart(void);
-extern void zfDKReSetEnd(void);
 extern void zfWorkAround_SwReset(void);
 extern void zfResetUSBFIFO(void);
 extern void zfTurnOffPower(void);
 extern void zfJumpToBootCode(void);
 
-
 #define zfwWriteReg(addr, val) (*(volatile u32_t*)(0x1c3000+(addr<<2)) = val)
-
-#if ZM_CAM_USER_NUM == 64
-#define MAX_USER		64
-#define MAX_KEY_LENGTH		16      // no use
-#define ENCRY_TYPE_START_ADDR	24
-#define DEFAULT_ENCRY_TYPE	26
-#define KEY_START_ADDR		27
-#define STA_KEY_START_ADDR	155
-#define COUNTER_START_ADDR      163
-#define STA_COUNTER_START_ADDR	165
-#else
-#define MAX_USER		16
-#define MAX_KEY_LENGTH		16      // no use
-#define ENCRY_TYPE_START_ADDR	6
-#define DEFAULT_ENCRY_TYPE	7
-#define KEY_START_ADDR		8
-#define STA_KEY_START_ADDR	40
-#define COUNTER_START_ADDR      48
-#define STA_COUNTER_START_ADDR	49
-#endif
 
 struct zsSetKeyCmdStruct
 {
@@ -588,102 +549,4 @@ void zfCmdHandler(void)
                 *(volatile u32_t*)ZM_CMD_BUFFER);
     }
 
-}
-
-void zfDisableCamUser(u16_t userId)
-{
-    if (userId >= MAX_USER)
-	    return;
-
-    if (userId <= 31)
-    {
-        zm_cam_roll_call_tablel_reg &= (~((u32_t)1<<userId));
-    }
-    else if (userId <= 63)
-    {
-        zm_cam_roll_call_tableh_reg &= (~((u32_t)1<<(userId-32)));
-    }
-    return;
-}
-
-void zfEnableCamUser(u16_t userId)
-{
-    if (userId >= MAX_USER)
-	    return;
-
-    if (userId <= 31)
-    {
-        zm_cam_roll_call_tablel_reg |= (((u32_t)1)<<userId);
-    }
-    else if (userId <= 63)
-    {
-        zm_cam_roll_call_tableh_reg |= (((u32_t)1)<<(userId-32));
-    }
-    return;
-}
-
-
-void zfWaitForCamReadReady(void)
-{
-    while (((*(volatile u32_t*)0x1c373c) & 0x40000000) == 0){}
-    //zfUartSendStr((u8_t*)"R");
-}
-
-void zfWaitForCamWriteReady(void)
-{
-    while (((*(volatile u32_t*)0x1c373c) & 0x80000000) == 0){}
-    //zfUartSendStr((u8_t*)"W");
-}
-
-void zfDelayLoop(u32_t n)
-{
-    u32_t temp;
-    for (temp=0; temp<n;)
-    {
-        temp++;
-    }
-}
-
-void HW_CAM_Avail(void)
-{
-    u32_t tmpValue;
-
-    tmpValue = zm_cam_mode_reg;
-    while(tmpValue & HOST_PEND)
-    {
-        //for(ii=0; ii<10000; ii++){}
-        tmpValue = zm_cam_mode_reg;
-    }
-
-}
-
-
-void HW_CAM_Write128(u32_t address, u32_t *data)
-{
-    HW_CAM_Avail();
-
-    zm_cam_data0_reg = data[0];
-    zm_cam_data1_reg = data[1];
-    zm_cam_data2_reg = data[2];
-    zm_cam_data3_reg = data[3];
-
-    zm_cam_addr_reg = address | CAM_WRITE;
-
-    zfWaitForCamWriteReady();
-}
-
-
-
-void HW_CAM_Read128(u32_t address, u32_t *data)
-{
-
-    HW_CAM_Avail();
-    zm_cam_addr_reg = address;
-
-    zfWaitForCamReadReady();
-    HW_CAM_Avail();
-    data[0] = zm_cam_data0_reg;
-    data[1] = zm_cam_data1_reg;
-    data[2] = zm_cam_data2_reg;
-    data[3] = zm_cam_data3_reg;
 }

@@ -22,10 +22,6 @@
 
 #define ZM_TX_HANG_CHK            1
 
-/* CAM user space : 64/16 */
-#define ZM_CAM_USER_NUM         64
-
-
 /* 1 to include test code, 0 to exclude test code  */
 
 /* DeBug mode base include: Uart input and output */
