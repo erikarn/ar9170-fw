@@ -4,29 +4,26 @@
 #include "dt_defs.h"
 
 /*********************** for Faraday USB controller *******************/
-typedef enum
-{
-    CMD_VOID,                   // No command
-    CMD_GET_DESCRIPTOR,         // Get_Descriptor command
-    CMD_SET_DESCRIPTOR          // Set_Descriptor command
+typedef enum {
+	CMD_VOID,		// No command
+	CMD_GET_DESCRIPTOR,	// Get_Descriptor command
+	CMD_SET_DESCRIPTOR	// Set_Descriptor command
 } CommandType;
 
-typedef enum
-{
-    ACT_IDLE,
-    ACT_DONE,
-    ACT_STALL
+typedef enum {
+	ACT_IDLE,
+	ACT_DONE,
+	ACT_STALL
 } Action;
 
-typedef struct Setup_Packet
-{
-    u8_t Direction;          /* Data transfer direction: IN, OUT */
-    u8_t Type;               /* Request Type: Standard, Class, Vendor */
-    u8_t Object;             /* Recipient: Device, Interface, Endpoint,other */
-    u16_t Request;           /* Refer to Table 9-3 */
-    u16_t Value;
-    u16_t Index;
-    u16_t Length;
+typedef struct Setup_Packet {
+	u8_t Direction;		/* Data transfer direction: IN, OUT */
+	u8_t Type;		/* Request Type: Standard, Class, Vendor */
+	u8_t Object;		/* Recipient: Device, Interface, Endpoint,other */
+	u16_t Request;		/* Refer to Table 9-3 */
+	u16_t Value;
+	u16_t Index;
+	u16_t Length;
 } SetupPacket;
 
 #define mBIT(b)                 (1 << (b))

@@ -13,11 +13,10 @@
 //#define ZM_INFO_BUFFER      0x10F500
 #else
 /* 96k */
-#define ZM_BA_BUFFER        0x117780 //Reserve 128
-#define ZM_CMD_BUFFER       0x117800 //Reserve 128
-#define ZM_RSP_BUFFER       0x117880 //Reserve 128
+#define ZM_BA_BUFFER        0x117780	//Reserve 128
+#define ZM_CMD_BUFFER       0x117800	//Reserve 128
+#define ZM_RSP_BUFFER       0x117880	//Reserve 128
 #endif
-
 
 /************************* Timer *************************/
 /* Definition of interrupt register base address */
@@ -35,7 +34,6 @@
 #define ZM_TICK_TIMER_OFFSET            0x30
 #define ZM_CLOCK_LOW_OFFSET             0x40
 #define ZM_CLOCK_HIGH_OFFSET            0x44
-
 
 /* Definitions of interrupt registers */
 
@@ -75,7 +73,6 @@
 #define ZM_CLOCK_HIGH_REG \
     (*((volatile u32_t*)(ZM_TIMER_REGISTER_BASE+ZM_CLOCK_HIGH_OFFSET)))
 
-
 /* ZM_TIMER_CONTROL_REG */
 #define ZM_DISABLE_CLOCK_BIT             0x100
 
@@ -86,8 +83,6 @@
 #define ZM_TIMER3_INT_BIT               0x008
 #define ZM_TIMER4_INT_BIT               0x010
 #define ZM_TICK_TIMER_INT_BIT           0x100
-
-
 
 /************************* Interrupt Controller *************************/
 #define ZM_MAX_INT_SRC                     9
@@ -152,7 +147,6 @@
 /* SW_INT_CONTROL_REG */
 #define ZM_SW_INT_ENABLE_BIT                0x1
 
-
 /************************* Random number generator *************************/
 /* Definition of interrupt register base address */
 #define ZM_RAND_REGISTER_BASE          0x1D0000
@@ -168,11 +162,9 @@
 #define ZM_RAND_MODE_REG \
     (*((volatile u32_t*)(ZM_RAND_REGISTER_BASE+ZM_RAND_MODE_OFFSET)))
 
-
 /* ZM_RAND_MODE_REG */
 #define ZM_RAND_MANUAL_BIT              0x000
 #define ZM_RAND_FREE_BIT                0x001
-
 
 /************************* GPIO/LED *************************/
 /* Base address */
@@ -189,7 +181,6 @@
 #define ZM_GPIO_PORT_DATA_REG \
     (*((volatile u32_t*)(ZM_GPIO_BASE_ADDRESS+ZM_GPIO_PORT_DATA_OFFSET)))
 
-
 /*ZM_GPIO_PORT_DATA_REG */
 #define ZM_GPIO0_BIT                        0X0001
 #define ZM_GPIO1_BIT                        0X0002
@@ -204,7 +195,6 @@
 #define ZM_LED2_BIT                         0x040000
 #define ZM_LED3_BIT                         0x080000
 #define ZM_LED4_BIT                         0x100000
-
 
 /************************* High Speed UART *************************/
 /* Definition of interrupt register base address */
@@ -269,7 +259,6 @@
 #define ZM_HUART_REMAINDER_REG \
     (*((volatile u32_t*)(ZM_HUART_REGISTER_BASE+ZM_HUART_REMAINDER_OFFSET)))
 
-
 /* HUART_FIFO_CONTROL_REG */
 #define ZM_RESET_RX_FIFO_BIT            0x02
 #define ZM_RESET_TX_FIFO_BIT            0x04
@@ -295,7 +284,6 @@
 #define ZM_CTS_COMPL_BIT                0x10
 #define ZM_DSR_COMPL_BIT                0x20
 #define ZM_DCD_COMPL_BIT                0x80
-
 
 /************************* Memory Control *************************/
 /* Definition of Memory Control  register base address */
@@ -390,12 +378,10 @@
 #define ZM_PTA_SHARE_MEM_CTRL_REG \
     (*((volatile u32_t*)(ZM_PTA_REGISTER_BASE + ZM_PTA_SHARE_MEM_CTRL_OFFSET)))
 
-
 /* ZM_PTA_INT_FLAG_REG */
 #define ZM_PTA_TX_INT                   0x01
 #define ZM_PTA_RX_INT                   0x02
 #define ZM_PTA_CMD_INT                  0x04
-
 
 /************************* PCI to AHB Bridge *************************/
 
@@ -418,8 +404,6 @@
 #define ZM_PTA_UP_CURR_ADDRL_OFFSET     0x140
 #define ZM_PTA_UP_CURR_ADDRH_OFFSET     0x144
 #define ZM_PTA_DMA_MODE_CTRL_OFFSET     0x148
-
-
 
 #define ZM_PTA_INT_FLAG_REG \
     (*((volatile u32_t*)(ZM_PTA_REGISTER_BASE+ZM_PTA_INT_FLAG_OFFSET)))
@@ -488,7 +472,6 @@
 #define ZM_PTA_8_BEAT_BURST     0x01
 #define ZM_PTA_16_BEAT_BURST    0x02
 #define ZM_PTA_LOOPBACK_MODE    0x10
-
 
 /************************* WLAN Registers *************************/
 #define ZM_WL_REGISTER_BASE             0x1c3000
@@ -628,7 +611,6 @@
 #define zm_wl_mpdu_count_reg \
     (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_MPDU_COUNT_OFF)))
 
-
 /* INTERRUPT Flag bits */
 #define ZM_INT_TXC_BIT              0x0001
 #define ZM_INT_RXC_BIT              0x0002
@@ -646,15 +628,11 @@
 #define ZM_INT_QUIET_FRAME_BIT      0x2000
 #define ZM_INT_PRETBTT_BIT          0x4000
 
-
-
-
 /* BEACON specification bits */
 #define ZM_AP_MODE_BIT              0x01000000
 #define ZM_IBSS_MODE_BIT            0x02000000
 #define ZM_POWER_MNT_BIT            0x04000000
 #define ZM_STA_PS_BIT               0x08000000
-
 
 #define ZM_WL_TXC_BIT               BIT_0
 #define ZM_WL_RXC_BIT               BIT_1
@@ -664,8 +642,6 @@
 #define CAM_WRITE                   0x80000000
 #define MAC_LENGTH                  6
 #define MIC_FINISH                  0x1
-
-
 
 /* DMA Module */
 #define ZM_WL_DMA_REG_BASE              0xD00
@@ -698,7 +674,6 @@
 #define zm_wl_dma_trigger_reg \
     (*((volatile u32_t*)(ZM_WL_REGISTER_BASE+ZM_WL_DMA_TRIGGER_OFFSET)))
 
-
 /* WLAN DMA Trigger bits */
 #define ZM_TXQ0_TRIG_BIT            0x01
 #define ZM_TXQ1_TRIG_BIT            0x02
@@ -717,10 +692,7 @@
 #define ZM_BCN_READY_BIT            0x01
 #define ZM_BCN_LOCK_BIT             0x02
 
-
 /* Protocol Controller Module */
-#define ZM_WL_PC_REG_BASE               0xE00//to be defined
+#define ZM_WL_PC_REG_BASE               0xE00	//to be defined
 
-
-#endif /* #ifndef _REG_DEFS_H */
-
+#endif				/* #ifndef _REG_DEFS_H */

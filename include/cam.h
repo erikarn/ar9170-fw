@@ -4,7 +4,7 @@
 #include "dt_defs.h"
 
 #define MAX_USER		64
-#define MAX_KEY_LENGTH		16      // no use
+#define MAX_KEY_LENGTH		16	// no use
 #define ENCRY_TYPE_START_ADDR	24
 #define DEFAULT_ENCRY_TYPE	26
 #define KEY_START_ADDR		27
@@ -17,7 +17,7 @@ extern void zfEnableCamUser(u16_t userId);
 extern void zfWaitForCamReadReady(void);
 extern void zfWaitForCamWriteReady(void);
 extern void HW_CAM_Avail(void);
-extern void HW_CAM_Write128(const u32_t address, const u32_t *data);
-extern void HW_CAM_Read128(const u32_t address, u32_t *data);
+extern void HW_CAM_Write128(const u32_t address, const u32_t * data);
+extern void HW_CAM_Read128(const u32_t address, u32_t * data);
 
-#endif /* __CAM */
+#endif				/* __CAM */

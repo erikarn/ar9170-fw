@@ -1,8 +1,8 @@
 #ifndef __USB_USER_PRE_H
 #define __USB_USER_PRE_H
 
-#define FUSB200_MAX_EP      10  // 1..10
-#define FUSB200_MAX_FIFO    10  // 0.. 9
+#define FUSB200_MAX_EP      10	// 1..10
+#define FUSB200_MAX_FIFO    10	// 0.. 9
 #define EP0MAXPACKETSIZE    0x40
 // #define EP0FIFOSIZE          64  // EP0_FIFO
 //JWEI 2003/04/29

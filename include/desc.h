@@ -15,15 +15,14 @@
 #ifndef _DESC_DEFS_H
 #define _DESC_DEFS_H
 
-struct zsDmaDesc
-{
-    volatile u16_t      status;     // Descriptor status
-    volatile u16_t      ctrl;       // Descriptor control
-    volatile u16_t      dataSize;   // Data size
-    volatile u16_t      totalLen;   // Total length
-    struct zsDmaDesc*   lastAddr;   // Last address of this chain
-    volatile u32_t      dataAddr;   // Data buffer address
-    struct zsDmaDesc*   nextAddr;   // Next TD address
+struct zsDmaDesc {
+	volatile u16_t status;	// Descriptor status
+	volatile u16_t ctrl;	// Descriptor control
+	volatile u16_t dataSize;	// Data size
+	volatile u16_t totalLen;	// Total length
+	struct zsDmaDesc *lastAddr;	// Last address of this chain
+	volatile u32_t dataAddr;	// Data buffer address
+	struct zsDmaDesc *nextAddr;	// Next TD address
 };
 
 /* Tx5 Dn Rx Up Int */
@@ -45,7 +44,6 @@ struct zsDmaDesc
 #define ZM_TERMINATOR_NUMBER (8 + ZM_TERMINATOR_NUMBER_BAR + \
                                   ZM_TERMINATOR_NUMBER_INT + \
 							      ZM_TX_DELAY_DESC_NUM)
-
 
 #define ZM_BLOCK_SIZE           (256+64)
 #define ZM_DESCRIPTOR_SIZE      (sizeof(struct zsDmaDesc))
@@ -82,9 +80,7 @@ struct zsDmaDesc
                                 (ZM_RX_BLOCK_RATIO + ZM_DOWN_BLOCK_RATIO)
 #define ZM_RX_BLOCK_NUMBER      ZM_BLOCK_NUMBER-ZM_TX_BLOCK_NUMBER
 
-
 #define ZM_TX_DELAY_DESC_BASE	ZM_FRAME_MEMORY_BASE + ZM_DESCRIPTOR_SIZE*(ZM_TERMINATOR_NUMBER-ZM_TX_DELAY_DESC_NUM)
-
 
 /* Erro code */
 #define ZM_ERR_FS_BIT           1
@@ -109,11 +105,9 @@ struct zsDmaDesc
 /* Last segament bit */
 #define ZM_FS_BIT               0x200
 
-struct zsDmaQueue
-{
-    struct zsDmaDesc* head;
-    struct zsDmaDesc* terminator;
+struct zsDmaQueue {
+	struct zsDmaDesc *head;
+	struct zsDmaDesc *terminator;
 };
 
-
-#endif /* #ifndef _DESC_DEFS_H */
+#endif				/* #ifndef _DESC_DEFS_H */

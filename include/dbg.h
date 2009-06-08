@@ -8,4 +8,4 @@ void usb_dbg16(u16_t v);
 void usb_dbg32(u32_t v);
 void usb_dbg_hex(int buflen, const u8_t *buf);
 
-#endif /* __DBG */
+#endif	/* __DBG */

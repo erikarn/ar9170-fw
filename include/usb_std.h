@@ -68,7 +68,7 @@
 #define cUSB_CONFIG_STATE       2
 
 /* for Data transfer direction */
-#define bmUSB_HOST_DIR          7     /* Bit 7 */
+#define bmUSB_HOST_DIR          7	/* Bit 7 */
 #define cUSB_DIR_HOST_OUT       0
 #define cUSB_DIR_HOST_IN        1
 
@@ -89,19 +89,18 @@
 #define cUSB_DESTYPE_STRING     3
 #define cUSB_DESTYPE_INTERFACE  4
 #define cUSB_DESTYPE_ENDPOINT   5
-#define cUSB_DESTYPE_END        cUSB_DESTYPE_ENDPOINT   // for range check
+#define cUSB_DESTYPE_END        cUSB_DESTYPE_ENDPOINT	// for range check
 
 /* for Feature selector */
 #define cUSB_FEATSEL_RMWAKEUP   0
 #define cUSB_FEATSEL_EPHALT     1
-#define cUSB_FEATSEL_END        cUSB_FEATSEL_EPHALT     // for range check
+#define cUSB_FEATSEL_END        cUSB_FEATSEL_EPHALT	// for range check
 
 #define bmREQ_RECI              0
-#define bmwREQ_RECI             5           // mMASKS(bmwREQ_RECI, bmREQ_RECI)
+#define bmwREQ_RECI             5	// mMASKS(bmwREQ_RECI, bmREQ_RECI)
 #define bmREQ_TYPE              5
-#define bmwREQ_TYPE             2           // mMASKS(bmwREQ_TYPE, bmREQ_TYPE)
+#define bmwREQ_TYPE             2	// mMASKS(bmwREQ_TYPE, bmREQ_TYPE)
 #define bmREQ_DIR               7
 #define bmwREQ_DIR              1
 
 #endif
-

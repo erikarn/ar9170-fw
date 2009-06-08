@@ -35,8 +35,8 @@
 
 /* ----- */
 
-#define ZM_CLOCK_25M            0   /* 0=>40MHz clock */
-                                    /* 1=>25MHz clock */
+#define ZM_CLOCK_25M            0	/* 0=>40MHz clock */
+				    /* 1=>25MHz clock */
 
 /* fix: interrupt in use EP2(data in) replace EP3
  *         0 : normal use EP3
@@ -52,6 +52,6 @@
 #define ZM_NANOSECOND_PER_CLOCK         (1000/ZM_MHZ_CLOCK)
 #define ZM_CLOCK_PER_MICORSECOND        (ZM_MHZ_CLOCK)
 
-#define ZM_TIMER_TIME_UNIT_IN_MICROSEC  (80/ZM_MHZ_CLOCK) //Microsecond
+#define ZM_TIMER_TIME_UNIT_IN_MICROSEC  (80/ZM_MHZ_CLOCK)	//Microsecond
 
 #endif

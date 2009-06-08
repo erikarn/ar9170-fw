@@ -27,37 +27,35 @@
 /* Is this needed ??? */
 #define NULL    0
 
-struct DB_TALLY_STRUCT
-{
-    /* Tally */
-    u32_t  RxTotalCount;
-    u32_t  RxCRC32;
-    u32_t  RxCRC16;
-    u32_t  RxOverRun;
-    u32_t  RxTimeOut;
-	u32_t  RxUniError;
-	u32_t  RxMulError;
+struct DB_TALLY_STRUCT {
+	/* Tally */
+	u32_t RxTotalCount;
+	u32_t RxCRC32;
+	u32_t RxCRC16;
+	u32_t RxOverRun;
+	u32_t RxTimeOut;
+	u32_t RxUniError;
+	u32_t RxMulError;
 
-    u32_t  RxMPDU;           //CA0;
-	u32_t  RxDropMPDU;       //CA4;
-	u32_t  RxDelMPDU;        //CA8;
+	u32_t RxMPDU;		//CA0;
+	u32_t RxDropMPDU;	//CA4;
+	u32_t RxDelMPDU;	//CA8;
 
-	u32_t  RxPhyMiscError;   //CAC;
-	u32_t  RxPhyXRError;     //CB0;
-	u32_t  RxPhyOFDMError;   //CB4;
-	u32_t  RxPhyCCKError;    //CB8;
-	u32_t  RxPhyHTError;     //CBC;
-	u32_t  RxPhyTotalCount;  //CC0;
+	u32_t RxPhyMiscError;	//CAC;
+	u32_t RxPhyXRError;	//CB0;
+	u32_t RxPhyOFDMError;	//CB4;
+	u32_t RxPhyCCKError;	//CB8;
+	u32_t RxPhyHTError;	//CBC;
+	u32_t RxPhyTotalCount;	//CC0;
 
-    u32_t  TxTotalCount;
-    u32_t  TxUnderRun;
-    u32_t  TxRetryCount;
+	u32_t TxTotalCount;
+	u32_t TxUnderRun;
+	u32_t TxRetryCount;
 
-	u32_t  BAFailCnt;
-	u32_t  AggTxCnt;
-	u32_t  TxAmpduCnt;
-	u32_t  TxMpduCnt;
+	u32_t BAFailCnt;
+	u32_t AggTxCnt;
+	u32_t TxAmpduCnt;
+	u32_t TxMpduCnt;
 };
 
 #endif
-
