@@ -1,19 +1,11 @@
-/************************************************************************/
-/*  Copyright (c) 2000-2005  ZyDAS Technology Corporation               */
-/*                                                                      */
-/*  Module Name : gv.c                                                  */
-/*                                                                      */
-/*  Abstract                                                            */
-/*      This module contains global valible delcation.                  */
-/*                                                                      */
-/*  ROUTINES                                                            */
-/*                                                                      */
-/*  NOTES                                                               */
-/*      None                                                            */
-/*                                                                      */
-/************************************************************************/
+/*
+ * Copyright (c) 2000-2005  ZyDAS Technology Corporation
+ *
+ * Various global variables
+ */
 #include "dt_defs.h"
 #include "desc.h"
+#include "gv_extr.h"
 #include "intrq_defs.h"
 
 #include "sta.h"
@@ -62,25 +54,25 @@ u8_t zgIntrINQNum;
 
 #if ZM_INT_USE_EP2 == 1
 /* EP3 replace by EP2 */
-struct zsDmaDesc* zgIntDesc;
+struct zsDmaDesc *zgIntDesc;
 u8_t zgIntrINAvailable;
 #endif
 
 #if ZM_BAR_AUTO_BA == 1
-struct zsDmaDesc* zgBADesc;
+struct zsDmaDesc *zgBADesc;
 u8_t zgBAAvailable;
 u8_t zgBARGotState;
 u32_t zgBARTimeOut;
 #endif
 
 #if ZM_TX_DELAY_DESC == 1
-struct zsDmaDesc* zgTxDelayDesc[ZM_TX_DELAY_DESC_NUM];
+struct zsDmaDesc *zgTxDelayDesc[ZM_TX_DELAY_DESC_NUM];
 u32_t zgTxDelayDescIdx;
 u32_t zgLastDelayDesc;
 #endif
 u32_t zgNextStartDesc;
 
-volatile u32_t zgBaErrorCount = 0;
+u32_t zgBaErrorCount = 0;
 u16_t zgBaStsCurrRate;
 u8_t zgGenBAIntr;
 u16_t zgBARate[4];
@@ -91,7 +83,7 @@ u32_t zgLastTxQHead;
 u16_t zgTxQSameCnt;
 #endif
 
-u8_t  u8Watchdog_Enable;
+u8_t u8Watchdog_Enable;
 u16_t zgBlockTx;
 u16_t zgTxCompleted;
 u16_t zgEnableFwRetry;
