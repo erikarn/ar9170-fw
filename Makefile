@@ -20,7 +20,7 @@ LDFLAGS += -static -Tfw.lds
 LDFLAGS += -EL
 LDFLAGS += -x
 LDFLAGS += -e _zfbooter
-LDFLAGS += --gc-sections
+LDFLAGS += --gc-sections --print-gc-sections
 
 FW += src/boot.o
 FW += src/USB_Boot.o

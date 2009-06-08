@@ -305,26 +305,6 @@ void zfDmaPutPacket(struct zsDmaQueue *q, struct zsDmaDesc *desc)
 	q->terminator = desc;
 }
 
-void zfRecycleTxQ(u8_t qNum)
-{
-	struct zsDmaQueue *q;
-	struct zsDmaDesc *desc;
-
-	q = (struct zsDmaQueue *)((u32_t) zgTxQ
-				  + (qNum * sizeof(struct zsDmaQueue)));
-
-	while (q->head != q->terminator) {
-		/* Dequeue the TxQ */
-		desc = q->head;
-		q->head = desc->lastAddr->nextAddr;
-
-		/* Put back to the Down Queue */
-		zfDmaReclaimPacket(&zgDnQ, desc);
-	}
-
-	zm_wl_txq0_dma_addr_reg = (u32_t) q->terminator;
-}
-
 void zfRecycleRxQ(void)
 {
 	struct zsDmaDesc *desc;
