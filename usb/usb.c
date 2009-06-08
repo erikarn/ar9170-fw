@@ -216,7 +216,6 @@ void vUsbEP0RxData(void);
 
 /* Flag definition */
 #define fCHK_LOADCODE              0
-#define ZM_SELF_TEST_MODE          0
 
 #define fBUS_POWER                 1
 u16_t UsbStatus[3];
@@ -296,7 +295,7 @@ void zfUsbInit(void)
 	//mUsbApRdEnd();
 }
 
-void mUsbEPinRsTgSet(u8_t u8ep)
+static void mUsbEPinRsTgSet(u8_t u8ep)
 {
 	u8_t *reg =
 	    (u8_t *) (ZM_FUSB_BASE + ZM_EP_IN_MAX_SIZE_HIGH_OFFSET +
@@ -304,7 +303,7 @@ void mUsbEPinRsTgSet(u8_t u8ep)
 	*reg |= BIT4;
 }
 
-void mUsbEPinRsTgClr(u8_t u8ep)
+static void mUsbEPinRsTgClr(u8_t u8ep)
 {
 	u8_t *reg =
 	    (u8_t *) (ZM_FUSB_BASE + ZM_EP_IN_MAX_SIZE_HIGH_OFFSET +
@@ -312,7 +311,7 @@ void mUsbEPinRsTgClr(u8_t u8ep)
 	*reg &= ~BIT4;
 }
 
-void mUsbEPoutRsTgSet(u8_t u8ep)
+static void mUsbEPoutRsTgSet(u8_t u8ep)
 {
 	u8_t *reg =
 	    (u8_t *) (ZM_FUSB_BASE + ZM_EP_OUT_MAX_SIZE_HIGH_OFFSET +
@@ -320,98 +319,12 @@ void mUsbEPoutRsTgSet(u8_t u8ep)
 	*reg |= BIT4;
 }
 
-void mUsbEPoutRsTgClr(u8_t u8ep)
+static void mUsbEPoutRsTgClr(u8_t u8ep)
 {
 	u8_t *reg =
 	    (u8_t *) (ZM_FUSB_BASE + ZM_EP_OUT_MAX_SIZE_HIGH_OFFSET +
 		      (u8ep << 1));
 	*reg &= ~BIT4;
-}
-
-void mUsbEPinStallSet(u8_t u8ep)
-{
-	u8_t *reg =
-	    (u8_t *) (ZM_FUSB_BASE + ZM_EP_IN_MAX_SIZE_HIGH_OFFSET +
-		      (u8ep << 1));
-	*reg |= BIT3;
-}
-
-void mUsbEPinStallClr(u8_t u8ep)
-{
-	u8_t *reg =
-	    (u8_t *) (ZM_FUSB_BASE + ZM_EP_IN_MAX_SIZE_HIGH_OFFSET +
-		      (u8ep << 1));
-	*reg &= ~BIT3;
-}
-
-void mUsbEPoutStallSet(u8_t u8ep)
-{
-	u8_t *reg =
-	    (u8_t *) (ZM_FUSB_BASE + ZM_EP_OUT_MAX_SIZE_HIGH_OFFSET +
-		      (u8ep << 1));
-	*reg |= BIT3;
-}
-
-void mUsbEPoutStallClr(u8_t u8ep)
-{
-	u8_t *reg =
-	    (u8_t *) (ZM_FUSB_BASE + ZM_EP_OUT_MAX_SIZE_HIGH_OFFSET +
-		      (u8ep << 1));
-	*reg &= ~BIT3;
-}
-
-u8_t mUsbEPinStallST(u8_t u8ep)
-{
-	u8_t *reg =
-	    (u8_t *) (ZM_FUSB_BASE + ZM_EP_IN_MAX_SIZE_HIGH_OFFSET +
-		      (u8ep << 1));
-	return ((*reg & BIT3) >> 3);
-}
-
-u8_t mUsbEPoutStallST(u8_t u8ep)
-{
-	u8_t *reg =
-	    (u8_t *) (ZM_FUSB_BASE + ZM_EP_OUT_MAX_SIZE_HIGH_OFFSET +
-		      (u8ep << 1));
-	return ((*reg & BIT3) >> 3);
-}
-
-u8_t mUsbEPMapRd(u8_t EPn)
-{
-	u8_t *reg = (u8_t *) (ZM_FUSB_BASE + 0x30 + (EPn - 1));
-	return *reg;
-}
-
-u8_t mUsbFIFOCfgRd(u8_t FIFOn)
-{
-	u8_t *reg = (u8_t *) (ZM_FUSB_BASE + 0x90 + FIFOn);
-	return *reg;
-}
-
-/* This is unused... */
-u8_t ChkEndPoint(u8_t bdir, u8_t u8ep_n)
-{
-	u8_t u8fifo_n;
-
-	/* Check whether the EP num is too large */
-	if (u8ep_n > FUSB200_MAX_EP)
-		return FALSE;
-
-	u8fifo_n = mUsbEPMapRd(u8ep_n);
-
-	//(u8fifo_n >> (4 * (!bdir))) & 0x0f;
-	if (bdir == cUSB_DIR_HOST_IN)
-		u8fifo_n &= 0x0f;
-	else
-		u8fifo_n >>= 4;
-
-	if (u8fifo_n >= FUSB200_MAX_FIFO)
-		return FALSE;
-
-	/* Check the FIFO had been enable */
-	if (!(mUsbFIFOCfgRd(u8fifo_n) & 0x80))
-		return FALSE;
-	return TRUE;
 }
 
 /***********************************************************************/
@@ -558,86 +471,13 @@ void vUsb_Data_In0Byte(void)
 }
 
 /***********************************************************************/
-//      bStandardCommand()
-//      Description:
-//          1. Process standard command.
-//      input: none
-//      output: TRUE or FALSE
-/***********************************************************************/
-BOOLEAN bStandardCommand(void)
-{
-	BOOLEAN bGet_status(void);
-	BOOLEAN bClear_feature(void);
-	BOOLEAN bSet_feature(void);
-	BOOLEAN bSet_address(void);
-	BOOLEAN bGet_descriptor(void);
-	BOOLEAN bSet_descriptor(void);
-	BOOLEAN bGet_configuration(void);
-	BOOLEAN bSet_configuration(void);
-	BOOLEAN bGet_interface(void);
-	BOOLEAN bSet_interface(void);
-
-	switch (mDEV_REQ_REQ())	// by Standard Request codes
-	{
-	case USB_GET_STATUS:
-		//zfUartSendStr((u8_t *) "USB_GET_STATUS\n");
-		return (bGet_status());
-
-	case USB_CLEAR_FEATURE:
-		//zfUartSendStr((u8_t *) "USB_CLEAR_FEATURE\n");
-		return (bClear_feature());
-
-	case USB_SET_FEATURE:
-		//zfUartSendStr((u8_t *) "USB_SET_FEATURE\n");
-		return (bSet_feature());
-
-	case USB_SET_ADDRESS:
-		//zfUartSendStr((u8_t *) "USB_SET_ADDRESS\n");
-		if (!bUsbEP0HaltSt)
-			return (bSet_address());
-		break;
-
-	case USB_GET_DESCRIPTOR:
-		//zfUartSendStr((u8_t *) "USB_GET_DESCRIPTOR\n");
-		if (!bUsbEP0HaltSt)
-			return (bGet_descriptor());
-		break;
-
-	case USB_GET_CONFIGURATION:
-		//zfUartSendStr((u8_t *) "USB_GET_CONFIGURATION\n");
-		if (!bUsbEP0HaltSt)
-			return (bGet_configuration());
-		break;
-
-	case USB_SET_CONFIGURATION:
-		//zfUartSendStr((u8_t *) "USB_SET_CONFIGURATION\n");
-		if (!bUsbEP0HaltSt)
-			return (bSet_configuration());
-		break;
-
-	case USB_GET_INTERFACE:
-		//zfUartSendStr((u8_t *) "USB_GET_INTERFACE\n");
-		if (!bUsbEP0HaltSt)
-			return (bGet_interface());
-		break;
-
-	case USB_SET_INTERFACE:
-		//zfUartSendStr((u8_t *) "USB_SET_INTERFACE\n");
-		if (!bUsbEP0HaltSt)
-			return (bSet_interface());
-		break;
-	}
-	return FALSE;
-}
-
-/***********************************************************************/
 //      bGet_status()
 //      Description:
 //          1. Send 2 bytes status to host.
 //      input: none
 //      output: TRUE or FALSE (BOOLEAN)
 /***********************************************************************/
-BOOLEAN bGet_status(void)
+static BOOLEAN bGet_status(void)
 {
 	u8_t RecipientStatusLow;
 
@@ -660,7 +500,7 @@ BOOLEAN bGet_status(void)
 //      input: none
 //      output: TRUE or FALSE (BOOLEAN)
 /***********************************************************************/
-BOOLEAN bClear_feature(void)
+static BOOLEAN bClear_feature(void)
 {
 	if (mDEV_REQ_VALUE() > cUSB_FEATSEL_END)
 		return FALSE;
@@ -678,25 +518,7 @@ BOOLEAN bClear_feature(void)
 //      input: none
 //      output: TRUE or FALSE (BOOLEAN)
 /***********************************************************************/
-#if ZM_SELF_TEST_MODE
-
-#define TEST_J                  0x02
-#define TEST_K                  0x04
-#define TEST_SE0_NAK            0x08
-#define TEST_PKY                0x10
-
-u16_t TestPatn0[] = { TEST_J, TEST_K, TEST_SE0_NAK };
-
-u16_t TestPatn1[] = {
-	0x0000, 0x0000, 0x0000, 0x0000, 0xAA00,	// JKJKJKJK x 9
-	0xAA00,
-	0xAAAA, 0xAAAA, 0xAAAA, 0xEEAA,	// AA x 8
-	0xEEEE, 0xEEEE, 0xEEEE, 0xFEEE,	// EE x 8
-	0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0xFFFF, 0x7FFF,	// FF x 11
-	0xDFBF, 0xF7EF, 0xFDFB, 0x7EFC, 0xDFBF, 0xFDFB, 0xFDFB
-};
-#endif
-BOOLEAN bSet_feature(void)
+static BOOLEAN bSet_feature(void)
 {
 
 	switch (mDEV_REQ_VALUE())	// FeatureSelector
@@ -711,75 +533,6 @@ BOOLEAN bSet_feature(void)
 		eUsbCxFinishAction = ACT_DONE;
 		break;
 
-#if ZM_SELF_TEST_MODE
-	case 2:		// Test Mode
-		//    ii = mDEV_REQ_INDEX() >> 8;
-		//    switch (ii)    // TestSelector
-		switch (mDEV_REQ_INDEX() >> 8)	// TestSelector
-		{
-		case 0x1:	// Test_J
-		case 0x2:	// Test_K
-		case 0x3:	// TEST_SE0_NAK
-			//    mUsbTsMdWr(TestPatn0[(mDEV_REQ_INDEX() >> 8) - 1]);
-			ZM_PHY_TEST_SELECT_REG =
-			    TestPatn0[(mDEV_REQ_INDEX() >> 8) - 1];
-			eUsbCxFinishAction = ACT_DONE;
-			break;
-
-		case 0x4:	// Test_Packet
-			//    mUsbTsMdWr(TEST_PKY);
-			//    mUsbEP0DoneSet();           // special case: follow the test sequence
-			ZM_PHY_TEST_SELECT_REG = TEST_PKY;
-			ZM_CX_CONFIG_STATUS_REG = 0x01;
-			/***********************************************************************///////
-			// Jay ask to modify, 91-6-5 (Begin)        //
-			/***********************************************************************///////
-			//    mUsbTsMdWr(TEST_PKY);
-			//    mUsbEP0DoneSet();           // special case: follow the test sequence
-			ZM_PHY_TEST_SELECT_REG = TEST_PKY;
-			ZM_CX_CONFIG_STATUS_REG = 0x01;
-			/***********************************************************************///////
-			// Jay ask to modify, 91-6-5 (Begin)        //
-			/***********************************************************************///////
-			{
-				u16_t ii;
-
-				/* Set to two bytes mode */
-				ZM_CBUS_FIFO_SIZE_REG = 0x03;
-
-				for (ii = 0; ii < sizeof(TestPatn1); ii++) {
-					//    mUsbEP0DataWr1(TestPatn1[ii]);
-					//    mUsbEP0DataWr2(mHIGH_BYTE(TestPatn1[ii]));
-					ZM_EP0_DATA_REG = TestPatn1[ii];
-				}
-				//mUsbEP0DataWr1(0x7E);
-				//mUsbApWrEnd();
-
-				/* Set to one byte mode */
-				ZM_CBUS_FIFO_SIZE_REG = 0x01;
-				ZM_EP0_DATA_REG = 0x7E;
-
-				/* Set to four bytes mode */
-				ZM_CBUS_FIFO_SIZE_REG = 0x0f;
-			}
-			/***********************************************************************///////
-			// Jay ask to modify, 91-6-5 (End)          //
-			/***********************************************************************///////
-
-			// Turn on "r_test_packet_done" bit(flag) (Bit 5)
-			//mUsbTsPkDoneSet();
-			ZM_CX_CONFIG_STATUS_REG = 0x02;
-			break;
-
-		case 0x5:	// Test_Force_Enable
-			//FUSBPort[0x08] = 0x20;    //Start Test_Force_Enable
-			break;
-
-		default:
-			return FALSE;
-		}
-		break;
-#endif
 	default:
 		return FALSE;
 	}
@@ -796,7 +549,7 @@ BOOLEAN bSet_feature(void)
 //      input: none
 //      output: TRUE or FALSE (BOOLEAN)
 /***********************************************************************/
-BOOLEAN bSet_address(void)
+static BOOLEAN bSet_address(void)
 {
 	if (mDEV_REQ_VALUE() >= 0x0100)
 		return FALSE;
@@ -816,7 +569,7 @@ BOOLEAN bSet_address(void)
 //      input: none
 //      output: TRUE or FALSE (BOOLEAN)
 /***********************************************************************/
-BOOLEAN bGet_descriptor(void)
+static BOOLEAN bGet_descriptor(void)
 {
 // Change Descriptor type
 	switch (mDEV_REQ_VALUE_HIGH()) {
@@ -908,7 +661,7 @@ BOOLEAN bGet_descriptor(void)
 //      input: none
 //      output: none
 /***********************************************************************/
-BOOLEAN bGet_configuration(void)
+static BOOLEAN bGet_configuration(void)
 {
 	ZM_CBUS_FIFO_SIZE_REG = 0x1;
 	ZM_EP0_DATA_REG = u8UsbConfigValue;
@@ -932,7 +685,7 @@ BOOLEAN bGet_configuration(void)
 //      input: none
 //      output: TRUE or FALSE
 /***********************************************************************/
-BOOLEAN bSet_configuration(void)
+static BOOLEAN bSet_configuration(void)
 {
 	void vUsbClrEPx(void);
 
@@ -987,7 +740,7 @@ BOOLEAN bSet_configuration(void)
 //      input: none
 //      output: TRUE or FALSE
 /***********************************************************************/
-BOOLEAN bGet_interface(void)
+static BOOLEAN bGet_interface(void)
 {
 	if (mUsbCfgST() == 0)
 		return FALSE;
@@ -1033,7 +786,7 @@ BOOLEAN bGet_interface(void)
 //      input: none
 //      output: TRUE or FALSE
 /***********************************************************************/
-BOOLEAN bSet_interface(void)
+static BOOLEAN bSet_interface(void)
 {
 	void vUsbClrEPx(void);
 
@@ -1075,6 +828,68 @@ BOOLEAN bSet_interface(void)
 			//    default:
 			//        break;
 		}
+	}
+	return FALSE;
+}
+
+/***********************************************************************/
+//      bStandardCommand()
+//      Description:
+//          1. Process standard command.
+//      input: none
+//      output: TRUE or FALSE
+/***********************************************************************/
+static BOOLEAN bStandardCommand(void)
+{
+	switch (mDEV_REQ_REQ())	// by Standard Request codes
+	{
+	case USB_GET_STATUS:
+		//zfUartSendStr((u8_t *) "USB_GET_STATUS\n");
+		return (bGet_status());
+
+	case USB_CLEAR_FEATURE:
+		//zfUartSendStr((u8_t *) "USB_CLEAR_FEATURE\n");
+		return (bClear_feature());
+
+	case USB_SET_FEATURE:
+		//zfUartSendStr((u8_t *) "USB_SET_FEATURE\n");
+		return (bSet_feature());
+
+	case USB_SET_ADDRESS:
+		//zfUartSendStr((u8_t *) "USB_SET_ADDRESS\n");
+		if (!bUsbEP0HaltSt)
+			return (bSet_address());
+		break;
+
+	case USB_GET_DESCRIPTOR:
+		//zfUartSendStr((u8_t *) "USB_GET_DESCRIPTOR\n");
+		if (!bUsbEP0HaltSt)
+			return (bGet_descriptor());
+		break;
+
+	case USB_GET_CONFIGURATION:
+		//zfUartSendStr((u8_t *) "USB_GET_CONFIGURATION\n");
+		if (!bUsbEP0HaltSt)
+			return (bGet_configuration());
+		break;
+
+	case USB_SET_CONFIGURATION:
+		//zfUartSendStr((u8_t *) "USB_SET_CONFIGURATION\n");
+		if (!bUsbEP0HaltSt)
+			return (bSet_configuration());
+		break;
+
+	case USB_GET_INTERFACE:
+		//zfUartSendStr((u8_t *) "USB_GET_INTERFACE\n");
+		if (!bUsbEP0HaltSt)
+			return (bGet_interface());
+		break;
+
+	case USB_SET_INTERFACE:
+		//zfUartSendStr((u8_t *) "USB_SET_INTERFACE\n");
+		if (!bUsbEP0HaltSt)
+			return (bSet_interface());
+		break;
 	}
 	return FALSE;
 }
@@ -1226,7 +1041,7 @@ void vUsbClrEPx(void)
 //          Setup the pointer to the descriptor in the SRAM and EEPROM
 //
 /***********************************************************************/
-void vUsb_SetupDescriptor(void)
+static void vUsb_SetupDescriptor(void)
 {
 	u8UsbDeviceDescriptor = (u16_t *) USB_DEVICE_DESC_ADDR;
 	u8String00Descriptor = (u16_t *) USB_STRING00_DESC_ADDR;
