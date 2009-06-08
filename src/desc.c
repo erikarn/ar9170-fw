@@ -15,6 +15,8 @@
 #include "compiler.h"
 #include "api_extr.h"
 
+struct ar9170_dma_memory dma_mem __section(sram);
+
 static void __noinline copy_zsDmaDesc(struct zsDmaDesc *dst,
 				      const struct zsDmaDesc *src)
 {
@@ -25,6 +27,28 @@ static void __noinline copy_zsDmaDesc(struct zsDmaDesc *dst,
 	dst->lastAddr = src->lastAddr;
 	dst->dataAddr = src->dataAddr;
 	dst->nextAddr = src->nextAddr;
+}
+
+static void clear_descriptor(struct zsDmaDesc *d)
+{
+	d->status = ZM_OWN_BITS_SW;
+	d->ctrl = 0;
+	d->dataSize = 0;
+	d->totalLen = 0;
+	d->lastAddr = NULL;
+	d->dataAddr = NULL;
+	d->nextAddr = NULL;
+}
+
+static void fill_descriptor(struct zsDmaDesc *d, u16_t size, u8_t *data)
+{
+	d->status = ZM_OWN_BITS_SW;
+	d->ctrl = 0;
+	d->dataSize = size;
+	d->totalLen = 0;
+	d->lastAddr = d;
+	d->dataAddr = data;
+	d->nextAddr = NULL;
 }
 
 /*
@@ -38,68 +62,38 @@ static void __noinline copy_zsDmaDesc(struct zsDmaDesc *dst,
 void zfDmaInitDescriptor(void)
 {
 	u16_t i;
-	struct zsDmaDesc *desc[ZM_TERMINATOR_NUMBER];
 
-	/* Init descriptors for terminators */
-	for (i = 0; i < ZM_TERMINATOR_NUMBER; i++) {
-		desc[i] = (struct zsDmaDesc *)(ZM_DESCRIPTOR_BASE + (i * ZM_DESCRIPTOR_SIZE));
-		desc[i]->status = ZM_OWN_BITS_SW;
-		desc[i]->ctrl = 0;
-		desc[i]->dataSize = 0;
-		desc[i]->totalLen = 0;
-		desc[i]->lastAddr = 0;
-		desc[i]->dataAddr = 0;
-		desc[i]->nextAddr = 0;
-	}
+	for (i = 0; i < ARRAY_SIZE(dma_mem.terminator); i++)
+		clear_descriptor(&dma_mem.terminator[i]);
+	for (i = 0; i < ARRAY_SIZE(dma_mem.delay); i++)
+		clear_descriptor(&dma_mem.delay[i]);
 
-	/* Assigned terminators to DMA queues */
-	zgUpQ.head = zgUpQ.terminator = desc[0];
-	zgDnQ.head = zgDnQ.terminator = desc[1];
-	zgTxQ[0].head = zgTxQ[0].terminator = desc[2];
-	zgTxQ[1].head = zgTxQ[1].terminator = desc[3];
-	zgTxQ[2].head = zgTxQ[2].terminator = desc[4];
-	zgTxQ[3].head = zgTxQ[3].terminator = desc[5];
-	zgTxQ[4].head = zgTxQ[4].terminator = desc[6];
-	zgRxQ.head = zgRxQ.terminator = desc[7];
+	/* Assign terminators to DMA queues */
+	i = 0;
+	zgUpQ.head = zgUpQ.terminator = &dma_mem.terminator[i++];
+	zgDnQ.head = zgDnQ.terminator = &dma_mem.terminator[i++];
+	zgTxQ[0].head = zgTxQ[0].terminator = &dma_mem.terminator[i++];
+	zgTxQ[1].head = zgTxQ[1].terminator = &dma_mem.terminator[i++];
+	zgTxQ[2].head = zgTxQ[2].terminator = &dma_mem.terminator[i++];
+	zgTxQ[3].head = zgTxQ[3].terminator = &dma_mem.terminator[i++];
+	zgTxQ[4].head = zgTxQ[4].terminator = &dma_mem.terminator[i++];
+	zgRxQ.head = zgRxQ.terminator = &dma_mem.terminator[i++];
 #if ZM_INT_USE_EP2 == 1
-	zgIntDesc = desc[8];
+	zgIntDesc = &dma_mem.terminator[i++];
 #endif
-
 #if ZM_BAR_AUTO_BA == 1
-#if ZM_INT_USE_EP2 == 1
-	zgBADesc = desc[9];
-#else
-	zgBADesc = desc[8];
-#endif
+	zgBADesc = &dma_mem.terminator[i++];
 #endif
 
 	/* Init descriptors and memory blocks */
 	for (i = 0; i < ZM_BLOCK_NUMBER; i++) {
-		desc[0] = (struct zsDmaDesc *)((ZM_DESCRIPTOR_BASE +
-						(ZM_TERMINATOR_NUMBER * ZM_DESCRIPTOR_SIZE))
-					       + (i * ZM_DESCRIPTOR_SIZE));
-		desc[0]->status = ZM_OWN_BITS_SW;
-		desc[0]->ctrl = 0;
-		desc[0]->dataSize = ZM_BLOCK_SIZE;
-		desc[0]->totalLen = 0;
-		desc[0]->lastAddr = desc[0];
-		desc[0]->dataAddr = ZM_BLOCK_BUFFER_BASE + (i * ZM_BLOCK_SIZE);
-		desc[0]->nextAddr = 0;
+		fill_descriptor(&dma_mem.block[i], ZM_BLOCK_SIZE, dma_mem.data[i].data);
 
-#if 0
-		if (i < ZM_RX_BLOCK_NUMBER) {
-			zfDmaReclaimPacket(&zgRxQ, desc[0]);
-		} else {
-			zfDmaReclaimPacket(&zgDnQ, desc[0]);
-		}
-#else
 		if (i < ZM_TX_BLOCK_NUMBER) {
-			zfDmaReclaimPacket(&zgDnQ, desc[0]);
+			zfDmaReclaimPacket(&zgDnQ, &dma_mem.block[i]);
 		} else {
-			zfDmaReclaimPacket(&zgRxQ, desc[0]);
+			zfDmaReclaimPacket(&zgRxQ, &dma_mem.block[i]);
 		}
-#endif
-
 	}
 
 	/* Set DMA address registers */
@@ -123,45 +117,33 @@ void zfDmaInitDescriptor(void)
 	zm_wl_rx_dma_addr_reg = (u32_t) zgRxQ.head;
 
 #if ZM_TX_DELAY_DESC == 1
-
 	zgTxDelayDescIdx = 0;
 
 	for (i = 0; i < ZM_TX_DELAY_DESC_NUM; i++) {
-		zgTxDelayDesc[i] = (struct zsDmaDesc *)(ZM_TX_DELAY_DESC_BASE +
-							(i * ZM_DESCRIPTOR_SIZE));
-		zgTxDelayDesc[i]->status = ZM_OWN_BITS_SW;
-		zgTxDelayDesc[i]->ctrl = 0;
-		zgTxDelayDesc[i]->dataSize = i;
-		zgTxDelayDesc[i]->totalLen = 0;
-		zgTxDelayDesc[i]->lastAddr = zgTxDelayDesc[i];
-		zgTxDelayDesc[i]->dataAddr = 0;
-		zgTxDelayDesc[i]->nextAddr = 0;
+		fill_descriptor(&dma_mem.delay[i], i, NULL);
+		zgTxDelayDesc[i] = &dma_mem.delay[i];
 	}
 #endif
 
 #if ZM_INT_USE_EP2 == 1
-	{
-		zgIntDesc->status = ZM_OWN_BITS_SW;
-		zgIntDesc->ctrl = (ZM_LS_BIT | ZM_FS_BIT);
-		zgIntDesc->dataSize = ZM_BLOCK_SIZE;
-		zgIntDesc->totalLen = 0;
-		zgIntDesc->lastAddr = zgIntDesc;
-		zgIntDesc->dataAddr = ZM_RSP_BUFFER;
-		zgIntDesc->nextAddr = 0;
+	zgIntDesc->status = ZM_OWN_BITS_SW;
+	zgIntDesc->ctrl = (ZM_LS_BIT | ZM_FS_BIT);
+	zgIntDesc->dataSize = ZM_BLOCK_SIZE;
+	zgIntDesc->totalLen = 0;
+	zgIntDesc->lastAddr = zgIntDesc;
+	zgIntDesc->dataAddr = (void *)ZM_RSP_BUFFER;
+	zgIntDesc->nextAddr = 0;
 
-		/* Fill private id for rsp */
-		for (i = 0; i < (ZM_INT_USE_EP2_HEADER_SIZE >> 2); i++) {
-			*(volatile u32_t *)(ZM_RSP_BUFFER + (i * 4)) =
-			    0xffffffff;
-		}
+	/* Fill private id for rsp */
+	for (i = 0; i < (ZM_INT_USE_EP2_HEADER_SIZE >> 2); i++) {
+		*(volatile u32_t *)(ZM_RSP_BUFFER + (i * 4)) =
+		    0xffffffff;
 	}
 #endif
 
 #if ZM_BAR_AUTO_BA == 1
 	zgBADesc->status = ZM_OWN_BITS_SW;
 	zgBADesc->ctrl = (ZM_LS_BIT | ZM_FS_BIT);
-	//zgBADesc->dataSize = ZM_BLOCK_SIZE;
-	//zgBADesc->totalLen = 0;
 	zgBADesc->lastAddr = zgBADesc;
 	zgBADesc->dataAddr = ZM_BA_BUFFER;
 	zgBADesc->nextAddr = 0;
@@ -170,12 +152,11 @@ void zfDmaInitDescriptor(void)
 	zgBADesc->totalLen = 36;
 
 	/* Zero out */
-	for (i = 0; i < 128; i += 4) {
-		*(volatile u32_t *)(ZM_BA_BUFFER + i) = 0;
-	}
+	for (i = 0; i < 128; i += 4)
+		*(u32_t *)(ZM_BA_BUFFER + i) = 0;
 
-	*(volatile u32_t *)(ZM_BA_BUFFER + 0) = 0x00040020;
-	*(volatile u32_t *)(ZM_BA_BUFFER + 4) = 0x0026c401;
+	*(u32_t *)(ZM_BA_BUFFER + 0) = 0x00040020;
+	*(u32_t *)(ZM_BA_BUFFER + 4) = 0x0026c401;
 #endif
 }
 
@@ -319,7 +300,7 @@ struct zsDmaDesc *zfExchangeDesc(struct zsDmaDesc *desc)
 {
 #if ZM_TX_DELAY_DESC == 1
 	struct zsDmaDesc *tmpDesc;
-	copy_zsDmaDesc((void *)zgTxDelayDesc[zgTxDelayDescIdx], (void *)desc);
+	copy_zsDmaDesc(zgTxDelayDesc[zgTxDelayDescIdx], desc);
 
 	zgLastDelayDesc = (u32_t) desc;
 	zgNextStartDesc = (u32_t) (desc->lastAddr->nextAddr);

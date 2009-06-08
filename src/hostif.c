@@ -60,7 +60,7 @@ void zfHostIfIsr(void)
 			desc = zfDmaGetPacket(&zgUpQ);
 
 #if ZM_INT_USE_EP2 == 1
-			if (desc->dataAddr == ZM_RSP_BUFFER) {
+			if (desc->dataAddr == (void *)ZM_RSP_BUFFER) {
 				/* Rsp */
 				zgIntrINAvailable = 1;
 				zgIntDesc = desc;

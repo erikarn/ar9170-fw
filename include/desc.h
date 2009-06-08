@@ -15,13 +15,15 @@
 #ifndef _DESC_DEFS_H
 #define _DESC_DEFS_H
 
+#include "compiler.h"
+
 struct zsDmaDesc {
 	volatile u16_t status;	// Descriptor status
 	volatile u16_t ctrl;	// Descriptor control
 	volatile u16_t dataSize;	// Data size
 	volatile u16_t totalLen;	// Total length
 	struct zsDmaDesc *lastAddr;	// Last address of this chain
-	volatile u32_t dataAddr;	// Data buffer address
+	volatile u8_t *dataAddr;	// Data buffer address
 	struct zsDmaDesc *nextAddr;	// Next TD address
 };
 
@@ -48,12 +50,11 @@ struct zsDmaDesc {
 
 #define ZM_TERMINATOR_NUMBER (ZM_TERMINATOR_NUMBER_B + \
 			      ZM_TERMINATOR_NUMBER_BAR + \
-			      ZM_TERMINATOR_NUMBER_INT + \
-			      ZM_TX_DELAY_DESC_NUM)
+			      ZM_TERMINATOR_NUMBER_INT)
 
 #define ZM_BLOCK_SIZE           (256 + 64)
-#define ZM_DESCRIPTOR_SIZE      (sizeof(struct zsDmaDesc))
 
+#define ZM_DESCRIPTOR_SIZE      (sizeof(struct zsDmaDesc))
 
 /*
  * Memory layout in RAM:
@@ -67,7 +68,7 @@ struct zsDmaDesc {
  *				|  - BAR (optional, auto BA (?))
  *				|  - USB Interrupt (optional, to USB host)
  *				|  - delay descriptors (optional, BA buffering (?))
- *				| total: ZM_TERMINATOR_NUMBER
+ *				| total: ZM_TERMINATOR_NUMBER + ZM_TX_DELAY_DESC_NUM
  *				+--
  *				| block descriptors (zsDmaDesc)
  *				| (ZM_BLOCK_NUMBER)
@@ -77,17 +78,31 @@ struct zsDmaDesc {
  * 0x117000			+--
  */
 
-#define ZM_FRAME_MEMORY_BASE    0x100000
-#define ZM_FRAME_MEMORY_SIZE    0x17000
+#define ZM_FRAME_MEMORY_SIZE	0x17000
 
-#define ZM_BLOCK_NUMBER         ((ZM_FRAME_MEMORY_SIZE-(ZM_DESCRIPTOR_SIZE* \
-                                ZM_TERMINATOR_NUMBER)-64)/(ZM_BLOCK_SIZE \
-                                +ZM_DESCRIPTOR_SIZE))
+#define BLOCK_ALIGNMENT		64
 
-#define ZM_DESCRIPTOR_BASE	ZM_FRAME_MEMORY_BASE
-#define ZM_BLOCK_BUFFER_BASE	(((((ZM_BLOCK_NUMBER+ZM_TERMINATOR_NUMBER) \
-                                *ZM_DESCRIPTOR_SIZE) >> 6) << 6) + 0x40 \
-                                + ZM_FRAME_MEMORY_BASE)
+#define NONBLOCK_DESCRIPTORS_SIZE	\
+	ZM_DESCRIPTOR_SIZE * (ZM_TERMINATOR_NUMBER + ZM_TX_DELAY_DESC_NUM)
+
+#define NONBLOCK_DESCRIPTORS_SIZE_ALIGNED	\
+	ALIGN(NONBLOCK_DESCRIPTORS_SIZE, BLOCK_ALIGNMENT)
+
+#define ZM_BLOCK_NUMBER	((ZM_FRAME_MEMORY_SIZE - NONBLOCK_DESCRIPTORS_SIZE_ALIGNED) / \
+			 (ZM_BLOCK_SIZE + ZM_DESCRIPTOR_SIZE))
+
+struct ar9170_data_block {
+	u8_t	data[ZM_BLOCK_SIZE];
+};
+
+struct ar9170_dma_memory {
+	struct zsDmaDesc		terminator[ZM_TERMINATOR_NUMBER];
+	struct zsDmaDesc		delay[ZM_TX_DELAY_DESC_NUM];
+	struct zsDmaDesc		block[ZM_BLOCK_NUMBER];
+	struct ar9170_data_block	data[ZM_BLOCK_NUMBER] __attribute__((aligned(BLOCK_ALIGNMENT)));
+};
+
+extern struct ar9170_dma_memory dma_mem;
 
 #define ZM_DOWN_BLOCK_RATIO     2
 #define ZM_RX_BLOCK_RATIO       1
@@ -95,8 +110,6 @@ struct zsDmaDesc {
 #define ZM_TX_BLOCK_NUMBER      ZM_BLOCK_NUMBER * ZM_DOWN_BLOCK_RATIO / \
                                 (ZM_RX_BLOCK_RATIO + ZM_DOWN_BLOCK_RATIO)
 #define ZM_RX_BLOCK_NUMBER      ZM_BLOCK_NUMBER-ZM_TX_BLOCK_NUMBER
-
-#define ZM_TX_DELAY_DESC_BASE	ZM_FRAME_MEMORY_BASE + ZM_DESCRIPTOR_SIZE*(ZM_TERMINATOR_NUMBER-ZM_TX_DELAY_DESC_NUM)
 
 /* Erro code */
 #define ZM_ERR_FS_BIT           1

@@ -4,19 +4,9 @@
 #include "dt_defs.h"
 
 /* Definition of Share Memory Area */
-#if 0
-/* 64k */
-#define ZM_CMD_BUFFER       0x10F000
-#define ZM_RSP_BUFFER       0x10F100
-#define ZM_BEACON_BUFFER    0x10F200
-//#define ZM_TALLY_BUFFER     0x10F400
-//#define ZM_INFO_BUFFER      0x10F500
-#else
-/* 96k */
 #define ZM_BA_BUFFER        0x117780	//Reserve 128
 #define ZM_CMD_BUFFER       0x117800	//Reserve 128
 #define ZM_RSP_BUFFER       0x117880	//Reserve 128
-#endif
 
 /************************* Timer *************************/
 /* Definition of interrupt register base address */

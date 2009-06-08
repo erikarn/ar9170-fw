@@ -484,7 +484,7 @@ void zfHandleTxCompInt(u8_t flag)
 			   != ZM_OWN_BITS_HW)) {
 
 #if ZM_BAR_AUTO_BA == 1
-			if (q->head->dataAddr == ZM_BA_BUFFER) {
+			if (q->head->dataAddr == (void *)ZM_BA_BUFFER) {
 				desc = zfDmaGetPacket(q);
 				desc = zfExchangeDesc(desc);
 
