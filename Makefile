@@ -29,7 +29,6 @@ FW += src/cphy.o
 FW += src/desc.o
 FW += src/gv.o
 FW += src/hostif.o
-FW += src/mon.o
 FW += src/uart.o
 FW += src/wlan.o
 FW += src/cam.o

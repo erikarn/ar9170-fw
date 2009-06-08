@@ -37,6 +37,19 @@ extern void zfUsbInit(void);
 extern void zfUsbIsr(void);
 extern void zfGenerateBAFailCntFrame(void);
 
+static void zfInitTimer0(void)
+{
+	/* Init timer */
+	/* Set timer-0 to periodic mode */
+	ZM_TIMER_CONTROL_REG = 0x1;
+
+	/* Set time-0 = 50ms */
+	ZM_TIMER0_REG = (50000 - 1);
+
+	/* Clear Timer-0 interrupt flag */
+	ZM_TIMER_INTERRUPT_REG = 0x1;
+}
+
 static void zfInit(void)
 {
 	u16_t ii;

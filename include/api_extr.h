@@ -28,11 +28,6 @@ extern void zfPtaModeInit(void);
 /* wlan.c */
 void zfWlanIsr(void);
 
-/* mon.c */
-extern void zfInitTimer0(void);
-//extern void zfMonitorTask(void);
-extern void zfPrintCpuUtilization(void);
-
 /* cphy.c */
 //void zfInitPhy(u32_t tableNo);
 //void zfInitRf(void);
