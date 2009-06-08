@@ -17,7 +17,6 @@ extern void zfRecycleRxQ(void);
 #define zfwReadReg(addr) (*(volatile u32_t*)(addr))
 #define zfwWriteReg(addr, val) (*(volatile u32_t*)(addr) = val)
 
-//#define reg_read(addr) zfwReadReg(addr+0x1bc000)
 #define reg_write(addr, val) zfwWriteReg(addr+0x1bc000, val)
 
 void zfHwSaveChannel(u32_t frequency);
