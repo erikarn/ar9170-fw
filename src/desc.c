@@ -166,7 +166,7 @@ struct zsDmaDesc *zfDmaGetPacket(struct zsDmaQueue *q)
 	//        || ((q->head->status & ZM_OWN_BITS_MASK) == ZM_OWN_BITS_SE))
 
 	if ((((q->head->status & ZM_OWN_BITS_MASK) == ZM_OWN_BITS_SW) && (q != &zgDnQ)) ||
-	    (((q->head->status & ZM_OWN_BITS_MASK) == ZM_OWN_BITS_SE) && (q != &zgDnQ))) {
+	    (((q->head->status & ZM_OWN_BITS_MASK) == ZM_OWN_BITS_SE) && (q == &zgDnQ))) {
 		desc = q->head;
 
 		q->head = desc->lastAddr->nextAddr;
