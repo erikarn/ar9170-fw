@@ -31,7 +31,8 @@ src/newlib-$(NEWLIB_VER): src/$(NEWLIB_TAR)
 
 src/gcc-$(GCC_VER): src/$(GCC_TAR) src/newlib-$(NEWLIB_VER)
 	tar -C src -xjf $<
-	ln -s $(BASEDIR)/src/newlib-$(NEWLIB_VER)/{newlib,libgloss} $@
+	ln -s $(BASEDIR)/src/newlib-$(NEWLIB_VER)/newlib $@
+	ln -s $(BASEDIR)/src/newlib-$(NEWLIB_VER)/libgloss $@
 
 binutils: src/binutils-$(BINUTILS_VER)
 	mkdir -p build/binutils
