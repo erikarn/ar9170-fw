@@ -37,14 +37,14 @@ src/gcc-$(GCC_VER): src/$(GCC_TAR) src/newlib-$(NEWLIB_VER)
 binutils: src/binutils-$(BINUTILS_VER)
 	mkdir -p build/binutils
 	cd build/binutils; \
-	$(BASEDIR)/$</configure --target=sh-elf --prefix=$(BASEDIR)/inst; \
+	$(BASEDIR)/$</configure --target=sh-elf --prefix=$(BASEDIR)/inst --disable-werror; \
 	$(MAKE); \
 	$(MAKE) install
 
 gcc: src/gcc-$(GCC_VER) binutils
 	mkdir -p build/gcc
 	cd build/gcc; \
-	$(BASEDIR)/$</configure --target=sh-elf --prefix=$(BASEDIR)/inst -enable-languages=c --without-pkgversion --with-newlib; \
+	$(BASEDIR)/$</configure --target=sh-elf --prefix=$(BASEDIR)/inst -enable-languages=c --without-pkgversion --with-newlib --disable-werror; \
 	$(MAKE); \
 	$(MAKE) install
 
